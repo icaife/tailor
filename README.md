@@ -1,3 +1,3 @@
-# tailor
+# Tailor
 
 tailor for toursforfun frontend
