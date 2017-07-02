@@ -12,7 +12,7 @@ module.exports = (config) => {
 	let entry = {},
 		plugins = [],
 		basic = config.basic,
-		cwd = Path.join(basic.root, basic.src),
+		cwd = Path.join(basic.root,basic.src),
 		pattern = config.pattern,
 		suffix = config.suffix,
 		ext = basic.jsExt,
@@ -24,9 +24,16 @@ module.exports = (config) => {
 		dirs = glob.found;
 
 	dirs.forEach(function(dir) {
-		let name = dir.replace(new RegExp(`/${suffix}$`, "ig"), "");
+		let name = dir.replace(/\.[^.]+$/ig, ""),
+			mod = Path.join(name.replace(/[\/\\]+[^\/\\]+$/,""),suffix);
+			
+		// if(!entry[mod]){
+		// 	entry[mod] = [];
+		// }
 
-		entry[name] = [Path.join(dir)][0];
+		// entry[mod].push(Path.join(basic.root,basic.src,dir));
+
+		entry[mod] = Path.join(basic.root,basic.src,dir);
 	});
 
 	return entry;

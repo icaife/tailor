@@ -22,14 +22,14 @@ const
 	});
 
 module.exports = {
-	context: Path.join(basic.root, basic.src),
+	context: Path.join(basic.root,basic.src),
 	entry: entry,
 	output: Output({
 		path: Path.join(basic.root, basic.dest),
 		pathinfo: true,
-		publicPath: "",
-		// basic: basic,
-		filename: "[name].[chunkhash:6].js"
+		publicPath: "//leon.com/github/tffview/dest/",
+		filename: "[name].[chunkhash:6].js",
+		chunkFilename: "[name].[chunkhash:6].js"
 	}),
 	module: {
 		rules: [{
@@ -46,6 +46,9 @@ module.exports = {
 			test: /\.(png|jpg|gif|jpeg)$/,
 			use: "url-loader"
 		}]
+	},
+	resolve: {
+		extensions: ["js","json"]
 	},
 	plugins: Plugin({
 		entry: entry,

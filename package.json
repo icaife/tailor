@@ -4,7 +4,8 @@
   "description": "tailor for toursforfun frontend",
   "main": "webpack",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "start": "webpack"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,7 @@
   "license": "ISC",
   "devDependencies": {
     "extract-text-webpack-plugin": "^2.1.2",
+    "glob": "^7.1.2",
     "golb": "0.0.5",
     "html-webpack-plugin": "^2.29.0",
     "html-webpack-replaceurl-plugin": "^1.0.0",
