@@ -26,14 +26,14 @@ module.exports = (config) => {
 	dirs.forEach(function(dir) {
 		let name = dir.replace(/\.[^.]+$/ig, ""),
 			mod = Path.join(name.replace(/[\/\\]+[^\/\\]+$/,""),suffix);
-			
+
 		// if(!entry[mod]){
 		// 	entry[mod] = [];
 		// }
 
 		// entry[mod].push(Path.join(basic.root,basic.src,dir));
-
-		entry[mod] = Path.join(basic.root,basic.src,dir);
+		// entry[mod] = Path.join(basic.root,basic.src,dir);
+		entry[mod] = `./${dir}`;
 	});
 
 	return entry;

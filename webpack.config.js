@@ -1,57 +1,75 @@
+/**
+ * @description webpack config
+ * @author Leon.Cai
+ */
 "use strict";
 
 const
-	Webpack = require("webpack"),
-	Entry = require("./entry"),
-	Output = require("./output"),
-	Plugin = require("./plugin"),
-	Path = require("path"),
-	ExtractTextPlugin = require("extract-text-webpack-plugin"),
-	basic = {
-		root: Path.resolve(Path.join(__dirname, "../tffview")),
-		src: "src",
-		dest: "dest",
-		htmlExt: "blade.php",
-		jsExt: "js",
-		cssExt: "css"
-	},
-	entry = Entry({
-		basic: basic,
-		suffix: "index",
-		pattern: "**"
-	});
+    Webpack = require("webpack"),
+    Entry = require("./entry"),
+    Output = require("./output"),
+    Plugin = require("./plugin"),
+    Path = require("path"),
+    ExtractTextPlugin = require("extract-text-webpack-plugin"),
+    basic = {
+        root: Path.resolve(Path.join(__dirname, "../tffview")),
+        src: "src",
+        dest: "dest",
+        htmlExt: "blade.php",
+        jsExt: "js",
+        cssExt: "css"
+    },
+    entry = Entry({
+        basic: basic,
+        suffix: "index",
+        pattern: "**"
+    });
 
 module.exports = {
-	context: Path.join(basic.root,basic.src),
-	entry: entry,
-	output: Output({
-		path: Path.join(basic.root, basic.dest),
-		pathinfo: true,
-		publicPath: "//leon.com/github/tffview/dest/",
-		filename: "[name].[chunkhash:6].js",
-		chunkFilename: "[name].[chunkhash:6].js"
-	}),
-	module: {
-		rules: [{
-			test: /\.(html|\.blade.php)$/,
-			use: "html"
-		}, {
-			test: /\.(css|less)$/,
-			use: ExtractTextPlugin.extract({
-				fallback: "style-loader",
-				//TODO: resolve-url-loader 链接进来
-				use: ["css-loader", "less-loader"]
-			})
-		}, {
-			test: /\.(png|jpg|gif|jpeg)$/,
-			use: "url-loader"
-		}]
-	},
-	resolve: {
-		extensions: ["js","json"]
-	},
-	plugins: Plugin({
-		entry: entry,
-		basic: basic
-	})
+    context: Path.join(basic.root, basic.src),
+    entry: entry,
+    output: Output({
+        path: Path.join(basic.root, basic.dest),
+        pathinfo: true,
+        publicPath: "//leon.com/github/tffview/dest/",
+        filename: "[name].[chunkhash:6].js",
+        chunkFilename: "[name].[chunkhash:6].js"
+    }),
+    module: {
+        rules: [{
+            test: /\.(html|\.blade.php)$/,
+            use: "html"
+        }, {
+            test: /\.(css|less)$/,
+            use: "less-loader"
+                // use: ExtractTextPlugin.extract({
+                //     fallback: 'style-loader',
+                //     //如果需要，可以在 sass-loader 之前将 resolve-url-loader 链接进来
+                //     use: ['css-loader', 'lessweb-loader']
+                // })
+                // use: ExtractTextPlugin.extract([{
+                //     loader: 'css-loader',
+                //     options: {
+                //         minimize: true,
+                //         '-autoprefixer': true,
+                //     },
+                // }, {
+                //     loader: 'postcss-loader',
+                // }, {
+                //     loader: 'less-loader',
+                // }])
+        }, {
+            test: /\.(png|jpg|gif|jpeg)$/,
+            use: "url-loader"
+        }]
+    },
+    // todo
+    // alias
+    resolve: {
+        extensions: ["js", "json", "less", "css"]
+    },
+    plugins: Plugin({
+        entry: entry,
+        basic: basic
+    })
 };
