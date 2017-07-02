@@ -7,10 +7,7 @@
     "test": "test",
     "start": "webpack"
   },
-  "repository": {
-    "type": "git",
-    "url": "http://git.tff.bz/leon.cai/febuilder.git"
-  },
+  "repository": "http://git.tff.bz/leon.cai/febuilder.git",
   "keywords": [
     "toursforfun",
     "frontend",
