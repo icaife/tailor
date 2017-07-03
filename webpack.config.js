@@ -6,18 +6,25 @@
 
 const
     Webpack = require("webpack"),
+    Merge = require("webpack-merge"),
     Entry = require("./entry"),
     Output = require("./output"),
+    Module = require("./module"),
+    Resolve = require("./resolve"),
     Plugin = require("./plugin"),
     Path = require("path"),
     ExtractTextPlugin = require("extract-text-webpack-plugin"),
     basic = {
+        cur: Path.resolve(__dirname),
         root: Path.resolve(Path.join(__dirname, "../tffview")),
         src: "src",
         dest: "dest",
         htmlExt: "blade.php",
         jsExt: "js",
-        cssExt: "css"
+        cssExt: "css",
+        views: "views",
+        assets: "assets",
+        env: "dev"
     },
     entry = Entry({
         basic: basic,
@@ -25,51 +32,29 @@ const
         pattern: "**"
     });
 
-module.exports = {
+module.exports = Merge({
     context: Path.join(basic.root, basic.src),
     entry: entry,
     output: Output({
-        path: Path.join(basic.root, basic.dest),
-        pathinfo: true,
-        publicPath: "//leon.com/github/tffview/dest/",
-        filename: "[name].[chunkhash:6].js",
-        chunkFilename: "[name].[chunkhash:6].js"
+        basic: basic,
+        entry: entry
     }),
-    module: {
-        rules: [{
-            test: /\.(html|\.blade.php)$/,
-            use: "html"
-        }, {
-            test: /\.(css|less)$/,
-            use: "less-loader"
-                // use: ExtractTextPlugin.extract({
-                //     fallback: 'style-loader',
-                //     //如果需要，可以在 sass-loader 之前将 resolve-url-loader 链接进来
-                //     use: ['css-loader', 'lessweb-loader']
-                // })
-                // use: ExtractTextPlugin.extract([{
-                //     loader: 'css-loader',
-                //     options: {
-                //         minimize: true,
-                //         '-autoprefixer': true,
-                //     },
-                // }, {
-                //     loader: 'postcss-loader',
-                // }, {
-                //     loader: 'less-loader',
-                // }])
-        }, {
-            test: /\.(png|jpg|gif|jpeg)$/,
-            use: "url-loader"
-        }]
-    },
-    // todo
-    // alias
-    resolve: {
-        extensions: ["js", "json", "less", "css"]
-    },
-    plugins: Plugin({
-        entry: entry,
-        basic: basic
+    module: Module({
+        basic: basic,
+        entry: entry
     })
-};
+}, {
+    profile: true,
+    resolve: Resolve({
+        basic: basic,
+        entry: entry
+    }).resolve,
+    resolveLoader: Resolve({
+        basic: basic,
+        entry: entry
+    }).resolveLoader,
+    plugins: Plugin({
+        basic: basic,
+        entry: entry
+    })
+});

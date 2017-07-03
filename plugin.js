@@ -70,6 +70,7 @@ function addJs(js) {
     var str = "";
 
     js.forEach((item) => {
+        item = item.replace(/\\/g, "/");
         str += `<script src="${item}" type="text/javascript" defer="true"></script>`;
     });
 
@@ -80,6 +81,7 @@ function addCss(css) {
     var str = "";
 
     css.forEach((item) => {
+        item = item.replace(/\\/g, "/");
         str += `<link href="${item}" rel="stylesheet">`;
     });
 
@@ -99,24 +101,28 @@ module.exports = (config) => {
             fileName = `${page}.${basic.htmlExt}`;
 
         plugin.push(new HtmlWebpackPlugin({
-            filename: `${fileName}`,
+            filename: `${basic.views}/${fileName}`,
             template: `${fileName}`,
             inject: false
         }));
     });
 
-    plugin.push(new CleanWebpackPlguin([basic.dest], { //clean dirs
+    plugin.push(new CleanWebpackPlguin([basic.dest, "map", "public", "compile"], { //clean dirs
         root: basic.root,
         verbose: true
     }));
-    // plugin.push(new ExtractTextPlugin({
-    //     filename: "[name].[contenthash:6].css",
-    //     allChunks: !true
-    // }));
+
+    plugin.push(new ExtractTextPlugin({
+        filename: `${basic.assets}/[name].[contenthash:6].css`,
+        allChunks: true
+    }));
+
     plugin.push(new UglifyJsPlugin());
+
     plugin.push(new ModuleConcatenationPlugin());
+
     plugin.push(new HtmlWebpackPluginReplace({ //add js and css to file end
-        replace: function(html, obj) {
+        replace: (html, obj) => {
             //todo
             html = html.replace(/$/, addCss(obj.css) + addJs(obj.js));
             return html;
