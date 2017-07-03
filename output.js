@@ -12,7 +12,7 @@ module.exports = (config) => {
 	return Extend({
 		path: Path.join(basic.root, basic.dest),
 		pathinfo: true,
-		publicPath: "//leon.com/github/tffview/dest/",
+		publicPath: "//cdn.tff.com/",
 		filename: `${basic.assets}/[name].[chunkhash:6].js`,
 		chunkFilename: `${basic.assets}/[name].[chunkhash:6].js`
 	}, {});

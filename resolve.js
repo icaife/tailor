@@ -10,10 +10,11 @@ module.exports = (config) => {
 		basic = config.basic;
 
 	return {
-		//todo:alias
 		resolve: {
-			alias: {},
-			// modules: [Path.resolve(basic.cur), "node_modules"],
+			alias: {
+				"@": Path.resolve(basic.src)
+			},
+			modules: [Path.resolve(basic.src) /*, "node_modules"*/ ],
 			extensions: [".js", ".json", ".less", ".css"]
 		},
 		resolveLoader: {
