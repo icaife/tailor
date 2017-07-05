@@ -13,26 +13,20 @@ module.exports = (config) => {
 		plugins = [],
 		basic = config.basic,
 		cwd = Path.join(basic.root, basic.src),
-		pattern = config.pattern,
-		suffix = config.suffix,
+		glob = basic.entryGlob,
+		prefix = basic.entryPrefix,
 		ext = basic.jsExt,
 		options = {
 			cwd: cwd,
 			sync: true
 		},
-		glob = new Glob.Glob(`${pattern}/${suffix}.${ext}`, options),
-		dirs = glob.found;
+		globInstance = new Glob.Glob(`${glob}/${prefix}.${ext}`, options),
+		dirs = globInstance.found;
 
 	dirs.forEach(function(dir) {
 		let name = dir.replace(/\.[^.]+$/ig, ""),
-			mod = Path.join(name.replace(/[\/\\]+[^\/\\]+$/, ""), suffix);
+			mod = Path.join(name.replace(/[\/\\]+[^\/\\]+$/, ""), prefix).replace(/\\/g, "/");
 
-		// if(!entry[mod]){
-		// 	entry[mod] = [];
-		// }
-
-		// entry[mod].push(Path.join(basic.root,basic.src,dir));
-		// entry[mod] = Path.join(basic.root,basic.src,dir);
 		entry[mod] = `./${dir}`;
 	});
 

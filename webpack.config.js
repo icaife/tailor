@@ -19,17 +19,18 @@ const
         root: Path.resolve(Path.join(__dirname, "../tffview")),
         src: "src",
         dest: "dest",
+        views: "views",
+        env: "dev",
+        assets: "assets",
+        cdn: "//cdn.tff.com/",
+        entryPrefix: "index",
+        entryGlob: "**",
         htmlExt: "blade.php",
         jsExt: "js",
-        cssExt: "css",
-        views: "views",
-        assets: "assets",
-        env: "dev"
+        cssExt: "css"
     },
     entry = Entry({
-        basic: basic,
-        suffix: "index",
-        pattern: "**"
+        basic: basic
     });
 
 module.exports = Merge({

@@ -11,8 +11,8 @@ module.exports = (config) => {
 
 	return Extend({
 		path: Path.join(basic.root, basic.dest),
-		pathinfo: true,
-		publicPath: "//cdn.tff.com/",
+		// pathinfo: true,
+		publicPath: basic.cdn,
 		filename: `${basic.assets}/[name].[chunkhash:6].js`,
 		chunkFilename: `${basic.assets}/[name].[chunkhash:6].js`
 	}, {});

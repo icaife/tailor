@@ -14,7 +14,7 @@ module.exports = (config) => {
 			alias: {
 				"@": Path.resolve(basic.src)
 			},
-			modules: [Path.resolve(basic.src) /*, "node_modules"*/ ],
+			modules: [Path.resolve(basic.src), "node_modules"],
 			extensions: [".js", ".json", ".less", ".css"]
 		},
 		resolveLoader: {

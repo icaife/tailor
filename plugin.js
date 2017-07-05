@@ -11,6 +11,7 @@ const
     StringReplaceWebpackPlugin = require("string-replace-webpack-plugin"),
     HtmlWebpackReplaceurlPlugin = require("html-webpack-replaceurl-plugin"),
     CleanWebpackPlguin = require("clean-webpack-plugin"),
+    ManifestPlugin = require("webpack-manifest-plugin"),
     UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
     ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
     ExtractTextPlugin = require("extract-text-webpack-plugin");
@@ -107,7 +108,7 @@ module.exports = (config) => {
         }));
     });
 
-    plugin.push(new CleanWebpackPlguin([basic.dest, "map", "public", "compile"], { //clean dirs
+    plugin.push(new CleanWebpackPlguin([basic.dest], { //clean dirs
         root: basic.root,
         verbose: true
     }));
@@ -128,6 +129,17 @@ module.exports = (config) => {
             return html;
         }
     }));
+
+    plugin.push(new ManifestPlugin({
+        fileName: `${basic.assets}/manifest.json`,
+        publicPath: `${basic.cdn}`
+    }));
+
+    plugin.push(function() {
+        this.plugin("done", function(stats) {
+            // console.log(stats.toJson());
+        });
+    });
     //todo: ProvidePlugin
 
     return plugin;
