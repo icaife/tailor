@@ -20,9 +20,8 @@ let
          */
         retina: true,
         relativeTo: "rule",
-        spritePath: Path.join(config.basic.dest, config.basic.assets),
-        stylesheetPath: Path.join(config.basic.dest, config.basic.assets),
-        // basePath: "",
+        spritePath: Path.join(config.basic.root, config.basic.src /*, config.basic.assets*/ ),
+        // stylesheetPath: Path.join(config.basic.root, config.basic.src /*, config.basic.assets*/ ),
         spritesmith: {
             padding: 4
         },
@@ -32,14 +31,15 @@ let
         groupBy: (image) => {
             let groups = image.url.match(/([^\/\\]+-sprite)[\/\\]/),
                 groupName = undefined;
-            console.log(image.path.replace(Path.join(config.basic.root, config.basic.src), ""));
-            groupName = groups ? groups[1] : "icons-sprite";
-            // groupName = image.path.replace(Path.join(config.basic.root, config.basic.src), "").replace(/[\\\/]+[^\\\/]+$/, "").replace(/\\/g, "/");
+            //console.log(image.path.replace(Path.join(config.basic.root, config.basic.src), ""));
+            // groupName = groups ? groups[1] : "icons-sprite";
+            groupName = image.path.replace(Path.join(config.basic.root, config.basic.src), "").replace(/[\\\/]+[^\\\/]+$/, "").replace(/\\/g, "/");
             image.retina = true;
             image.ratio = 1;
 
             if (groups) {
                 let ratio = /@(\d+)x$/gi.exec(groupName);
+
                 if (ratio) {
                     ratio = ratio[1];
 
@@ -48,6 +48,10 @@ let
                     }
 
                     image.ratio = ratio;
+                    image.groups = image.groups.filter((group) => {
+                        return ("@" + ratio + "x") !== group;
+                    });
+                    groupName += "@" + ratio + "x";
                 }
             }
 
@@ -71,9 +75,10 @@ let
                 updateRule(rule, token, image);
             },
             onSaveSpritesheet: function(opts, spritesheet) {
-                let filenameChunks = spritesheet.groups.concat(spritesheet.extension);
+                let filenameChunks = spritesheet.groups.concat(spritesheet.extension),
+                    destPath = Path.join(opts.spritePath, filenameChunks.join("."));
 
-                return Path.join(opts.spritePath, filenameChunks.join('.'));
+                return destPath;
             }
         }
     }),
@@ -88,7 +93,7 @@ let
             use: [{
                 loader: "css-loader",
                 options: {
-                    // importLoaders: 1
+                    importLoaders: 1
                 }
             }, {
                 loader: "postcss-loader",
@@ -109,21 +114,15 @@ let
         })
     }),
     imageRule = (config) => ({
-        test: /\.(png|jpe?g|bmp|gif|svg|eof|woff|eot)/i,
+        test: {
+            test: /\.(png|jpe?g|gif|svg)/i,
+            // not: [/\w+-sprite/]
+        },
         use: [{
             loader: "file-loader", //url-loader
             options: {
                 name: `${config.basic.assets}/[path][name].[hash:6].[ext]`,
                 // limit: 1024 * 10
-            }
-        }]
-    }),
-    otherRule = (config) => ({ //TODO
-        test: /(png|jpe?g|gif|svg|eof|woff|eot)/ig,
-        use: [{
-            loader: "file-loader",
-            options: {
-                name: `${config.basic.assets}/[path][name].[hash:6].[ext]`,
             }
         }, {
             loader: "image-webpack-loader",
@@ -148,6 +147,15 @@ let
                         removeEmptyAttrs: false
                     }]
                 }
+            }
+        }]
+    }),
+    otherRule = (config) => ({ //TODO
+        test: /eof|woff|eot/ig,
+        use: [{
+            loader: "file-loader",
+            options: {
+                name: `${config.basic.assets}/[path][name].[hash:6].[ext]`,
             }
         }]
     });

@@ -40,5 +40,8 @@
     "webpack": "^3.0.0",
     "webpack-manifest-plugin": "^1.1.0",
     "webpack-merge": "^4.1.0"
+  },
+  "dependencies": {
+    "pngquant-bin": "^3.1.1"
   }
 }
