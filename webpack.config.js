@@ -7,11 +7,11 @@
 const
     Webpack = require("webpack"),
     Merge = require("webpack-merge"),
-    Entry = require("./entry"),
-    Output = require("./output"),
-    Module = require("./module"),
-    Resolve = require("./resolve"),
-    Plugin = require("./plugin"),
+    Entry = require("./mod/entry"),
+    Output = require("./mod/output"),
+    Module = require("./mod/module"),
+    Resolve = require("./mod/resolve"),
+    Plugin = require("./mod/plugin"),
     Path = require("path"),
     ExtractTextPlugin = require("extract-text-webpack-plugin"),
     basic = {
