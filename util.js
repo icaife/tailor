@@ -2,7 +2,7 @@
  * util webpack
  */
 
-let util = {
+const util = {
 	/**
 	 * format input args
 	 * @return {Object} formated args
@@ -32,6 +32,7 @@ let util = {
 
 		return Object.keys(data).length ? data : {};
 	},
+
 };
 
 module.exports = util;
