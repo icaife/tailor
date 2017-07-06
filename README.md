@@ -6,7 +6,7 @@
 
 # Tailor for ToursForFun Frontend
 
-##Instructions
+## Instructions
 - Based on webpack@3.0
 - Check list
 	- multiple pages supported
