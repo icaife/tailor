@@ -13,4 +13,4 @@
 	- less to css
 	- js uglify
 	- css sprite
-	- TODO:mock、live reload、sourcemap、env diff
+	- TODO:mock、livereload、sourcemap、env diff(dev|qa、prod)、*hint
