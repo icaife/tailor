@@ -14,3 +14,4 @@
 	- js uglify
 	- css sprite
 	- TODO:mock、livereload、sourcemap、env diff(dev|qa、prod)、*hint
+
