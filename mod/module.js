@@ -82,11 +82,26 @@ let
             }
         }
     }),
-    htmlRule = (config) => ({
+    htmlRule = config => [{
         test: /\.(html|\.blade.php)$/,
-        use: "html-loader"
-    }),
-    styleRule = (config) => ({
+        use: [{
+            loader: "html-loader",
+            options: {
+                // interpolate: true,
+                // config: {
+                //     ignoreCustomFragments: [/\{\{.*?}}/],
+                //     attrs: ["img:src", "img:data-src", "link:href"]
+                // }
+            }
+        }]
+    }, {
+        test: /\.art$/,
+        use: [{
+            loader: "art-template-loader",
+            options: {}
+        }]
+    }],
+    styleRule = config => [{
         test: /\.(css|less)$/,
         use: ExtractTextPlugin.extract({
             fallback: "style-loader",
@@ -112,8 +127,8 @@ let
                 options: {}
             }]
         })
-    }),
-    imageRule = (config) => ({
+    }],
+    imageRule = config => [{
         test: {
             test: /\.(png|jpe?g|gif|svg)/i,
             // not: [/\w+-sprite/]
@@ -149,8 +164,8 @@ let
                 }
             }
         }]
-    }),
-    otherRule = (config) => ({ //TODO
+    }],
+    otherRule = config => [{ //TODO
         test: /eof|woff|eot/ig,
         use: [{
             loader: "file-loader",
@@ -158,10 +173,10 @@ let
                 name: `${config.basic.assets}/[path][name].[hash:6].[ext]`,
             }
         }]
-    });
+    }];
 
 module.exports = (config) => {
     return {
-        rules: [htmlRule(config), styleRule(config), imageRule(config)]
+        rules: [...htmlRule(config), ...styleRule(config), ...imageRule(config)]
     }
 }

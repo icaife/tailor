@@ -2,6 +2,7 @@
  * @description plugins for webpack config
  * @author Leon.Cai
  */
+
 "use strict";
 
 const
@@ -14,11 +15,12 @@ const
     ManifestPlugin = require("webpack-manifest-plugin"),
     UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
     ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
-    ExtractTextPlugin = require("extract-text-webpack-plugin");
+    ExtractTextPlugin = require("extract-text-webpack-plugin"),
+    StyleExtHtmlWebpackPlugin = require("style-ext-html-webpack-plugin");
 
 /**
  * html webpack replace plugin
- * @param {Object} options 
+ * @param {Object} options  
  */
 var HtmlWebpackPluginReplace = function(options) {
     this.options = Object.assign({
@@ -35,11 +37,23 @@ var HtmlWebpackPluginReplace = function(options) {
  */
 HtmlWebpackPluginReplace.prototype.apply = function(compiler) {
     let that = this;
+
     compiler.plugin("compilation", function(compilation) {
         compilation.plugin("html-webpack-plugin-before-html-processing", (htmlPluginData, callback) => {
             that.replace(compilation, htmlPluginData, callback);
         });
     });
+
+    // compiler.plugin("make", function(compilation, callback) {
+    //     compilation.plugin("normal-module-loader", function(loaderContext, module) {
+    //         let issuer = module.issuer;
+
+    //         if (issuer) {
+    //             console.log(module.issuer._source._value = "void 0"); //TODO modify souce code
+    //         }
+    //     });
+    //     callback();
+    // });
 };
 
 /**
@@ -68,27 +82,26 @@ HtmlWebpackPluginReplace.prototype.replace = function(compilation, htmlPluginDat
     callback(null, htmlPluginData);
 };　
 function addJs(js) {
-    var str = "";
+    let items = [];
 
     js.forEach((item) => {
         item = item.replace(/\\/g, "/");
-        str += `<script src="${item}" type="text/javascript" defer="true"></script>`;
+        items.push(`<script src="${item}" type="text/javascript" defer="true"></script>`);
     });
 
-    return `\n@push("scripts")\n${str}\n@endpush\n`;
+    return `\n@prepend("scripts")\n${items.join("\n")}\n@endprepend\n`;
 }
 
 function addCss(css) {
-    var str = "";
+    let items = [];
 
     css.forEach((item) => {
         item = item.replace(/\\/g, "/");
-        str += `<link href="${item}" rel="stylesheet">`;
+        items.push(`<link href="${item}" rel="stylesheet">`);
     });
 
-    return `\n@push("styles")\n${str}\n@endpush\n`;
+    return `\n@prepend("styles")\n${items.join("\n")}\n@endprepend\n`;
 }
-
 
 module.exports = (config) => {
     let plugin = [],
@@ -99,47 +112,37 @@ module.exports = (config) => {
     Object.keys(entry).forEach((page) => {
         let item = entry[page],
             obj = Path.parse(page),
-            fileName = `${page}.${basic.htmlExt}`;
+            fileName = `${page}.${basic.htmlExt}`,
+            opts = {
+                filename: `${basic.views}/${fileName}`,
+                template: `${fileName}`,
+                inject: false
+            };
 
-        plugin.push(new HtmlWebpackPlugin({
-            filename: `${basic.views}/${fileName}`,
-            template: `${fileName}`,
-            inject: false
-        }));
+        plugin.push(new HtmlWebpackPlugin(opts));
     });
 
-    plugin.push(new CleanWebpackPlguin([basic.dest], { //clean dirs
-        root: basic.root,
-        verbose: true
-    }));
+    plugin.push(
+        new CleanWebpackPlguin([basic.dest], { //clean dirs
+            root: basic.root,
+            verbose: true
+        }),
+        new ExtractTextPlugin({ //extract css
+            filename: `${basic.assets}/[name].[contenthash:6].css`,
+            allChunks: true
+        }),
+        new UglifyJsPlugin(), new ModuleConcatenationPlugin(), new HtmlWebpackPluginReplace({ //add js and css to file end
+            replace: (html, obj) => {
+                //todo
+                html = html.replace(/$/, addCss(obj.css) + addJs(obj.js));
+                return html;
+            }
+        }),
+        new ManifestPlugin({
+            fileName: `${basic.assets}/manifest.json`,
+            publicPath: `${basic.cdn}`
+        }), /*new StyleExtHtmlWebpackPlugin()*/ );
 
-    plugin.push(new ExtractTextPlugin({
-        filename: `${basic.assets}/[name].[contenthash:6].css`,
-        allChunks: true
-    }));
-
-    plugin.push(new UglifyJsPlugin());
-
-    plugin.push(new ModuleConcatenationPlugin());
-
-    plugin.push(new HtmlWebpackPluginReplace({ //add js and css to file end
-        replace: (html, obj) => {
-            //todo
-            html = html.replace(/$/, addCss(obj.css) + addJs(obj.js));
-            return html;
-        }
-    }));
-
-    plugin.push(new ManifestPlugin({
-        fileName: `${basic.assets}/manifest.json`,
-        publicPath: `${basic.cdn}`
-    }));
-
-    plugin.push(function() {
-        this.plugin("done", function(stats) {
-            // console.log(stats.toJson());
-        });
-    });
     //todo: ProvidePlugin
 
     return plugin;

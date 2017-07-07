@@ -24,6 +24,7 @@ const
         assets: "assets",
         cdn: "//cdn.tff.com/",
         entryPrefix: "index",
+        entryExt: "js",
         entryGlob: "**",
         htmlExt: "blade.php",
         jsExt: "js",

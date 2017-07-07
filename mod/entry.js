@@ -15,7 +15,7 @@ module.exports = (config) => {
 		cwd = Path.join(basic.root, basic.src),
 		glob = basic.entryGlob,
 		prefix = basic.entryPrefix,
-		ext = basic.jsExt,
+		ext = basic.entryExt,
 		options = {
 			cwd: cwd,
 			sync: true
