@@ -15,7 +15,8 @@ module.exports = (config) => {
 				"@": Path.resolve(basic.src)
 			},
 			modules: [Path.resolve(basic.src), "node_modules"],
-			extensions: [".js", ".json", ".less", ".css", ".art", ".html", ".blade.php"]
+			extensions: [".js", ".json", ".less", ".css", ".art", ".html", ".blade.php"],
+			cacheWithContext: true,
 		},
 		resolveLoader: {
 			modules: [Path.resolve(basic.cur, "node_modules"), "node_modules"],

@@ -37,7 +37,9 @@ var HtmlWebpackPluginReplace = function(options) {
  * @return {[type]}          [description]
  */
 HtmlWebpackPluginReplace.prototype.apply = function(compiler) {
-    let that = this;
+    let that = this,
+        opts = that.options,
+        config = options.config;
 
     compiler.plugin("compilation", function(compilation) {
         compilation.plugin("html-webpack-plugin-before-html-processing", (htmlPluginData, callback) => {
@@ -45,16 +47,20 @@ HtmlWebpackPluginReplace.prototype.apply = function(compiler) {
         });
     });
 
-    // compiler.plugin("make", function(compilation, callback) {
-    //     compilation.plugin("normal-module-loader", function(loaderContext, module) {
-    //         let issuer = module.issuer;
+    compiler.plugin("make", function(compilation, callback) {
+        compilation.plugin("normal-module-loader", function(loaderContext, module) {
+            let issuer = module.issuer;
 
-    //         if (issuer) {
-    //             console.log(module.issuer._source._value = "void 0"); //TODO modify souce code
-    //         }
-    //     });
-    //     callback();
-    // });
+            if (issuer) {
+                let code = module.issuer._source._value,
+                    modName = issuer.context.replace(Path.join(config.basic.root, config.basic.src), "");
+                console.log(modName);
+                module.issuer._source._value = code.replace(/(require\.ensure\([\s\S]+,[\s\S]+)\)/img, `$1,${modName}/_async`);
+
+            }
+        });
+        callback();
+    });
 };
 
 /**
@@ -92,7 +98,7 @@ function addJs(js) {
         items.push(`<script src="${item}" type="text/javascript" defer="true"></script>`);
     });
 
-    return `\n@prepend("scripts")\n${items.join("\n")}\n@endprepend\n`;
+    return `\n@prepend("scripts-head")\n${items.join("\n")}\n@endprepend\n`;
 }
 
 function addCss(css) {
@@ -103,7 +109,7 @@ function addCss(css) {
         items.push(`<link href="${item}" rel="stylesheet">`);
     });
 
-    return `\n@prepend("styles")\n${items.join("\n")}\n@endprepend\n`;
+    return `\n@prepend("styles-head")\n${items.join("\n")}\n@endprepend\n`;
 }
 
 module.exports = (config) => {
@@ -134,12 +140,15 @@ module.exports = (config) => {
             filename: `${basic.assets}/[name].[contenthash:6].css`,
             allChunks: true
         }),
-        new UglifyJsPlugin(), new ModuleConcatenationPlugin(), new HtmlWebpackPluginReplace({ //add js and css to file end
+        new UglifyJsPlugin(),
+        new ModuleConcatenationPlugin(),
+        new HtmlWebpackPluginReplace({ //add js and css to file end
             replace: (html, obj) => {
                 //todo
                 html = html.replace(/$/, addCss(obj.css) + addJs(obj.js));
                 return html;
-            }
+            },
+            config: config
         }),
         new ManifestPlugin({
             fileName: `${basic.assets}/manifest.json`,
@@ -155,6 +164,5 @@ module.exports = (config) => {
         }]));
 
     //todo: ProvidePlugin
-
     return plugin;
 }
