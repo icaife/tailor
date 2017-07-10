@@ -24,12 +24,11 @@
 
 ## Geting Started
 - ### Install with Yarn
-	
-	
-	npm install yarn --save-dev	
+	```
+    npm install yarn --save-dev	
 	yarn install --dev
+    ```
 - ### Run with webpack
-
-
+    ```
 	webpack
-
+    ```
