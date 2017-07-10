@@ -12,24 +12,10 @@ const
     Module = require("./mod/module"),
     Resolve = require("./mod/resolve"),
     Plugin = require("./mod/plugin"),
+    Config = require("./mod/config"),
     Path = require("path"),
     ExtractTextPlugin = require("extract-text-webpack-plugin"),
-    basic = {
-        cur: Path.resolve(__dirname),
-        root: Path.resolve(Path.join(__dirname, "../tffview")),
-        src: "src",
-        dest: "dest",
-        views: "views",
-        env: "dev",
-        assets: "assets",
-        cdn: "//cdn.tff.com/",
-        entryPrefix: "index",
-        entryExt: "js",
-        entryGlob: "**",
-        htmlExt: "blade.php",
-        jsExt: "js",
-        cssExt: "css"
-    },
+    basic = Config.basic,
     entry = Entry({
         basic: basic
     });
@@ -46,7 +32,6 @@ module.exports = Merge({
         entry: entry
     })
 }, {
-    profile: true,
     resolve: Resolve({
         basic: basic,
         entry: entry
@@ -58,5 +43,7 @@ module.exports = Merge({
     plugins: Plugin({
         basic: basic,
         entry: entry
-    })
+    }),
+    profile: true,
+    // watch: true
 });

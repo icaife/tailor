@@ -81,6 +81,8 @@ HtmlWebpackPluginReplace.prototype.replace = function(compilation, htmlPluginDat
 
     callback(null, htmlPluginData);
 };　
+
+//TODO
 function addJs(js) {
     let items = [];
 
