@@ -9,18 +9,18 @@
 ## Instructions
 - Based on webpack@3.0
 - TODO List
-	- [x]multiple pages supported
-	- [x]less to css
-	- [x]js uglify
-	- [x]css sprite
-	- [ ]mock
-	- [ ]livereload
-	- [ ]sourcemap
-	- [ ]env diff:DEV QA PROD
-	- [ ]htmlhint、eslint
-	- [ ]git precommit hook
-	- [ ]es6 supported
-	- [ ]vue spported
+	- [x] multiple pages supported
+	- [x] less to css
+	- [x] js uglify
+	- [x] css sprite
+	- [ ] mock
+	- [ ] livereload
+	- [ ] sourcemap
+	- [ ] env diff:DEV QA PROD
+	- [ ] htmlhint、eslint
+	- [ ] git precommit hook
+	- [ ] es6 supported
+	- [ ] vue spported
 
 ## Geting Started
 - ### Install with Yarn
