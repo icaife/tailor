@@ -8,10 +8,28 @@
 
 ## Instructions
 - Based on webpack@3.0
-- Check list
-	- multiple pages supported
-	- less to css
-	- js uglify
-	- css sprite
-	- TODO:mock、livereload、sourcemap、env diff(dev|qa、prod)、*hint
+- TODO List
+	- [x]multiple pages supported
+	- [x]less to css
+	- [x]js uglify
+	- [x]css sprite
+	- [ ]mock
+	- [ ]livereload
+	- [ ]sourcemap
+	- [ ]env diff:DEV QA PROD
+	- [ ]htmlhint、eslint
+	- [ ]git precommit hook
+	- [ ]es6 supported
+	- [ ]vue spported
+
+## Geting Started
+- ### Install with Yarn
+	
+	
+	npm install yarn --save-dev	
+	yarn install --dev
+- ### Run with webpack
+
+
+	webpack
 
