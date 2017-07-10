@@ -45,5 +45,5 @@ module.exports = Merge({
         entry: entry
     }),
     profile: true,
-    // watch: true
+    watch: true
 });

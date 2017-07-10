@@ -16,7 +16,8 @@ const
     UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
     ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
     ExtractTextPlugin = require("extract-text-webpack-plugin"),
-    StyleExtHtmlWebpackPlugin = require("style-ext-html-webpack-plugin");
+    StyleExtHtmlWebpackPlugin = require("style-ext-html-webpack-plugin"),
+    CopyWebpackPlugin = require("copy-webpack-plugin");
 
 /**
  * html webpack replace plugin
@@ -143,7 +144,15 @@ module.exports = (config) => {
         new ManifestPlugin({
             fileName: `${basic.assets}/manifest.json`,
             publicPath: `${basic.cdn}`
-        }), /*new StyleExtHtmlWebpackPlugin()*/ );
+        }), /*new StyleExtHtmlWebpackPlugin()*/
+        new CopyWebpackPlugin([{
+            context: Path.join(basic.root, basic.src),
+            from: {
+                glob: "**/*.{blade.php,html}",
+                dot: true
+            },
+            to: Path.join(basic.root, basic.dest, basic.views)
+        }]));
 
     //todo: ProvidePlugin
 

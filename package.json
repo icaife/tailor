@@ -21,6 +21,7 @@
     "art-template-loader": "^1.4.3",
     "autoprefixer": "^7.1.1",
     "clean-webpack-plugin": "^0.1.16",
+    "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.4",
     "cssnano": "^3.10.0",
     "extend": "^3.0.1",
