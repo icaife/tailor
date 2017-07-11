@@ -42,10 +42,12 @@
     "style-loader": "^0.18.2",
     "url-loader": "^0.5.9",
     "webpack": "^3.1.0",
+    "webpack-dev-server": "^2.5.1",
     "webpack-manifest-plugin": "^1.1.0",
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
-    "pngquant-bin": "^3.1.1"
+    "pngquant-bin": "^3.1.1",
+    "wepack": "^0.0.1"
   }
 }

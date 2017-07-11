@@ -39,7 +39,7 @@ var HtmlWebpackPluginReplace = function(options) {
 HtmlWebpackPluginReplace.prototype.apply = function(compiler) {
     let that = this,
         opts = that.options,
-        config = options.config;
+        config = opts.config;
 
     compiler.plugin("compilation", function(compilation) {
         compilation.plugin("html-webpack-plugin-before-html-processing", (htmlPluginData, callback) => {
@@ -53,10 +53,10 @@ HtmlWebpackPluginReplace.prototype.apply = function(compiler) {
 
             if (issuer) {
                 let code = module.issuer._source._value,
-                    modName = issuer.context.replace(Path.join(config.basic.root, config.basic.src), "");
-                console.log(modName);
-                module.issuer._source._value = code.replace(/(require\.ensure\([\s\S]+,[\s\S]+)\)/img, `$1,${modName}/_async`);
+                    modName = issuer.context.replace(Path.join(config.basic.root, config.basic.src), "").replace(/[\\\/]/g, "/");
 
+                // module.issuer._source._value = code.replace(/(require\.ensure\([\s\S]+,[\s\S]+)\)/img, `$1,"${modName}/_parts")`);
+                // console.log(module.issuer._source._value);
             }
         });
         callback();
@@ -140,7 +140,11 @@ module.exports = (config) => {
             filename: `${basic.assets}/[name].[contenthash:6].css`,
             allChunks: true
         }),
-        new UglifyJsPlugin(),
+        new UglifyJsPlugin({
+            // mangle : false,
+            // debug: true,
+            // drop_console: true
+        }),
         new ModuleConcatenationPlugin(),
         new HtmlWebpackPluginReplace({ //add js and css to file end
             replace: (html, obj) => {

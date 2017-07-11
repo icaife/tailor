@@ -16,11 +16,12 @@ module.exports = (config) => {
 			},
 			modules: [Path.resolve(basic.src), "node_modules"],
 			extensions: [".js", ".json", ".less", ".css", ".art", ".html", ".blade.php"],
-			cacheWithContext: true,
+			// cacheWithContext: false,
 		},
 		resolveLoader: {
 			modules: [Path.resolve(basic.cur, "node_modules"), "node_modules"],
-			extensions: [".js", ".json", ".less", ".css", ".art", ".html", ".blade.php"]
+			extensions: [".js", ".json", ".less", ".css", ".art", ".html", ".blade.php"],
+			// cacheWithContext: false,
 		}
 	};
 };
