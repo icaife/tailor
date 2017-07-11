@@ -19,6 +19,11 @@ const
     entry = Entry({
         basic: basic
     });
+/**
+ * @description webpack.config.js
+ * @type {Object}
+ * @author Leon.Cai
+ */
 
 module.exports = Merge({
     context: Path.join(basic.root, basic.src),
@@ -44,6 +49,16 @@ module.exports = Merge({
         basic: basic,
         entry: entry
     }),
+    devServer: {
+        contentBase: Path.join(basic.root, basic.dest, basic.assets),
+        compress: true,
+        port: 8888,
+        hot: true,
+        // lazy: true,
+        // filename:"",
+        watchContentBase: true,
+        inline: true
+    },
     profile: true,
     watch: true
 });
