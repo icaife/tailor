@@ -30,5 +30,5 @@ module.exports = (config) => {
 		entry[mod] = `./${dir}`;
 	});
 
-	return entry;
+	return Object.assign(entry, {});
 }

@@ -130,7 +130,7 @@ let
     }],
     imageRule = config => [{
         test: {
-            test: /\.(png|jpe?g|gif|svg)/i,
+            test: /\.(png|jpe?g|gif|svg|eof|woff|eot|ttf)$/i,
             // not: [/\w+-sprite/]
         },
         use: [{

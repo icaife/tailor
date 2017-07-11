@@ -54,6 +54,7 @@ module.exports = Merge({
         compress: true,
         port: 8888,
         hot: true,
+        disableHostCheck: true,
         // lazy: true,
         // filename:"",
         watchContentBase: true,

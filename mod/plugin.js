@@ -17,11 +17,12 @@ const
     ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
     ExtractTextPlugin = require("extract-text-webpack-plugin"),
     StyleExtHtmlWebpackPlugin = require("style-ext-html-webpack-plugin"),
+    CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin,
     CopyWebpackPlugin = require("copy-webpack-plugin");
 
 /**
  * html webpack replace plugin
- * @param {Object} options  
+ * @param {Object} options
  */
 var HtmlWebpackPluginReplace = function(options) {
     this.options = Object.assign({
@@ -134,11 +135,30 @@ module.exports = (config) => {
     plugin.push(
         new CleanWebpackPlguin([basic.dest], { //clean dirs
             root: basic.root,
-            verbose: true
+            verbose: !true
+        }),
+        /**
+         * @see https://doc.webpack-china.org/guides/author-libraries/#-library
+         * @see https://github.com/webpack/webpack/tree/master/examples/multiple-commons-chunks
+         * @see https://github.com/boijs/boi-kernel/blob/ed1c95266cd17853c0e7b02678800000a7cdb052/lib/config/generateConfig/_entry.js
+         */
+        new CommonsChunkPlugin({
+            names: [...Object.keys(entry)],
+            // name: "vendor",
+            // chunks: [...Object.keys(entry)],
+            // chunks: [],
+            minChunks: 3,
+            // minChunks: module => {
+            //     let context = module.context;
+
+            //     return /[\\\/]common[\\\/]/.test(context);
+            // },
+            // children: true,
+            filename: `${basic.assets}/[name].common.[chunkhash:6].js`,
         }),
         new ExtractTextPlugin({ //extract css
             filename: `${basic.assets}/[name].[contenthash:6].css`,
-            allChunks: true
+            allChunks: !true
         }),
         new UglifyJsPlugin({
             // mangle : false,
@@ -167,6 +187,13 @@ module.exports = (config) => {
             to: Path.join(basic.root, basic.dest, basic.views)
         }]));
 
-    //todo: ProvidePlugin
+    //todo:
+    //  ProvidePlugin
+    //  DefinePlugin
+    //  EnvironmentPlugin process.env
+    //  stats-webpack-plugin
+    //  AggressiveMergingPlugin
+    //  MinChunkSizePlugin
+    //  LimitChunkCountPlugin
     return plugin;
 }

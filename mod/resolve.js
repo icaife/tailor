@@ -11,8 +11,11 @@ module.exports = (config) => {
 
 	return {
 		resolve: {
-			alias: {
-				"@": Path.resolve(basic.src)
+			alias: { //TODO
+				"@": Path.resolve(basic.root, basic.src),
+				"lib": "@/common/lib",
+				"jquery": "lib/jquery/jquery-3.2.1.js",
+				"vue": "lib/vue/vue-2.3.3.js",
 			},
 			modules: [Path.resolve(basic.src), "node_modules"],
 			extensions: [".js", ".json", ".less", ".css", ".art", ".html", ".blade.php"],
