@@ -58,7 +58,14 @@ module.exports = Merge({
         // lazy: true,
         // filename:"",
         watchContentBase: true,
-        inline: true
+        inline: true,
+        // colors: true,
+        // proxy: {
+        //     "/": {
+        //         target: "http://www.baidu.com",
+        //         secure: true
+        //     }
+        // }
     },
     profile: true,
     watch: true

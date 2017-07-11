@@ -161,7 +161,8 @@ let
                     }, {
                         removeEmptyAttrs: false
                     }]
-                }
+                },
+                limit: 10 * 1024
             }
         }]
     }],
