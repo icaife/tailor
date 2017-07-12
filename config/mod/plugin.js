@@ -115,14 +115,15 @@ function addCss(css) {
 
 module.exports = (config) => {
     let plugin = [],
-        entry = config.entry || {},
+        entry = config.entry,
         basic = config.basic,
-        htmlExt = config.htmlExt;
+        htmlConfig = basic.html,
+        htmlExt = htmlConfig.ext;
 
     Object.keys(entry).forEach((page) => {
         let item = entry[page],
             obj = Path.parse(page),
-            fileName = `${page}.${basic.htmlExt}`,
+            fileName = `${page}.${htmlExt[1]}`,
             opts = {
                 filename: `${basic.views}/${fileName}`,
                 template: `${fileName}`,

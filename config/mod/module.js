@@ -3,6 +3,7 @@
  * @author Leon.Cai
  */
 "use strict";
+
 const
     Path = require("path"),
     ExtractTextPlugin = require("extract-text-webpack-plugin"),

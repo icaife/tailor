@@ -13,9 +13,10 @@ module.exports = (config) => {
 		plugins = [],
 		basic = config.basic,
 		cwd = Path.join(basic.root, basic.src),
-		glob = basic.entryGlob,
-		prefix = basic.entryPrefix,
-		ext = basic.entryExt,
+		entryConfig = basic.entry,
+		glob = entryConfig.glob,
+		prefix = entryConfig.prefix,
+		ext = entryConfig.ext,
 		options = {
 			cwd: cwd,
 			sync: true

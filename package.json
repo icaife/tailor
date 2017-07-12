@@ -4,6 +4,7 @@
   "description": "tailor for toursforfun frontend",
   "main": "webpack",
   "scripts": {
+    "dev": "dev",
     "test": "test",
     "start": "webpack"
   },
@@ -24,7 +25,6 @@
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.4",
     "cssnano": "^3.10.0",
-    "extend": "^3.0.1",
     "extract-text-webpack-plugin": "^2.1.2",
     "glob": "^7.1.2",
     "html-webpack-plugin": "^2.29.0",
