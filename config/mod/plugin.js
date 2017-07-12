@@ -10,7 +10,7 @@ const
     Path = require("path"),
     HtmlWebpackPlugin = require("html-webpack-plugin"),
     StringReplaceWebpackPlugin = require("string-replace-webpack-plugin"),
-    HtmlWebpackReplaceurlPlugin = require("html-webpack-replaceurl-plugin"),
+    HtmlWebpackReplaceUrlPlugin = require("html-webpack-replaceurl-plugin"),
     CleanWebpackPlguin = require("clean-webpack-plugin"),
     ManifestPlugin = require("webpack-manifest-plugin"),
     UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
@@ -161,10 +161,16 @@ module.exports = (config) => {
             filename: `${basic.assets}/[name].[contenthash:6].css`,
             allChunks: !true
         }),
+        /**
+         * @see  https://github.com/mishoo/UglifyJS2
+         */
         new UglifyJsPlugin({
-            // mangle : false,
-            // debug: true,
-            // drop_console: true
+            drop_debugger: true,
+            dead_code: true,
+            join_vars: true,
+            reduce_vars: true,
+            drop_console: true,
+            comments: /[^\s\S]/g
         }),
         new ModuleConcatenationPlugin(),
         new HtmlWebpackPluginReplace({ //add js and css to file end

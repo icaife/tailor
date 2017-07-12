@@ -88,11 +88,11 @@ let
         use: [{
             loader: "html-loader",
             options: {
-                // interpolate: true,
+                interpolate: true,
                 // config: {
-                //     ignoreCustomFragments: [/\{\{.*?}}/],
-                //     attrs: ["img:src", "img:data-src", "link:href"]
-                // }
+                ignoreCustomFragments: [/\{\{.*?}}/],
+                attrs: ["img:src", "img:data-src", "img:data-original", "link:href", "script:src"]
+                    // }
             }
         }]
     }, {
@@ -103,7 +103,7 @@ let
         }]
     }],
     styleRule = config => [{
-        test: /\.(css|less)$/ || new RegExp(`.(${config.basic.css.ext.join("|")})$`.replace(/\./g, "\\."), "i") /*|| /\.(css|less)$/*/ ,
+        test: /*/\.(css|less)$/ ||*/ new RegExp(`.(${config.basic.css.ext.join("|")})$`.replace(/\./g, "\\."), "i") /*|| /\.(css|less)$/*/ ,
         use: ExtractTextPlugin.extract({
             fallback: "style-loader",
             use: [{
@@ -170,6 +170,7 @@ let
 
 module.exports = (config) => {
     return {
-        rules: [...htmlRule(config), ...styleRule(config), ...imageRule(config)]
+        rules: [...htmlRule(config), ...styleRule(config), ...imageRule(config)],
+        noParse: [/vendor/]
     }
 }
