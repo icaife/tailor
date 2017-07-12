@@ -27,6 +27,7 @@
     "cssnano": "^3.10.0",
     "extract-text-webpack-plugin": "^2.1.2",
     "glob": "^7.1.2",
+    "html-loader": "^0.4.5",
     "html-webpack-plugin": "^2.29.0",
     "html-webpack-replaceurl-plugin": "^1.0.0",
     "image-webpack-loader": "^3.3.1",

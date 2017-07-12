@@ -5,8 +5,8 @@
 const
 	Path = require("path"),
 	proj = "tffview",
-	cur = Path.resolve(__dirname, `../../${proj}`),
-	root = Path.resolve(cur);
+	cur = Path.resolve(__dirname, `../`),
+	root = Path.resolve(cur, `../${proj}`);
 
 module.exports = {
 	cur: cur,
@@ -15,7 +15,7 @@ module.exports = {
 	dest: "dest",
 	views: "views",
 	assets: "assets",
-	cdn: "//cdn.tff.com",
+	cdn: "//cdn.tff.com/",
 	entry: {
 		prefix: "index",
 		glob: "**",

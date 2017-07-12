@@ -84,7 +84,7 @@ let
         }
     }),
     htmlRule = config => [{
-        test: /\.(html|\.blade.php)$/,
+        test: new RegExp(`.(${config.basic.html.ext.join("|")})$`.replace(/\./g, "\\."), "i") /*|| /\.(html|\.blade.php)$/*/ ,
         use: [{
             loader: "html-loader",
             options: {
@@ -103,7 +103,7 @@ let
         }]
     }],
     styleRule = config => [{
-        test: /\.(css|less)$/,
+        test: /\.(css|less)$/ || new RegExp(`.(${config.basic.css.ext.join("|")})$`.replace(/\./g, "\\."), "i") /*|| /\.(css|less)$/*/ ,
         use: ExtractTextPlugin.extract({
             fallback: "style-loader",
             use: [{
@@ -131,7 +131,7 @@ let
     }],
     imageRule = config => [{
         test: {
-            test: /\.(png|jpe?g|gif|svg|eof|woff|eot|ttf)$/i,
+            test: new RegExp(`.(${config.basic.img.ext.join("|")})$`.replace(/\./g, "\\."), "i") /*|| /\.(png|jpe?g|gif|svg|eof|woff|eot|ttf)$/i*/ ,
             // not: [/\w+-sprite/]
         },
         use: [{
@@ -164,15 +164,6 @@ let
                     }]
                 },
                 limit: 10 * 1024
-            }
-        }]
-    }],
-    otherRule = config => [{ //TODO
-        test: /eof|woff|eot/ig,
-        use: [{
-            loader: "file-loader",
-            options: {
-                name: `${config.basic.assets}/[path][name].[hash:6].[ext]`,
             }
         }]
     }];
