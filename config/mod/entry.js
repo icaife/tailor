@@ -28,7 +28,7 @@ module.exports = (config) => {
 		let name = dir.replace(/\.[^.]+$/ig, ""),
 			mod = Path.join(name.replace(/[\/\\]+[^\/\\]+$/, ""), prefix).replace(/\\/g, "/");
 
-		entry[mod] = `./${dir}`;
+		entry[mod] = [`./${dir}`];
 	});
 
 	return Object.assign(entry, {});
