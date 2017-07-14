@@ -18,7 +18,7 @@ module.exports = (config) => {
 			"jquery": "vendor/jquery/jquery-3.2.1.js",
 			"vue": "vendor/vue/vue-2.3.3.js",
 		},
-		modules: [Path.resolve(basic.src), "node_modules"],
+		modules: [Path.resolve(basic.cur, "./node_modules"), /*Path.resolve(basic.src),*/ "./node_modules"],
 		extensions: [".js", ".json", ".less", ".css", ".art", ".html", ".blade.php"],
 		// cacheWithContext: false,
 	};

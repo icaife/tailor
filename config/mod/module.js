@@ -104,7 +104,27 @@ let
     }],
     styleRule = config => [{
         test: /*/\.(css|less)$/ ||*/ new RegExp(`.(${config.basic.css.ext.join("|")})$`.replace(/\./g, "\\."), "i") /*|| /\.(css|less)$/*/ ,
-        use: ExtractTextPlugin.extract({
+        use: ["style-loader", {
+            loader: "css-loader",
+            options: {
+                importLoaders: 1
+            }
+        }, {
+            loader: "postcss-loader",
+            options: {
+                plugins: [
+                    AutoPrefixer({
+                        browsers: ["Chrome >= 35", "FireFox >= 40", "ie > 8", "Android >= 4", "Safari >= 5.1", "iOS >= 7"],
+                        remove: true
+                    }),
+                    CssNano({}),
+                    PostCssSprites(spritesConfig(config)),
+                ]
+            }
+        }, {
+            loader: "less-loader",
+            options: {}
+        }] || ExtractTextPlugin.extract({
             fallback: "style-loader",
             use: [{
                 loader: "css-loader",

@@ -15,7 +15,7 @@ module.exports = {
 	dest: "dest",
 	views: "views",
 	assets: "assets",
-	cdn: "//cdn.tff.com/",
+	cdn: "//cdn.tff.com:8080/",
 	entry: {
 		prefix: "index",
 		glob: "**",

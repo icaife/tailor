@@ -4,18 +4,18 @@
  */
 
 module.exports = {
-	domain: "localhost",
+	host: "localhost",
 	port: 8080,
 	devServer: {
-		// noInfo: true,
-		// quiet: true,
+		noInfo: true,
+		quiet: true,
 		clientLogLevel: 'info',
 		disableHostCheck: true,
 		// 不启用压缩
 		compress: true,
 		// enable hmr
 		hot: true,
-		// hotOnly: true,
+		hotOnly: true,
 		// no lazy mode
 		lazy: false,
 		watchOptions: {

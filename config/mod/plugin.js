@@ -18,7 +18,6 @@ const
     ExtractTextPlugin = require("extract-text-webpack-plugin"),
     StyleExtHtmlWebpackPlugin = require("style-ext-html-webpack-plugin"),
     CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin,
-    // BrowserSyncPlugin = require("browser-sync-webpack-plugin"),
     CopyWebpackPlugin = require("copy-webpack-plugin");
 
 /**
@@ -163,12 +162,9 @@ module.exports = (config) => {
     });
 
     plugin.push(
-        // new BrowserSyncPlugin({
-        //     host: "localhost",
-        //     port: 8080,
-        //     proxy: "http://duang.tff.com/"
-        // }),
-        // new Webpack.HotModuleReplacementPlugin(),
+        new Webpack.optimize.OccurrenceOrderPlugin(),
+        new Webpack.HotModuleReplacementPlugin(),
+        new Webpack.NoEmitOnErrorsPlugin(),
         new CleanWebpackPlguin([basic.dest], { //clean dirs
             root: basic.root,
             verbose: !true
@@ -192,10 +188,10 @@ module.exports = (config) => {
             // children: true,
             filename: `${basic.assets}/[name].common.js`,
         }),
-        new ExtractTextPlugin({ //extract css
-            filename: `${basic.assets}/[name].css`,
-            allChunks: !true
-        }),
+        // new ExtractTextPlugin({ //extract css
+        //     filename: `${basic.assets}/[name].css`,
+        //     allChunks: !true
+        // }),
         /**
          * @see  https://github.com/mishoo/UglifyJS2
          */

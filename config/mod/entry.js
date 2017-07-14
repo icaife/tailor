@@ -28,7 +28,7 @@ module.exports = (config) => {
 		let name = dir.replace(/\.[^.]+$/ig, ""),
 			mod = Path.join(name.replace(/[\/\\]+[^\/\\]+$/, ""), prefix).replace(/\\/g, "/");
 
-		entry[mod] = [`./${dir}`];
+		entry[mod] = [`./${dir}`, "webpack-hot-middleware/client?reload=true&path=http://localhost:8080/__webpack_hmr"];
 	});
 
 	return Object.assign(entry, {});
