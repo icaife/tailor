@@ -15,17 +15,23 @@ module.exports = {
 	dest: "dest",
 	views: "views",
 	assets: "assets",
-	cdn: "//cdn.tff.com:8080/",
+	cdn: "//cdn.tff.com/",
 	entry: {
 		prefix: "index",
 		glob: "**",
 		ext: "js"
 	},
+	output: {
+		useHash: true,
+	},
 	html: {
 		ext: ["html", "blade.php"]
 	},
 	js: {
-		ext: ["js"]
+		ext: ["js"],
+		attrs: {
+			defer: true
+		}
 	},
 	css: {
 		ext: ["css", "less"]
