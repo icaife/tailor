@@ -9,6 +9,7 @@ const
 	root = Path.resolve(cur, `../${proj}`);
 
 module.exports = {
+	// env: env,
 	cur: cur,
 	root: root,
 	src: "src",
@@ -23,6 +24,7 @@ module.exports = {
 	},
 	output: {
 		useHash: true,
+		hashLen: 6
 	},
 	html: {
 		ext: ["html", "blade.php"]

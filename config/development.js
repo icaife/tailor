@@ -5,6 +5,10 @@
 
 
 module.exports = {
-    basic: {},
-    server: {}
+	basic: {
+		output: {
+			useHash: false
+		}
+	},
+	server: {}
 };

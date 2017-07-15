@@ -84,7 +84,7 @@ let
         }
     }),
     htmlRule = config => [{
-        test: new RegExp(`.(${config.basic.html.ext.join("|")})$`.replace(/\./g, "\\."), "i") /*|| /\.(html|\.blade.php)$/*/ ,
+        test: new RegExp(`.(${config.basic.html.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
         use: [{
             loader: "html-loader",
             options: {
@@ -103,7 +103,7 @@ let
         }]
     }],
     styleRule = config => [{
-        test: /*/\.(css|less)$/ ||*/ new RegExp(`.(${config.basic.css.ext.join("|")})$`.replace(/\./g, "\\."), "i") /*|| /\.(css|less)$/*/ ,
+        test: new RegExp(`.(${config.basic.css.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
         use: ["style-loader", {
             loader: "css-loader",
             options: {
@@ -149,44 +149,49 @@ let
             }]
         })
     }],
-    imageRule = config => [{
-        test: {
-            test: new RegExp(`.(${config.basic.img.ext.join("|")})$`.replace(/\./g, "\\."), "i") /*|| /\.(png|jpe?g|gif|svg|eof|woff|eot|ttf)$/i*/ ,
-            // not: [/\w+-sprite/]
-        },
-        use: [{
-            loader: "file-loader", //url-loader
-            options: {
-                name: `${config.basic.assets}/[path][name].[hash:6].[ext]`,
-                // limit: 1024 * 10
-            }
-        }, {
-            loader: "image-webpack-loader",
-            options: {
-                mozjpeg: { //jpeg
-                    quality: 80
-                },
-                bypassOnDebug: true,
-                progressive: true,
-                optipng: { //png
-                    optimizationLevel: 3
-                },
-                pngquant: { //png
-                    quality: "75-90",
-                    speed: 4,
-                    verbose: true
-                },
-                svgo: { //svg
-                    plugins: [{
-                        removeViewBox: false
-                    }, {
-                        removeEmptyAttrs: false
-                    }]
-                },
-                limit: 10 * 1024
-            }
-        }]
-    }];
+    imageRule = config => {
+        let basic = config.basic,
+            outputConfig = basic.output,
+            name = `${config.basic.assets}/[path][name]` + (outputConfig.useHash ? `.[${outputConfig.hashLen}]` : "") + `.[ext]`;
+
+        return [{
+            test: {
+                test: new RegExp(`.(${config.basic.img.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
+            },
+            use: [{
+                loader: "file-loader", //url-loader
+                options: {
+                    name: `${name}`,
+                    // limit: 1024 * 10
+                }
+            }, {
+                loader: "image-webpack-loader",
+                options: {
+                    mozjpeg: { //jpeg
+                        quality: 80
+                    },
+                    bypassOnDebug: true,
+                    progressive: true,
+                    optipng: { //png
+                        optimizationLevel: 3
+                    },
+                    pngquant: { //png
+                        quality: "75-90",
+                        speed: 4,
+                        verbose: true
+                    },
+                    svgo: { //svg
+                        plugins: [{
+                            removeViewBox: false
+                        }, {
+                            removeEmptyAttrs: false
+                        }]
+                    },
+                    limit: 10 * 1024
+                }
+            }]
+        }];
+    };
 
 module.exports = (config) => {
     return {

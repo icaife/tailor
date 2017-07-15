@@ -5,8 +5,10 @@
 
 
 module.exports = {
-    basic: {
-        cdn: "//cdn.tff.bz/"
-    },
-    server: {}
+	basic: {
+		output: {
+			useHash: false
+		}
+	},
+	server: {}
 };

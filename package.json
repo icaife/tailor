@@ -4,10 +4,10 @@
     "description": "tailor for toursforfun frontend",
     "main": "webpack",
     "scripts": {
-        "dev": "dev-server --env dev",
-        "qa": "webpack --env qa",
-        "prod": "webpack --env prod",
-        "deploy": "todo deploy"
+        "dev": "cross-env NODE_ENV=development webpack",
+        "test": "cross-env NODE_ENV=test webpack",
+        "prod": "cross-env NODE_ENV=production webpack",
+        "deploy": ""
     },
     "repository": "https://github.com/icaife/tailor/",
     "keywords": [
