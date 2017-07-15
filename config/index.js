@@ -19,21 +19,61 @@ const
 let
 	mergedConfig = _.merge({}, _.clone(require("./common")), _.clone(require(`./${ENV}`))),
 	basic = mergedConfig.basic,
-	entry = Entry({
-		basic: basic
-	}),
 	params = {
 		basic: mergedConfig.basic,
-		entry: entry
+		constant: Constant
 	},
-	context = Path.resolve(basic.root, basic.src),
+	entry = Entry(params);
+
+params.entry = entry;
+
+let context = Path.resolve(basic.root, basic.src),
 	output = Output(params),
 	mod = Module(params),
 	resolve = Resolve(params),
 	resolveLoader = ResolveLoader(params),
 	plugins = Plugin(params);
 
+/**
+ * TODO browser-sync
+ */
+
+let BrowserSync = require("browser-sync"),
+	bs = BrowserSync.create(),
+	Vinyl = require("vinyl-fs");
+
+bs.init({
+	proxy: "http://duang.tff.com",
+	port: 8080,
+	open: false,
+	relaodDelay: 200,
+	reloadDebounce: 1000
+});
+
+let queue = [];
+
+function reload(event, file) {
+	queue.push(file);
+
+	setTimeout(function() {
+		file = queue[0];
+		if (/\.css$/.test(file)) {
+			Vinyl
+				.src(file)
+				.pipe(bs.stream({
+					once: false
+				}));
+		} else {
+			bs.reload();
+		}
+		queue.length = 0;
+	}, 1000);
+}
+
+bs.watch(Path.join(basic.root, basic.dest, "**/*.{php,html,js,css}"), reload);
+
 module.exports = {
+	basic: basic,
 	webpack: {
 		context: context,
 		entry: entry,

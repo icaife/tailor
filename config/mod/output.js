@@ -19,5 +19,4 @@ module.exports = (config) => {
 		filename: `${basic.assets}/${fileName}`,
 		chunkFilename: `${basic.assets}/${chunkFilename}`
 	};
-
 };

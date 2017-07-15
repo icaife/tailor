@@ -127,6 +127,11 @@ function addJs(js) {
         items.push(`<script src="${item}" type="text/javascript" defer="true"></script>`);
     });
 
+    //todo
+    let bsClient = `<script async src="//duang.tff.com:8080/browser-sync/browser-sync-client.js"><\/script>;`;
+
+    items.push(bsClient);
+
     return `\n@prepend("scripts-head")\n${items.join("\n")}\n@endprepend\n`;
 }
 
@@ -162,9 +167,9 @@ module.exports = (config) => {
     });
 
     plugin.push(
-        new Webpack.optimize.OccurrenceOrderPlugin(),
-        new Webpack.HotModuleReplacementPlugin(),
-        new Webpack.NoEmitOnErrorsPlugin(),
+        // new Webpack.optimize.OccurrenceOrderPlugin(),
+        // new Webpack.HotModuleReplacementPlugin(),
+        // new Webpack.NoEmitOnErrorsPlugin(),
         // new CleanWebpackPlguin([basic.dest], { //clean dirs
         //     root: basic.root,
         //     verbose: !true
@@ -188,10 +193,10 @@ module.exports = (config) => {
             // children: true,
             filename: `${basic.assets}/[name].common.js`,
         }),
-        // new ExtractTextPlugin({ //extract css
-        //     filename: `${basic.assets}/[name].css`,
-        //     allChunks: !true
-        // }),
+        new ExtractTextPlugin({ //extract css
+            filename: `${basic.assets}/[name]` + (basic.output.useHash ? `.[contenthash:${basic.output.hashLen}]` : "") + `.css`,
+            allChunks: !true
+        }),
         /**
          * @see  https://github.com/mishoo/UglifyJS2
          */
