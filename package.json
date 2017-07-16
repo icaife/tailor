@@ -4,7 +4,7 @@
     "description": "tailor for toursforfun frontend",
     "main": "webpack",
     "scripts": {
-        "dev": "cross-env NODE_ENV=development webpack",
+        "dev": "cross-env NODE_ENV=development webpack node ./server/server.js",
         "test": "cross-env NODE_ENV=test webpack",
         "prod": "cross-env NODE_ENV=production webpack",
         "deploy": ""
@@ -56,6 +56,7 @@
     },
     "dependencies": {
         "pngquant-bin": "^3.1.1",
+        "semver": "^5.3.0",
         "wepack": "^0.0.1"
     }
 }
