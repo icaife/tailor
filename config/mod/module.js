@@ -85,22 +85,37 @@ let
     }),
     htmlRule = config => [{
         test: new RegExp(`.(${config.basic.html.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
-        use: [{
-            loader: "html-loader",
-            options: {
-                interpolate: true,
-                // config: {
-                ignoreCustomFragments: [/\{\{.*?}}/],
-                attrs: ["img:src", "img:data-src", "img:data-original", "link:href", "script:src"]
-                    // }
+        use: [
+            /*{
+                        loader: "html-loader",
+                        options: {
+                            // interpolate: true,
+                            // ignoreCustomFragments: [/\{\{.*?}}/],
+                            // attrs: ["img:src", "img:data-src", "img:data-original", "link:href", "script:src"]
+                        }
+                    }, */
+            {
+                loader: "art-template-loader",
+                options: {
+                    //handle art-template and php template conflicts
+                    rules: [{
+                            test: /(@{{([@#]?)[ \t]*(\/?)([\w\W]*?)[ \t]*}})|({{$[ \t]*(\/?)([\w\W]*?)[ \t]*}})/, //vue or other javascript template
+                            use: function(match, raw, close, code) {
+                                return {
+                                    code: `"${match.toString()}"`,
+                                    output: "raw"
+                                };
+                            }
+                        },
+                        require("art-template/lib/compile/adapter/rule.art"),
+                        require("art-template/lib/compile/adapter/rule.native")
+                    ],
+                    extname: "." + config.basic.html.ext[0],
+                    htmlResourceRoot: Path.join(config.basic.root, config.basic.src),
+                    root: Path.join(config.basic.root, config.basic.src)
+                }
             }
-        }]
-    }, {
-        test: /\.art$/,
-        use: [{
-            loader: "art-template-loader",
-            options: {}
-        }]
+        ]
     }],
     styleRule = config => [{
         test: new RegExp(`.(${config.basic.css.ext.join("|")})$`.replace(/\./g, "\\."), "i"),

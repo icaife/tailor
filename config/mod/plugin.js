@@ -156,11 +156,11 @@ module.exports = (config) => {
     Object.keys(entry).forEach((page) => {
         let item = entry[page],
             obj = Path.parse(page),
-            fileName = `${page}.${htmlExt[1]}`, //TODO
+            fileName = `${page}`, //TODO
             opts = {
-                filename: `${basic.views}/${fileName}`,
-                template: `${fileName}`,
-                inject: false
+                filename: `${basic.views}/${fileName}.${basic.output.html.ext}`,
+                template: `${fileName}.${basic.html.ext[0]}`,
+                inject: !false
             };
 
         plugin.push(new HtmlWebpackPlugin(opts));
@@ -209,26 +209,26 @@ module.exports = (config) => {
             comments: /[^\s\S]/g
         }),
         new ModuleConcatenationPlugin(),
-        new HtmlWebpackPluginReplace({ //add js and css to file end
-            replace: (html, obj) => {
-                //todo
-                html = html.replace(/$/, addCss(obj.css) + addJs(obj.js));
-                return html;
-            },
-            config: config
-        }),
+        // new HtmlWebpackPluginReplace({ //add js and css to file end
+        //     replace: (html, obj) => {
+        //         //todo
+        //         html = html.replace(/$/, addCss(obj.css) + addJs(obj.js));
+        //         return html;
+        //     },
+        //     config: config
+        // }),
         new ManifestPlugin({
             fileName: `${basic.assets}/manifest.json`,
             publicPath: `${basic.cdn}`
         }), /*new StyleExtHtmlWebpackPlugin()*/
-        new CopyWebpackPlugin([{
-            context: Path.join(basic.root, basic.src),
-            from: {
-                glob: "**/*.{blade.php,html}",
-                dot: true
-            },
-            to: Path.join(basic.root, basic.dest, basic.views)
-        }]),
+        // new CopyWebpackPlugin([{
+        //     context: Path.join(basic.root, basic.src),
+        //     from: {
+        //         glob: "**/*.{blade.php,html}",
+        //         dot: true
+        //     },
+        //     to: Path.join(basic.root, basic.dest, basic.views)
+        // }]),
         new Webpack.ProvidePlugin({
             "$": "jquery",
             "jQuery": "jquery",

@@ -11,8 +11,8 @@ const
 module.exports = {
     // env: env,
     cur: cur,
-    domain: "http://duang.tff.com",
     root: root,
+    domain: "http://duang.tff.com",
     src: "src",
     dest: "dest",
     views: "views",
@@ -25,10 +25,13 @@ module.exports = {
     },
     output: {
         useHash: true,
-        hashLen: 6
+        hashLen: 6,
+        html: {
+            ext: "blade.php"
+        }
     },
     html: {
-        ext: ["html", "blade.php"]
+        ext: ["html"]
     },
     js: {
         ext: ["js"],
