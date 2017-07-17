@@ -8,15 +8,7 @@ const
 	Constant = require("../constant"),
 	bs = BrowserSync.create(),
 	basic = Constant.basic,
-	server =  Constant.server;
-
-bs.init({
-	proxy: basic.domain,
-	port: server.port,
-	open: false,
-	relaodDelay: 200,
-	reloadDebounce: 1000
-});
+	server = Constant.server;
 
 let queue = [];
 
@@ -25,6 +17,7 @@ function reload(event, file) {
 
 	setTimeout(function() {
 		file = queue[0];
+
 		if (/\.css$/.test(file)) {
 			Vinyl
 				.src(file)
@@ -39,10 +32,22 @@ function reload(event, file) {
 }
 
 module.exports = {
-	run : function(){
-		bs.watch(Path.join(basic.root, basic.dest, "**/*.{php,html,js,css}"), reload);
+	run: function(callback) {
+		return new Promise((resolve, reject) => {
+			bs.init({
+				proxy: basic.domain,
+				port: server.port,
+				open: false,
+				relaodDelay: 200,
+				reloadDebounce: 1000
+			}, function(e) {
+				resolve(e);
+				// bs.watch(Path.join(basic.root, basic.dest, "**/*.{php,html,js,css}"), reload);
+			});
+		});
 	}
 };
+
 // const
 // 	Webpack = require("webpack"),
 // 	WebpackDevServer = require("webpack-dev-server"),

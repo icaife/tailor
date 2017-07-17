@@ -15,7 +15,7 @@
 "use strict";
 
 const
-    Webpack = require("webpack"),
-    Config = require("./config");
+	Webpack = require("webpack"),
+	Config = require("./config");
 
 module.exports = Config.webpack;

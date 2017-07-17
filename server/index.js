@@ -3,4 +3,9 @@
  * @author Leon.Cai
  */
 
-module.exports = {};
+const
+	Server = require("./server");
+
+Server.run();
+
+module.exports = Server;
