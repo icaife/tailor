@@ -99,8 +99,27 @@ let
                 options: {
                     //handle art-template and php template conflicts
                     rules: [{
-                            test: /(@{{([@#]?)[ \t]*(\/?)([\w\W]*?)[ \t]*}})|({{$[ \t]*(\/?)([\w\W]*?)[ \t]*}})/, //vue or other javascript template
+                            test: /@{{([@#]?)[ \t]*([\w\W]*?)[ \t]*}}/, //vue or other javascript,php blade template
                             use: function(match, raw, close, code) {
+
+                                return {
+                                    code: `"${match.toString()}"`,
+                                    output: "raw"
+                                };
+                            }
+                        }, {
+                            test: /{{[ \t]*\$([\w\W]*?)[ \t]*}}/, //php blade template
+                            use: function(match, raw, close, code) {
+
+                                return {
+                                    code: `"${match.toString()}"`,
+                                    output: "raw"
+                                };
+                            }
+                        }, {
+                            test: /{{[ \t]*\w+\([ \t]*\$([\w\W]*?)?\)[ \t]*}}/, //php blade template with function
+                            use: function(match, raw, close, code) {
+                                console.log(match.toString(), raw, close, code);
                                 return {
                                     code: `"${match.toString()}"`,
                                     output: "raw"
