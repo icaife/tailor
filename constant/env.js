@@ -4,7 +4,7 @@
  */
 
 module.exports = {
-	dev: "dev",
-	qa: "qa",
-	prod: "prod"
+    test: "test",
+    production: "production",
+    development: "development"
 };

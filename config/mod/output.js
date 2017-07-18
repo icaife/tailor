@@ -7,14 +7,16 @@ const
 	Path = require("path");
 
 module.exports = (config) => {
-	let basic = config.basic;
+	let basic = config.basic,
+		outputConfig = basic.output,
+		fileName = outputConfig.useHash ? `[name].[chunkhash:${outputConfig.hashLen}].js` : '[name].js',
+		chunkFilename = outputConfig.useHash ? `[name].[chunkhash:${outputConfig.hashLen}].js` : "[name].js";
 
 	return {
 		path: Path.join(basic.root, basic.dest),
 		// pathinfo: true,
 		publicPath: basic.cdn,
-		filename: `${basic.assets}/[name].[chunkhash:6].js`,
-		chunkFilename: `${basic.assets}/[name].[chunkhash:6].js`
+		filename: `${basic.assets}/${fileName}`,
+		chunkFilename: `${basic.assets}/${chunkFilename}`
 	};
-
 };

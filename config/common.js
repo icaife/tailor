@@ -4,8 +4,10 @@
  */
 "use strict";
 const
-	constant = require("../constant");
+    constant = require("../constant");
 
 module.exports = {
-	basic: constant.basic
+    basic: constant.basic,
+    server: constant.server,
+    env: constant.env
 };

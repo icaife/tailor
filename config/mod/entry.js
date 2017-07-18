@@ -12,6 +12,7 @@ module.exports = (config) => {
 	let entry = {},
 		plugins = [],
 		basic = config.basic,
+		envs = config.constant.env,
 		cwd = Path.join(basic.root, basic.src),
 		entryConfig = basic.entry,
 		glob = entryConfig.glob,
@@ -28,7 +29,10 @@ module.exports = (config) => {
 		let name = dir.replace(/\.[^.]+$/ig, ""),
 			mod = Path.join(name.replace(/[\/\\]+[^\/\\]+$/, ""), prefix).replace(/\\/g, "/");
 
-		entry[mod] = `./${dir}`;
+		entry[mod] = [`./${dir}`];
+		if (basic.env === envs.development) {
+			// entry[mod].push("browser-sync");
+		}
 	});
 
 	return Object.assign(entry, {});

@@ -84,26 +84,60 @@ let
         }
     }),
     htmlRule = config => [{
-        test: new RegExp(`.(${config.basic.html.ext.join("|")})$`.replace(/\./g, "\\."), "i") /*|| /\.(html|\.blade.php)$/*/ ,
-        use: [{
-            loader: "html-loader",
-            options: {
-                interpolate: true,
-                // config: {
-                ignoreCustomFragments: [/\{\{.*?}}/],
-                attrs: ["img:src", "img:data-src", "img:data-original", "link:href", "script:src"]
-                    // }
+        test: new RegExp(`.(${config.basic.html.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
+        use: [
+            /*{
+                        loader: "html-loader",
+                        options: {
+                            // interpolate: true,
+                            // ignoreCustomFragments: [/\{\{.*?}}/],
+                            // attrs: ["img:src", "img:data-src", "img:data-original", "link:href", "script:src"]
+                        }
+                    }, */
+            {
+                loader: "art-template-loader",
+                options: {
+                    //handle art-template and php template conflicts
+                    rules: [{
+                            test: /@{{([@#]?)[ \t]*([\w\W]*?)[ \t]*}}/, //vue or other javascript,php blade template
+                            use: function(match, raw, close, code) {
+
+                                return {
+                                    code: `"${match.toString()}"`,
+                                    output: "raw"
+                                };
+                            }
+                        }, {
+                            test: /{{[ \t]*\$([\w\W]*?)[ \t]*}}/, //php blade template
+                            use: function(match, raw, close, code) {
+
+                                return {
+                                    code: `"${match.toString()}"`,
+                                    output: "raw"
+                                };
+                            }
+                        }, {
+                            test: /{{[ \t]*\w+\([ \t]*\$([\w\W]*?)?\)[ \t]*}}/, //php blade template with function
+                            use: function(match, raw, close, code) {
+                                console.log(match.toString(), raw, close, code);
+                                return {
+                                    code: `"${match.toString()}"`,
+                                    output: "raw"
+                                };
+                            }
+                        },
+                        require("art-template/lib/compile/adapter/rule.art"),
+                        require("art-template/lib/compile/adapter/rule.native")
+                    ],
+                    extname: "." + config.basic.html.ext[0],
+                    htmlResourceRoot: Path.join(config.basic.root, config.basic.src),
+                    root: Path.join(config.basic.root, config.basic.src)
+                }
             }
-        }]
-    }, {
-        test: /\.art$/,
-        use: [{
-            loader: "art-template-loader",
-            options: {}
-        }]
+        ]
     }],
     styleRule = config => [{
-        test: /*/\.(css|less)$/ ||*/ new RegExp(`.(${config.basic.css.ext.join("|")})$`.replace(/\./g, "\\."), "i") /*|| /\.(css|less)$/*/ ,
+        test: new RegExp(`.(${config.basic.css.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
         use: ExtractTextPlugin.extract({
             fallback: "style-loader",
             use: [{
@@ -129,44 +163,49 @@ let
             }]
         })
     }],
-    imageRule = config => [{
-        test: {
-            test: new RegExp(`.(${config.basic.img.ext.join("|")})$`.replace(/\./g, "\\."), "i") /*|| /\.(png|jpe?g|gif|svg|eof|woff|eot|ttf)$/i*/ ,
-            // not: [/\w+-sprite/]
-        },
-        use: [{
-            loader: "file-loader", //url-loader
-            options: {
-                name: `${config.basic.assets}/[path][name].[hash:6].[ext]`,
-                // limit: 1024 * 10
-            }
-        }, {
-            loader: "image-webpack-loader",
-            options: {
-                mozjpeg: { //jpeg
-                    quality: 80
-                },
-                bypassOnDebug: true,
-                progressive: true,
-                optipng: { //png
-                    optimizationLevel: 3
-                },
-                pngquant: { //png
-                    quality: "75-90",
-                    speed: 4,
-                    verbose: true
-                },
-                svgo: { //svg
-                    plugins: [{
-                        removeViewBox: false
-                    }, {
-                        removeEmptyAttrs: false
-                    }]
-                },
-                limit: 10 * 1024
-            }
-        }]
-    }];
+    imageRule = config => {
+        let basic = config.basic,
+            outputConfig = basic.output,
+            name = `${config.basic.assets}/[path][name]` + (outputConfig.useHash ? `.[${outputConfig.hashLen}]` : "") + `.[ext]`;
+
+        return [{
+            test: {
+                test: new RegExp(`.(${config.basic.img.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
+            },
+            use: [{
+                loader: "file-loader", //url-loader
+                options: {
+                    name: `${name}`,
+                    // limit: 1024 * 10
+                }
+            }, {
+                loader: "image-webpack-loader",
+                options: {
+                    mozjpeg: { //jpeg
+                        quality: 80
+                    },
+                    bypassOnDebug: true,
+                    progressive: true,
+                    optipng: { //png
+                        optimizationLevel: 3
+                    },
+                    pngquant: { //png
+                        quality: "75-90",
+                        speed: 4,
+                        verbose: true
+                    },
+                    svgo: { //svg
+                        plugins: [{
+                            removeViewBox: false
+                        }, {
+                            removeEmptyAttrs: false
+                        }]
+                    },
+                    limit: 10 * 1024
+                }
+            }]
+        }];
+    };
 
 module.exports = (config) => {
     return {
