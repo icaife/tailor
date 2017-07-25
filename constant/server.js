@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 /**
  * @description constant server
  * @author Leon.Cai

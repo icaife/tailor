@@ -30,6 +30,7 @@
         "css-loader": "^0.28.4",
         "cssnano": "^3.10.0",
         "extract-text-webpack-plugin": "^2.1.2",
+        "fs-extra": "^4.0.0",
         "glob": "^7.1.2",
         "html-loader": "^0.4.5",
         "html-webpack-plugin": "^2.29.0",

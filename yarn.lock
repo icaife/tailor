@@ -2253,6 +2253,14 @@ fs-extra@^0.30.0:
     path-is-absolute "^1.0.0"
     rimraf "^2.2.8"
 
+fs-extra@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-4.0.0.tgz#414fb4ca2d2170ba0014159d3a8aec3303418d9e"
+  dependencies:
+    graceful-fs "^4.1.2"
+    jsonfile "^3.0.0"
+    universalify "^0.1.0"
+
 fs-extra@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-1.0.0.tgz#cd3ce5f7e7cb6145883fcae3191e9877f8587950"

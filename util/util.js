@@ -2,6 +2,10 @@
  * util webpack
  */
 
+const
+	FSE = require("fs-extra"),
+	Path = require("path");
+
 const util = {
 	/**
 	 * format input args
@@ -32,7 +36,26 @@ const util = {
 
 		return Object.keys(data).length ? data : {};
 	},
+	/**
+	 * find project root
+	 * @param  {String} base [description]
+	 * @param  {String} flag [description]
+	 * @return {String}      [description]
+	 */
+	findRoot: function(base, flag) {
+		base = base || "../";
 
+		let root = "";
+
+		FSE.readdirSync(base).forEach((path) => {
+			if (FSE.existsSync(Path.join(base, path, flag))) {
+				root = path;
+				return false;
+			}
+		});
+
+		return Path.resolve(base, root);
+	}
 };
 
 module.exports = util;

@@ -14,7 +14,6 @@ module.exports = (config) => {
 
 	let output = {
 		path: Path.join(basic.root, basic.dest),
-		pathinfo: true,
 		publicPath: basic.cdn,
 		filename: `${basic.assets}/${fileName}`,
 		chunkFilename: `${basic.assets}/${chunkFilename}`

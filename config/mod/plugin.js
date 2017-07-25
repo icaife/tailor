@@ -26,7 +26,8 @@ module.exports = (config) => {
         basic = config.basic,
         envs = config.constant.env,
         htmlConfig = basic.html,
-        htmlExt = htmlConfig.ext;
+        htmlExt = htmlConfig.ext,
+        assetsPath = Path.join(basic.root, basic.dest, basic.assets);
 
     plugin.push(
         new ExtractTextPlugin({ //extract css
@@ -65,11 +66,7 @@ module.exports = (config) => {
         //     },
         //     to: Path.join(basic.root, basic.dest, basic.views)
         // }]),
-        new Webpack.ProvidePlugin({ //TODO
-            "$": "jquery",
-            "jQuery": "jquery",
-            "Vue": "vue"
-        }),
+        new Webpack.ProvidePlugin(basic.globalVars),
         // new Webpack.optimize.OccurrenceOrderPlugin(),
         // new Webpack.HotModuleReplacementPlugin(),
         // new Webpack.NoEmitOnErrorsPlugin(),
@@ -113,18 +110,18 @@ module.exports = (config) => {
             filename: `${basic.assets}/[name].common.js`,
         }));
 
-        plugin.push(new Webpack.DllReferencePlugin({
-            manifest: require(Path.join(basic.root, basic.dest, basic.assets, "vue-dll-manifest.json")),
-            context: Path.join(basic.root, basic.dest, basic.assets)
-        }), new Webpack.DllReferencePlugin({
-            manifest: require(Path.join(basic.root, basic.dest, basic.assets, "jquery-dll-manifest.json")),
-            context: Path.join(basic.root, basic.dest, basic.assets)
-        }));
+        // Object.keys(basic.vendor).forEach((item) => {
+        //     plugin.push(new Webpack.DllReferencePlugin({
+        //         manifest: require(Path.join(assetsPath, `dll/${item}-dll-manifest.json`)),
+        //         context: Path.join(assetsPath),
+        //         name: item
+        //     }));
+        // });
     } else { //build dll env
         plugin.push(new Webpack.DllPlugin({
-            context: Path.join(basic.root, basic.dest, basic.assets),
-            path: Path.join(basic.root, basic.dest, basic.assets, "[name]-dll-manifest.json"),
-            name: "[name].[hash:6]",
+            context: Path.join(assetsPath),
+            path: Path.join(assetsPath, "dll/[name]-dll-manifest.json"),
+            name: "[name]" + (basic.output.useHash ? `.[chunkhash:${basic.output.hashLen}]` : "")
         }));
     }
 

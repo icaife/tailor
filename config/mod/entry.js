@@ -5,6 +5,7 @@
 "use strict";
 
 const
+	_ = require("lodash"),
 	Glob = require("glob"),
 	Path = require("path");
 
@@ -34,10 +35,7 @@ module.exports = (config) => {
 			entry[mod] = [`./${dir}`];
 		});
 	} else {
-		//TODO
-		// entry.dll = ["jquery", "vue"];
-		entry.jquery = ["jquery"];
-		entry.vue = ["vue"];
+		_.merge(entry, basic.vendor);
 	}
 
 	return Object.assign({}, entry);
