@@ -4,6 +4,9 @@
  */
 
 module.exports = {
-    basic: {},
-    server: {}
+	basic: {
+		env: "test",
+		useHash: true
+	},
+	server: {}
 };

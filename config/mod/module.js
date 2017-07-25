@@ -119,7 +119,6 @@ let
                         }, {
                             test: /{{[ \t]*\w+\([ \t]*\$([\w\W]*?)?\)[ \t]*}}/, //php blade template with function
                             use: function(match, raw, close, code) {
-                                console.log(match.toString(), raw, close, code);
                                 return {
                                     code: `"${match.toString()}"`,
                                     output: "raw"

@@ -26,7 +26,6 @@ let
 	entry = Entry(params);
 
 params.entry = entry;
-basic.env = ENV;
 
 let context = Path.resolve(basic.root, basic.src),
 	output = Output(params),
@@ -46,6 +45,6 @@ module.exports = {
 		resolveLoader: resolveLoader,
 		plugins: plugins,
 		profile: true,
-		watch: ENV === Constant.env.development,
+		watch: basic.env === Constant.env.development,
 	}
 };

@@ -4,7 +4,8 @@
     "description": "tailor for toursforfun frontend",
     "main": "webpack",
     "scripts": {
-        "dev": "cross-env NODE_ENV=development webpack & node ./server/index.js",
+        "dev": "cross-env NODE_ENV=development webpack",
+        "dll": "cross-env NODE_ENV=dll webpack",
         "test": "cross-env NODE_ENV=test node index.js",
         "prod": "cross-env NODE_ENV=production node index.js",
         "deploy": ""

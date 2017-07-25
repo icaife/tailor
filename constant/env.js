@@ -4,7 +4,8 @@
  */
 
 module.exports = {
-    test: "test",
-    production: "production",
-    development: "development"
+	test: "test",
+	production: "production",
+	development: "development",
+	dll: "dll"
 };
