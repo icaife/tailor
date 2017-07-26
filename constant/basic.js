@@ -43,7 +43,9 @@ const
         },
         alias: {},
         vendor: {},
-        globalVars: {}
+        globalVars: {},
+        modules: [],
+        extensions: []
     };
 
 module.exports = config;

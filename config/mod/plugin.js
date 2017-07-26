@@ -9,8 +9,8 @@ const
     Webpack = require("webpack"),
     Path = require("path"),
     HtmlWebpackPlugin = require("html-webpack-plugin"),
-    StringReplaceWebpackPlugin = require("string-replace-webpack-plugin"),
     HtmlWebpackReplaceUrlPlugin = require("html-webpack-replaceurl-plugin"),
+    StringReplaceWebpackPlugin = require("string-replace-webpack-plugin"),
     // CleanWebpackPlguin = require("clean-webpack-plugin"),
     ManifestPlugin = require("webpack-manifest-plugin"),
     UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
@@ -46,6 +46,7 @@ module.exports = (config) => {
             comments: /[^\s\S]/g
         }),
         new ModuleConcatenationPlugin(),
+        new StringReplaceWebpackPlugin(),
         // new HtmlWebpackPluginReplace({ //add js and css to file end
         //     replace: (html, obj) => {
         //         //todo
@@ -107,7 +108,7 @@ module.exports = (config) => {
             //     return /[\\\/]common[\\\/]/.test(context);
             // },
             // children: true,
-            filename: `${basic.assets}/[name].common.js`,
+            filename: `${basic.assets}/[name].common` + (basic.output.useHash ? `.[chunkhash:${basic.output.hashLen}]` : "") + `.js`,
         }));
 
         // Object.keys(basic.vendor).forEach((item) => {

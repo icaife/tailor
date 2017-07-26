@@ -7,6 +7,7 @@
 const
     Path = require("path"),
     ExtractTextPlugin = require("extract-text-webpack-plugin"),
+    StringReplaceWebpackPlugin = require("string-replace-webpack-plugin"),
     AutoPrefixer = require("autoprefixer"),
     CssNano = require("cssnano"),
     PostCss = require("postcss"),
@@ -94,6 +95,7 @@ let
                             // attrs: ["img:src", "img:data-src", "img:data-original", "link:href", "script:src"]
                         }
                     }, */
+
             {
                 loader: "art-template-loader",
                 options: {
@@ -132,7 +134,16 @@ let
                     htmlResourceRoot: Path.join(config.basic.root, config.basic.src),
                     root: Path.join(config.basic.root, config.basic.src)
                 }
-            }
+            }, {
+                loader: StringReplaceWebpackPlugin.replace({ //TODO replace something
+                    replacements: [{
+                        pattern: /<script[^>]+>[\s\S]*?<\/script>/ig,
+                        replacement: function(match, p1, offset, string) {
+                            return match;
+                        }
+                    }]
+                })
+            },
         ]
     }],
     styleRule = config => [{

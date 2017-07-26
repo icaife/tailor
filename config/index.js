@@ -58,5 +58,8 @@ module.exports = {
 		plugins: plugins,
 		profile: true,
 		watch: basic.env === Constant.env.development,
+		// node: {
+		// 	fs: "empty"
+		// }
 	}
 };
