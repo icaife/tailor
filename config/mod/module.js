@@ -84,6 +84,20 @@ let
             }
         }
     }),
+    jsRule = config => [{
+        test: /\.js/,
+        exclude: /node_modules|vendor/,
+        use: [{
+            loader: "babel-loader",
+            options: {
+                presets: [
+                    Path.join(config.basic.cur, "./node_modules/babel-preset-es2015"),
+                    Path.join(config.basic.cur, "./node_modules/babel-preset-stage-2")
+                ],
+                babelrc: false
+            }
+        }]
+    }],
     htmlRule = config => [{
         test: new RegExp(`.(${config.basic.html.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
         use: [
@@ -219,7 +233,7 @@ let
 
 module.exports = (config) => {
     return {
-        rules: [...htmlRule(config), ...styleRule(config), ...imageRule(config)],
+        rules: [...jsRule(config), ...htmlRule(config), ...styleRule(config), ...imageRule(config)],
         noParse: [/vendor/]
     }
 }

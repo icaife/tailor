@@ -24,6 +24,8 @@ module.exports = (config) => {
 	let entry = config.entry,
 		basic = config.basic;
 
+	console.log(Path.resolve(basic.cur, "./node_modules"));
+
 	return {
 		alias: _.merge({
 			"root": Path.resolve(basic.root),

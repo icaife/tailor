@@ -11,7 +11,7 @@ const
     HtmlWebpackPlugin = require("html-webpack-plugin"),
     HtmlWebpackReplaceUrlPlugin = require("html-webpack-replaceurl-plugin"),
     StringReplaceWebpackPlugin = require("string-replace-webpack-plugin"),
-    // CleanWebpackPlguin = require("clean-webpack-plugin"),
+    CleanWebpackPlguin = require("clean-webpack-plugin"),
     ManifestPlugin = require("webpack-manifest-plugin"),
     UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
     ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
@@ -32,7 +32,7 @@ module.exports = (config) => {
     plugin.push(
         new ExtractTextPlugin({ //extract css
             filename: `${basic.assets}/[name]` + (basic.output.useHash ? `.[contenthash:${basic.output.hashLen}]` : "") + `.css`,
-            allChunks: !true
+            allChunks: true
         }),
         /**
          * @see  https://github.com/mishoo/UglifyJS2
@@ -71,10 +71,10 @@ module.exports = (config) => {
         // new Webpack.optimize.OccurrenceOrderPlugin(),
         // new Webpack.HotModuleReplacementPlugin(),
         // new Webpack.NoEmitOnErrorsPlugin(),
-        // new CleanWebpackPlguin([basic.dest], { //clean dirs
-        //     root: basic.root,
-        //     verbose: !true
-        // }),
+        new CleanWebpackPlguin([basic.dest], { //clean dirs
+            root: basic.root,
+            verbose: !true
+        }),
         /**
          * @see https://doc.webpack-china.org/guides/author-libraries/#-library
          * @see https://github.com/webpack/webpack/tree/master/examples/multiple-commons-chunks
