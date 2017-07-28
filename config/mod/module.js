@@ -177,7 +177,15 @@ let
                             browsers: ["Chrome >= 35", "FireFox >= 40", "ie > 8", "Android >= 4", "Safari >= 5.1", "iOS >= 7"],
                             remove: true
                         }),
-                        CssNano({}),
+                        CssNano({
+                            // safe: true,
+                            // minifyFontValues: {
+                            //     removeQuotes: false
+                            // },
+                            // discardUnused: {
+                            //     fontFace: false
+                            // }
+                        }),
                         PostCssSprites(spritesConfig(config)),
                     ]
                 }
@@ -200,7 +208,7 @@ let
                 loader: "file-loader", //url-loader
                 options: {
                     name: `${name}`,
-                    // limit: 1024 * 10
+                    useRelativePath: true
                 }
             }, {
                 loader: "image-webpack-loader",
@@ -229,11 +237,30 @@ let
                 }
             }]
         }];
+    },
+    fileRule = config => {
+        let basic = config.basic,
+            outputConfig = basic.output,
+            name = `${config.basic.assets}/[path][name]` + (outputConfig.useHash ? `.[${outputConfig.hashLen}]` : "") + `.[ext]`;
+
+        return [{
+            test: {
+                test: new RegExp(`.(${config.basic.file.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
+            },
+            use: [{
+                loader: "file-loader", //url-loader
+                options: {
+                    name: `${name}`,
+                    useRelativePath: true,
+                    // limit: 1024 * 10
+                }
+            }]
+        }];
     };
 
 module.exports = (config) => {
     return {
-        rules: [...jsRule(config), ...htmlRule(config), ...styleRule(config), ...imageRule(config)],
+        rules: [...jsRule(config), ...htmlRule(config), ...styleRule(config), ...imageRule(config), ...fileRule(config)],
         noParse: [/vendor/]
     }
 }
