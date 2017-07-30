@@ -1,6 +1,6 @@
 ```
- ______                    ____           ____        
-/_  __/__  __ _________   / __/__  ____  / __/_ _____ 
+ ______                    ____           ____
+/_  __/__  __ _________   / __/__  ____  / __/_ _____
  / / / _ \/ // / __(_-<  / _// _ \/ __/ / _// // / _ \
 /_/  \___/\___/_/ /___/ /_/  \___/_/   /_/  \___/_//_/
 ```
@@ -14,24 +14,26 @@
 	- [x] less to css
 	- [x] js uglify
 	- [x] css sprite
-	- [ ] mock
-	- [ ] livereload
+	- [ ] livereload, bs or hot middleware
 	- [ ] sourcemap
-	- [ ] env diff:DEV QA PROD
 	- [ ] htmlhint、eslint
 	- [ ] git precommit hook
-	- [ ] es6 supported
-	- [ ] vue spported
+	- [x] env diff:DEV QA PROD
+	- [x] ES6 supported
+	- [x] Vue spported
+	- [ ] Mock
+	- [ ] [Jest](http://facebook.github.io/jest/docs/zh-Hans/getting-started.html)
+	- [ ] more...
 
 ## Geting Started
 - ### Install with Yarn
-	
+
     ```
-    npm install yarn --save-dev	
+    npm install yarn --save-dev
 	yarn install --dev
     ```
-- ### Run with webpack
-    
+- ### Run scripts
+
     ```
-	webpack
+	npm run dev
     ```
