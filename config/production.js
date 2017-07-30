@@ -6,6 +6,7 @@
 
 module.exports = {
 	basic: {
+		env: "production",
 		output: {
 			useHash: false
 		}

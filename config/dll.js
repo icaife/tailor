@@ -5,7 +5,7 @@
 
 module.exports = {
 	basic: {
-		env: "development",
+		env: "dll",
 		output: {
 			useHash: false
 		}

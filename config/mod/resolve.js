@@ -3,23 +3,36 @@
  * @author Leon.Cai
  */
 "use strict";
-const Path = require("path");
+const
+	_ = require("lodash"),
+	Path = require("path");
+
+/**
+ *
+ *
+ *
+ *
+ * externals
+ * 		script.src -> global var-> externals
+ * output
+ * 		libraryTarget: umd cmd
+ * 		library require name
+ *
+ */
 
 module.exports = (config) => {
 	let entry = config.entry,
 		basic = config.basic;
 
+	console.log(Path.resolve(basic.cur, "./node_modules"));
+
 	return {
-		alias: { //TODO
-			"@": Path.resolve(basic.root, basic.src),
-			"common": "@/common",
-			"lib": "common/lib",
-			"vendor": "common/vendor",
-			"jquery": "vendor/jquery-3.2.1.js",
-			"vue": "vendor/vue-2.3.3.js",
-		},
-		modules: [Path.resolve(basic.cur, "./node_modules"), /*Path.resolve(basic.src),*/ "./node_modules"],
-		extensions: [".js", ".json", ".less", ".css", ".art", ".html", ".blade.php"],
+		alias: _.merge({
+			"root": Path.resolve(basic.root),
+			"@": `root/${basic.src}`,
+		}, basic.alias),
+		modules: [Path.resolve(basic.cur, "./node_modules"), "./node_modules"].concat(basic.modules),
+		extensions: [".js", ".less", ".css", ".html"].concat(basic.extensions),
 		// cacheWithContext: false,
 	};
 };
