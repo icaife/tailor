@@ -14,14 +14,16 @@
 	- [x] less to css
 	- [x] js uglify
 	- [x] css sprite
-	- [ ] mock
-	- [ ] livereload
+	- [ ] livereload, bs or hot middleware
 	- [ ] sourcemap
-	- [ ] env diff:DEV QA PROD
 	- [ ] htmlhint、eslint
 	- [ ] git precommit hook
-	- [ ] es6 supported
-	- [ ] vue spported
+	- [x] env diff:DEV QA PROD
+	- [x] ES6 supported
+	- [x] Vue spported
+	- [ ] Mock
+	- [ ] [Jest](http://facebook.github.io/jest/docs/zh-Hans/getting-started.html)
+	- [ ] more...
 
 ## Geting Started
 - ### Install with Yarn
@@ -30,8 +32,8 @@
     npm install yarn --save-dev
 	yarn install --dev
     ```
-- ### Run with webpack
+- ### Run scripts
 
     ```
-	webpack
+	npm run dev
     ```

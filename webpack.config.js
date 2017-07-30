@@ -11,6 +11,7 @@
  * @see  https://github.com/gwuhaolin/blog/issues/2
  * @see  http://www.jianshu.com/p/1a452981f510
  * @see  http://acgtofe.com/posts/2016/02/full-live-reload-for-express-with-webpack
+ * @see  http://www.cnblogs.com/douglasvegas/p/6830847.html
  */
 "use strict";
 

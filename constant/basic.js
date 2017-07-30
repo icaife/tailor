@@ -39,11 +39,16 @@ const
             ext: ["css", "less"]
         },
         img: {
-            ext: ["jpg", "jpeg", "png", "gif", "svg", "eof", "woff", "woff2", "eot", "ttf"]
+            ext: ["jpg", "jpeg", "png", "gif", ]
+        },
+        file: {
+            ext: ["svg", "eof", "woff", "woff2", "eot", "ttf"]
         },
         alias: {},
         vendor: {},
-        globalVars: {}
+        globalVars: {},
+        modules: [],
+        extensions: []
     };
 
 module.exports = config;

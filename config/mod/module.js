@@ -7,6 +7,7 @@
 const
     Path = require("path"),
     ExtractTextPlugin = require("extract-text-webpack-plugin"),
+    StringReplaceWebpackPlugin = require("string-replace-webpack-plugin"),
     AutoPrefixer = require("autoprefixer"),
     CssNano = require("cssnano"),
     PostCss = require("postcss"),
@@ -83,6 +84,20 @@ let
             }
         }
     }),
+    jsRule = config => [{
+        test: /\.js/,
+        exclude: /node_modules|vendor/,
+        use: [{
+            loader: "babel-loader",
+            options: {
+                presets: [
+                    Path.join(config.basic.cur, "./node_modules/babel-preset-es2015"),
+                    Path.join(config.basic.cur, "./node_modules/babel-preset-stage-2")
+                ],
+                babelrc: false
+            }
+        }]
+    }],
     htmlRule = config => [{
         test: new RegExp(`.(${config.basic.html.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
         use: [
@@ -94,6 +109,7 @@ let
                             // attrs: ["img:src", "img:data-src", "img:data-original", "link:href", "script:src"]
                         }
                     }, */
+
             {
                 loader: "art-template-loader",
                 options: {
@@ -132,7 +148,16 @@ let
                     htmlResourceRoot: Path.join(config.basic.root, config.basic.src),
                     root: Path.join(config.basic.root, config.basic.src)
                 }
-            }
+            }, {
+                loader: StringReplaceWebpackPlugin.replace({ //TODO replace something
+                    replacements: [{
+                        pattern: /<script[^>]+>[\s\S]*?<\/script>/ig,
+                        replacement: function(match, p1, offset, string) {
+                            return match;
+                        }
+                    }]
+                })
+            },
         ]
     }],
     styleRule = config => [{
@@ -152,7 +177,15 @@ let
                             browsers: ["Chrome >= 35", "FireFox >= 40", "ie > 8", "Android >= 4", "Safari >= 5.1", "iOS >= 7"],
                             remove: true
                         }),
-                        CssNano({}),
+                        CssNano({
+                            // safe: true,
+                            // minifyFontValues: {
+                            //     removeQuotes: false
+                            // },
+                            // discardUnused: {
+                            //     fontFace: false
+                            // }
+                        }),
                         PostCssSprites(spritesConfig(config)),
                     ]
                 }
@@ -175,7 +208,7 @@ let
                 loader: "file-loader", //url-loader
                 options: {
                     name: `${name}`,
-                    // limit: 1024 * 10
+                    useRelativePath: true
                 }
             }, {
                 loader: "image-webpack-loader",
@@ -204,11 +237,30 @@ let
                 }
             }]
         }];
+    },
+    fileRule = config => {
+        let basic = config.basic,
+            outputConfig = basic.output,
+            name = `${config.basic.assets}/[path][name]` + (outputConfig.useHash ? `.[${outputConfig.hashLen}]` : "") + `.[ext]`;
+
+        return [{
+            test: {
+                test: new RegExp(`.(${config.basic.file.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
+            },
+            use: [{
+                loader: "file-loader", //url-loader
+                options: {
+                    name: `${name}`,
+                    useRelativePath: true,
+                    // limit: 1024 * 10
+                }
+            }]
+        }];
     };
 
 module.exports = (config) => {
     return {
-        rules: [...htmlRule(config), ...styleRule(config), ...imageRule(config)],
+        rules: [...jsRule(config), ...htmlRule(config), ...styleRule(config), ...imageRule(config), ...fileRule(config)],
         noParse: [/vendor/]
     }
 }
