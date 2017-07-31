@@ -7,9 +7,9 @@ const
 	Webpack = require("webpack"),
 	Constant = require("./constant"),
 	Config = require("./config"),
-	Server = require("./server");
+	Serve = require("./server");
 
-Shell.exec("webpack --colors --config webpack.config.js");
+// Shell.exec("webpack --colors --config webpack.config.js");
 
 if (Config.basic.env === Constant.env.development) {
 	Serve.run();

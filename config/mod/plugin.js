@@ -13,12 +13,13 @@ const
     StringReplaceWebpackPlugin = require("string-replace-webpack-plugin"),
     CleanWebpackPlguin = require("clean-webpack-plugin"),
     ManifestPlugin = require("webpack-manifest-plugin"),
-    UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
-    ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
     ExtractTextPlugin = require("extract-text-webpack-plugin"),
     StyleExtHtmlWebpackPlugin = require("style-ext-html-webpack-plugin"),
-    CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin,
-    CopyWebpackPlugin = require("copy-webpack-plugin");
+    CopyWebpackPlugin = require("copy-webpack-plugin"),
+    HtmlWebpackHarddiskPlugin = require("html-webpack-harddisk-plugin"),
+    UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
+    ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
+    CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin;
 
 module.exports = (config) => {
     let plugin = [],
@@ -30,21 +31,6 @@ module.exports = (config) => {
         assetsPath = Path.join(basic.root, basic.dest, basic.assets);
 
     plugin.push(
-        new ExtractTextPlugin({ //extract css
-            filename: `${basic.assets}/[name]` + (basic.output.useHash ? `.[contenthash:${basic.output.hashLen}]` : "") + `.css`,
-            allChunks: true
-        }),
-        /**
-         * @see  https://github.com/mishoo/UglifyJS2
-         */
-        new UglifyJsPlugin({
-            drop_debugger: true,
-            dead_code: true,
-            join_vars: true,
-            reduce_vars: true,
-            drop_console: true,
-            comments: /[^\s\S]/g
-        }),
         new ModuleConcatenationPlugin(),
         new StringReplaceWebpackPlugin(),
         // new HtmlWebpackPluginReplace({ //add js and css to file end
@@ -68,9 +54,6 @@ module.exports = (config) => {
         //     to: Path.join(basic.root, basic.dest, basic.views)
         // }]),
         new Webpack.ProvidePlugin(basic.globalVars),
-        // new Webpack.optimize.OccurrenceOrderPlugin(),
-        // new Webpack.HotModuleReplacementPlugin(),
-        // new Webpack.NoEmitOnErrorsPlugin(),
         new CleanWebpackPlguin([basic.dest], { //clean dirs
             root: basic.root,
             verbose: !true
@@ -82,6 +65,41 @@ module.exports = (config) => {
          */
     );
 
+    if (basic.env === envs.development) {
+        plugin.push( //for webpack hot middleware
+            new Webpack.optimize.OccurrenceOrderPlugin(),
+            new Webpack.HotModuleReplacementPlugin(),
+            new Webpack.NoEmitOnErrorsPlugin()
+        );
+    }
+
+    if (basic.env === envs.test) {
+
+    }
+
+    if (basic.env == envs.production || basic.env === envs.test) {
+        plugin.push(
+            new ExtractTextPlugin({ //extract css
+                filename: `${basic.assets}/[name]` + (basic.output.useHash ? `.[contenthash:${basic.output.hashLen}]` : "") + `.css`,
+                allChunks: true
+            }),
+            /**
+             * @see  https://github.com/mishoo/UglifyJS2
+             */
+            new UglifyJsPlugin({
+                drop_debugger: true,
+                dead_code: true,
+                join_vars: true,
+                reduce_vars: true,
+                drop_console: true,
+                comments: /[^\s\S]/g
+            }));
+    }
+
+    if (basic.env === envs.dll) {
+
+    }
+
     if (basic.env !== envs.dll) { //not dll env
         Object.keys(entry).forEach((page) => {
             let item = entry[page],
@@ -90,11 +108,16 @@ module.exports = (config) => {
                 opts = {
                     filename: `${basic.views}/${fileName}.${basic.output.html.ext}`,
                     template: `${fileName}.${basic.html.ext[0]}`,
-                    inject: !false
+                    inject: !false,
+                    alwaysWriteToDisk: true
                 };
 
             plugin.push(new HtmlWebpackPlugin(opts));
         });
+
+        plugin.push(new HtmlWebpackHarddiskPlugin({
+            alwaysWriteToDisk: true
+        }));
 
         plugin.push(new CommonsChunkPlugin({
             names: [...Object.keys(entry)],

@@ -4,8 +4,8 @@
  */
 
 module.exports = {
-    host: "localhost",
-    port: 8080,
+    domain: "localhost",
+    port: 8888,
     devServer: {
         noInfo: true,
         quiet: true,
