@@ -83,7 +83,8 @@ let
                 return destPath;
             }
         }
-    }),
+    });
+let
     jsRule = config => [{
         test: /\.js/,
         exclude: /node_modules|vendor/,
@@ -97,7 +98,8 @@ let
                 babelrc: false
             }
         }]
-    }],
+    }];
+let
     htmlRule = config => [{
         test: new RegExp(`.(${config.basic.html.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
         use: [
@@ -159,42 +161,58 @@ let
                 })
             },
         ]
-    }],
-    styleRule = config => [{
-        test: new RegExp(`.(${config.basic.css.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
-        use: ExtractTextPlugin.extract({
-            fallback: "style-loader",
-            use: [{
-                loader: "css-loader",
-                options: {
-                    importLoaders: 1
-                }
-            }, {
-                loader: "postcss-loader",
-                options: {
-                    plugins: [
-                        AutoPrefixer({
-                            browsers: ["Chrome >= 35", "FireFox >= 40", "ie > 8", "Android >= 4", "Safari >= 5.1", "iOS >= 7"],
-                            remove: true
-                        }),
-                        CssNano({
-                            // safe: true,
-                            // minifyFontValues: {
-                            //     removeQuotes: false
-                            // },
-                            // discardUnused: {
-                            //     fontFace: false
-                            // }
-                        }),
-                        PostCssSprites(spritesConfig(config)),
-                    ]
-                }
-            }, {
-                loader: "less-loader",
-                options: {}
-            }]
-        })
-    }],
+    }];
+
+let
+    styleRule = config => {
+        let
+            isDev = config.basic.env === config.constant.env.development,
+            postcssPlugins = [AutoPrefixer({
+                    browsers: ["Chrome >= 35", "FireFox >= 40", "ie > 8", "Android >= 4", "Safari >= 5.1", "iOS >= 7"],
+                    remove: true
+                }),
+                CssNano({
+                    // safe: true,
+                    // minifyFontValues: {
+                    //     removeQuotes: false
+                    // },
+                    // discardUnused: {
+                    //     fontFace: false
+                    // }
+                }),
+            ];
+
+        if (!isDev) {
+            postcssPlugins.push(PostCssSprites(spritesConfig(config)));
+        }
+
+        let styleLoaders = [{
+            loader: "style-loader",
+            options: {}
+        }, {
+            loader: "css-loader",
+            options: {
+                importLoaders: 1
+            }
+        }, {
+            loader: "postcss-loader",
+            options: {
+                plugins: postcssPlugins
+            }
+        }, {
+            loader: "less-loader",
+            options: {}
+        }];
+
+        return [{
+            test: new RegExp(`.(${config.basic.css.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
+            use: isDev ? styleLoaders : ExtractTextPlugin.extract({
+                fallback: "style-loader",
+                use: styleLoaders
+            })
+        }]
+    };
+let
     imageRule = config => {
         let basic = config.basic,
             outputConfig = basic.output,
@@ -237,7 +255,8 @@ let
                 }
             }]
         }];
-    },
+    };
+let
     fileRule = config => {
         let basic = config.basic,
             outputConfig = basic.output,
