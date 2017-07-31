@@ -194,8 +194,7 @@ let
         }, {
             loader: "css-loader",
             options: {
-                importLoaders: 1,
-                sourceMap: true
+                importLoaders: 1
             }
         }, {
             loader: "postcss-loader",
@@ -214,7 +213,7 @@ let
             test: new RegExp(`.(${config.basic.css.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
             use: isDev ? styleLoaders : ExtractTextPlugin.extract({
                 fallback: "style-loader",
-                use: styleLoaders
+                use: styleLoaders.slice(1)
             })
         }]
     };
