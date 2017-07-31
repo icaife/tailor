@@ -5,9 +5,9 @@
     "main": "webpack",
     "scripts": {
         "dev": "cross-env NODE_ENV=development node ./index.js",
-        "dll": "cross-env NODE_ENV=dll webpack",
-        "test": "cross-env NODE_ENV=test node index.js",
+        "test": "cross-env NODE_ENV=test node ./index.js",
         "prod": "cross-env NODE_ENV=production node index.js",
+        "dll": "cross-env NODE_ENV=dll webpack",
         "deploy": ""
     },
     "repository": "https://github.com/icaife/tailor/",

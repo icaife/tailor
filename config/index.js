@@ -60,8 +60,9 @@ module.exports = {
 		plugins: plugins,
 		profile: true,
 		watch: basic.env === Constant.env.development,
-		// node: {
-		// 	fs: "empty"
-		// }
+		devtool: ({
+			"development": "eval-source-map",
+			"production": "source-map"
+		})[basic.env === Constant.env.development ? "development" : "production"]
 	}
 };

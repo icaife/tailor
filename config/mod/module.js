@@ -188,20 +188,26 @@ let
 
         let styleLoaders = [{
             loader: "style-loader",
-            options: {}
+            options: {
+                sourceMap: true
+            }
         }, {
             loader: "css-loader",
             options: {
-                importLoaders: 1
+                importLoaders: 1,
+                sourceMap: true
             }
         }, {
             loader: "postcss-loader",
             options: {
-                plugins: postcssPlugins
+                plugins: postcssPlugins,
+                sourceMap: true
             }
         }, {
             loader: "less-loader",
-            options: {}
+            options: {
+                sourceMap: true
+            }
         }];
 
         return [{

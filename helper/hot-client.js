@@ -14,6 +14,6 @@ hotClient.subscribe(event => {
 		clearTimeout(timmer);
 		timmer = setTimeout(function() {
 			window.location.reload();
-		}, 500);
+		}, 1000);
 	}
 });

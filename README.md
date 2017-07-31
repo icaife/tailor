@@ -14,8 +14,8 @@
 	- [x] less to css
 	- [x] js uglify
 	- [x] css sprite
-	- [ ] livereload, bs or hot middleware
-	- [ ] sourcemap
+	- [x] livereload, bs or hot middleware
+	- [x] sourcemap
 	- [ ] htmlhint、eslint
 	- [ ] git precommit hook
 	- [x] env diff:DEV QA PROD
