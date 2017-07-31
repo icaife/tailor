@@ -30,7 +30,8 @@ let
 	mergedConfig = _.merge({
 		constant: Constant
 	}, commonConfig, envConfig, projConfig),
-	basic = mergedConfig.basic;
+	basic = mergedConfig.basic,
+	server = mergedConfig.server;
 
 let
 	entry = Entry(mergedConfig),
@@ -48,6 +49,7 @@ let
 
 module.exports = {
 	basic: basic,
+	server: server,
 	webpack: {
 		context: context,
 		entry: entry,

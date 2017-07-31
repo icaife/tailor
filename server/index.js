@@ -1,11 +1,12 @@
+"use strict";
 /**
  * @description server index
  * @author Leon.Cai
  */
-
 const
-	Server = require("./server");
+	Serve = require("./server");
 
-Server.run();
+// Serve.run();
 
-module.exports = Server;
+
+module.exports = Serve;

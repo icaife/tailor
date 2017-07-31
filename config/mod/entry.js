@@ -14,7 +14,10 @@ module.exports = (config) => {
 		plugins = [],
 		basic = config.basic,
 		envs = config.constant.env,
-		cwd = Path.join(basic.root, basic.src);
+		server = config.server,
+		cwd = Path.join(basic.root, basic.src),
+		hotClient = Path.resolve(__dirname, `../../helper/hot-client`),
+		hotClientQuery = `?path=${basic.cdn}__webpack_hmr&reload=false`;
 
 	if (basic.env !== envs.dll) {
 		let entryConfig = basic.entry,
@@ -33,6 +36,9 @@ module.exports = (config) => {
 				mod = Path.join(name.replace(/[\/\\]+[^\/\\]+$/, ""), prefix).replace(/\\/g, "/");
 
 			entry[mod] = [`./${dir}`];
+			if (basic.env === envs.development) {
+				entry[mod].push(hotClient + hotClientQuery);
+			}
 		});
 	} else {
 		_.merge(entry, basic.vendor);
