@@ -110,7 +110,7 @@ module.exports = (config) => {
                     filename: `${basic.views}/${fileName}.${basic.output.html.ext}`,
                     template: `${fileName}.${basic.html.ext[0]}`,
                     inject: !false,
-                    alwaysWriteToDisk: true
+                    alwaysWriteToDisk: true,
                 };
 
             plugin.push(new HtmlWebpackPlugin(opts));

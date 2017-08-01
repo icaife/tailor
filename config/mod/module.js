@@ -115,11 +115,11 @@ let
             {
                 loader: "art-template-loader",
                 options: {
+                    // htmlResourceRules:false
                     //handle art-template and php template conflicts
                     rules: [{
-                            test: /@{{([@#]?)[ \t]*([\w\W]*?)[ \t]*}}/, //vue or other javascript,php blade template
+                            test: /@{{([@#]?)[ \t]*([\w\W]*?)[ \t]*}}/, //TODO:vue or other javascript,php blade template
                             use: function(match, raw, close, code) {
-
                                 return {
                                     code: `"${match.toString()}"`,
                                     output: "raw"
@@ -146,7 +146,7 @@ let
                         require("art-template/lib/compile/adapter/rule.art"),
                         require("art-template/lib/compile/adapter/rule.native")
                     ],
-                    extname: "." + config.basic.html.ext[0],
+                    extname: "." + config.basic.html.ext[0], //TODO
                     htmlResourceRoot: Path.join(config.basic.root, config.basic.src),
                     root: Path.join(config.basic.root, config.basic.src)
                 }
