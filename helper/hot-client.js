@@ -12,6 +12,7 @@ let hotClient = require(`webpack-hot-middleware/client${__resourceQuery}`),
 hotClient.subscribe(event => {
 	if (event.action = "reload") {
 		clearTimeout(timmer);
+		console.log("[HMR] " + event.src);
 		timmer = setTimeout(function() {
 			window.location.reload();
 		}, 1000);

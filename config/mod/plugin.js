@@ -17,6 +17,7 @@ const
     StyleExtHtmlWebpackPlugin = require("style-ext-html-webpack-plugin"),
     CopyWebpackPlugin = require("copy-webpack-plugin"),
     HtmlWebpackHarddiskPlugin = require("html-webpack-harddisk-plugin"),
+    WriteFileWebpackPlugin = require("write-file-webpack-plugin"),
     UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
     ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
     CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin;
@@ -115,8 +116,11 @@ module.exports = (config) => {
             plugin.push(new HtmlWebpackPlugin(opts));
         });
 
-        plugin.push(new HtmlWebpackHarddiskPlugin({
-            alwaysWriteToDisk: true
+        // plugin.push(new HtmlWebpackHarddiskPlugin({
+        //     alwaysWriteToDisk: true
+        // }));
+        plugin.push(new WriteFileWebpackPlugin({
+            test: /(assets|views)/
         }));
 
         plugin.push(new CommonsChunkPlugin({

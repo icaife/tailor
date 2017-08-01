@@ -28,7 +28,10 @@ module.exports = {
             error: true
         },
         headers: {
-            "Access-Control-Allow-Origin": "*"
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Methods": "*",
+            "Accept": "*/*"
         },
         // options for formating the statistics
         stats: {

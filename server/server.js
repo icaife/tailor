@@ -86,12 +86,23 @@ function run() {
 		app = new Express();
 
 	compiler.plugin("compilation", function(compilation) {
-		compilation.plugin("html-webpack-plugin-after-emit", function(data, cb) {
-			console.log("[HMR] html changed,reload page..");
-			hotMiddleware.publish({
-				action: "reload"
-			});
-			cb();
+		// compilation.plugin("html-webpack-plugin-after-emit", function(data, cb) {
+		// 	console.log("[HMR] html changed,refresh page..");
+		// 	hotMiddleware.publish({
+		// 		action: "reload"
+		// 	});
+		// 	cb();
+		// });
+
+		compilation.plugin("succeed-module", function(module) {
+			let resource = module.resource;
+
+			if (/(html|php)$/.test(resource)) {
+				hotMiddleware.publish({
+					action: "reload",
+					src: resource
+				});
+			}
 		});
 	});
 
