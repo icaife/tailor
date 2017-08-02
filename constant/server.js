@@ -7,9 +7,9 @@ module.exports = {
     domain: "localhost",
     port: 8888,
     devServer: {
-        noInfo: true,
-        quiet: true,
-        clientLogLevel: 'info',
+        noInfo: false,
+        quiet: false,
+        clientLogLevel: "info",
         disableHostCheck: true,
         // 不启用压缩
         compress: true,

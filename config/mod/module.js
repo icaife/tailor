@@ -118,6 +118,14 @@ let
                     // htmlResourceRules:false
                     //handle art-template and php template conflicts
                     rules: [{
+                            test: /{{raw}}([\w\W]*?){{\/raw}}/,
+                            use: function(match, code) {
+                                return {
+                                    output: 'raw',
+                                    code: JSON.stringify(code)
+                                }
+                            }
+                        }, {
                             test: /@{{([@#]?)[ \t]*([\w\W]*?)[ \t]*}}/, //TODO:vue or other javascript,php blade template
                             use: function(match, raw, close, code) {
                                 return {
@@ -125,16 +133,18 @@ let
                                     output: "raw"
                                 };
                             }
-                        }, {
-                            test: /{{[ \t]*\$([\w\W]*?)[ \t]*}}/, //php blade template
-                            use: function(match, raw, close, code) {
+                        }
+                        /*, {
+                                                    test: /{{[ \t]*\$([\w\W]*?)[ \t]*}}/, //php blade template
+                                                    use: function(match, raw, close, code) {
 
-                                return {
-                                    code: `"${match.toString()}"`,
-                                    output: "raw"
-                                };
-                            }
-                        }, {
+                                                        return {
+                                                            code: `"${match.toString()}"`,
+                                                            output: "raw"
+                                                        };
+                                                    }
+                                                }*/
+                        , {
                             test: /{{[ \t]*\w+\([ \t]*\$([\w\W]*?)?\)[ \t]*}}/, //php blade template with function
                             use: function(match, raw, close, code) {
                                 return {
