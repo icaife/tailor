@@ -39,7 +39,7 @@ const
             ext: ["css", "less"]
         },
         img: {
-            ext: ["jpg", "jpeg", "png", "gif", ]
+            ext: ["jpg", "jpeg", "png", "gif", "ico", "bmp"]
         },
         file: {
             ext: ["svg", "eof", "woff", "woff2", "eot", "ttf"]

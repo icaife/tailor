@@ -36,7 +36,8 @@ module.exports = (config) => {
 				mod = Path.join(name.replace(/[\/\\]+[^\/\\]+$/, ""), prefix).replace(/\\/g, "/");
 
 			entry[mod] = [`./${dir}`];
-			if (basic.env === envs.development) {
+
+			if (basic.env === envs.development) { //if in development,push hot client entry
 				entry[mod].push(hotClient + hotClientQuery);
 			}
 		});

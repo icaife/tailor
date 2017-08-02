@@ -115,7 +115,9 @@ let
             {
                 loader: "art-template-loader",
                 options: {
-                    // htmlResourceRules:false
+                    htmlResourceRules: [
+                        /<(?:link|script|img)[^>]+\b(?:(?:data|original)-)?(?:src|href)="([^"]*)"/img,
+                    ],
                     //handle art-template and php template conflicts
                     rules: [{
                             test: /{{raw}}([\w\W]*?){{\/raw}}/,
