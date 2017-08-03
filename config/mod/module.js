@@ -85,20 +85,39 @@ let
         }
     });
 let
-    jsRule = config => [{
-        test: /\.js/,
-        exclude: /node_modules|vendor/,
-        use: [{
-            loader: "babel-loader",
-            options: {
-                presets: [
-                    Path.join(config.basic.cur, "./node_modules/babel-preset-es2015"),
-                    Path.join(config.basic.cur, "./node_modules/babel-preset-stage-2")
-                ],
-                babelrc: false
-            }
+    jsRule = config => {
+        let
+            isDev = config.basic.env === config.constant.env.development;
+
+        return [{
+            test: /\.js/,
+            exclude: /node_modules|vendor/,
+            use: [{
+                loader: "babel-loader",
+                options: {
+                    presets: [
+                        Path.join(config.basic.cur, "./node_modules/babel-preset-es2015"),
+                        Path.join(config.basic.cur, "./node_modules/babel-preset-stage-2")
+                    ],
+                    babelrc: false,
+                    retainLines: true,
+                    cacheDirectory: true
+                }
+            }, {
+                /**
+                 * @see https://www.npmjs.com/package/eslint-loader
+                 */
+                loader: "eslint-loader",
+                options: {
+                    configFile: Path.join(config.basic.root, ".eslintrc"),
+                    failOnWarning: false, // warning occured then stop
+                    failOnError: !isDev, // error occured then stop
+                    cache: false, // disable cache
+                    formatter: require("eslint-friendly-formatter")
+                }
+            }]
         }]
-    }];
+    };
 let
     htmlRule = config => [{
         test: new RegExp(`.(${config.basic.html.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
@@ -116,7 +135,7 @@ let
                 loader: /*lib/loader/*/ "art-template-loader",
                 options: {
                     htmlResourceRules: [
-                        /<(?:link|script|img)[^>]+\b(?:(?:data|original)-)?(?:src|href)="([^"]*)"[^>]+>/img,
+                        /<(?:link|script|img)[^>]+\b(?:(?:data|original)-)?(?:src|href)="([^"]*)"[^>]*?>/img,
                     ],
                     //handle art-template and php template conflicts
                     rules: [{
@@ -273,6 +292,7 @@ let
             }]
         }];
     };
+
 let
     fileRule = config => {
         let basic = config.basic,

@@ -16,7 +16,9 @@
 	- [x] css sprite
 	- [x] livereload, bs or hot middleware
 	- [x] sourcemap
-	- [ ] htmlhint、eslint
+	- [x] eslint
+	- [ ] stylelint
+	- [ ] htmlint
 	- [ ] git precommit hook
 	- [x] env diff:DEV QA PROD
 	- [x] ES6 supported

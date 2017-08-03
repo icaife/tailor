@@ -10,7 +10,7 @@ module.exports = (config) => {
 		basic = config.basic;
 
 	return {
-		modules: [Path.resolve(basic.cur), Path.resolve(basic.cur, "node_modules"), "node_modules"],
+		modules: [Path.resolve(basic.cur, "node_modules"), "node_modules"],
 		extensions: [".js", ".json", ".less", ".css", ".art", ".html", ".blade.php"],
 		// cacheWithContext: false,
 	};
