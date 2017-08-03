@@ -20,7 +20,8 @@ const
     WriteFileWebpackPlugin = require("write-file-webpack-plugin"),
     UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
     ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
-    CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin;
+    CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin,
+    SourceMapDevToolPlugin = Webpack.SourceMapDevToolPlugin;
 
 module.exports = (config) => {
     let plugin = [],
@@ -34,30 +35,33 @@ module.exports = (config) => {
     plugin.push(
         new ModuleConcatenationPlugin(),
         new StringReplaceWebpackPlugin(),
-        // new HtmlWebpackPluginReplace({ //add js and css to file end
-        //     replace: (html, obj) => {
-        //         //todo
-        //         html = html.replace(/$/, addCss(obj.css) + addJs(obj.js));
-        //         return html;
-        //     },
-        //     config: config
-        // }),
         new ManifestPlugin({
             fileName: `${basic.assets}/manifest.json`,
             publicPath: `${basic.cdn}`
-        }), /*new StyleExtHtmlWebpackPlugin()*/
-        // new CopyWebpackPlugin([{
-        //     context: Path.join(basic.root, basic.src),
-        //     from: {
-        //         glob: "**/*.{blade.php,html}",
-        //         dot: true
-        //     },
-        //     to: Path.join(basic.root, basic.dest, basic.views)
-        // }]),
+        }),
         new Webpack.ProvidePlugin(basic.globalVars),
         new CleanWebpackPlguin([basic.dest], { //clean dirs
             root: basic.root,
             verbose: !true
+        }),
+        /**
+         * @see  https://doc.webpack-china.org/plugins/source-map-dev-tool-plugin/
+         */
+        new SourceMapDevToolPlugin({
+            filename: "[name].map",
+            exclude: [/vendor/]
+        }),
+        /**
+         * @see  https://github.com/mishoo/UglifyJS2
+         */
+        new UglifyJsPlugin({
+            drop_debugger: true,
+            dead_code: true,
+            join_vars: true,
+            reduce_vars: true,
+            drop_console: true,
+            comments: /[^\s\S]/g,
+            sourceMap: true
         }),
         /**
          * @see https://doc.webpack-china.org/guides/author-libraries/#-library
@@ -82,18 +86,8 @@ module.exports = (config) => {
         plugin.push(
             new ExtractTextPlugin({ //extract css
                 filename: `${basic.assets}/[name]` + (basic.output.useHash ? `.[contenthash:${basic.output.hashLen}]` : "") + `.css`,
-                allChunks: true
-            }),
-            /**
-             * @see  https://github.com/mishoo/UglifyJS2
-             */
-            new UglifyJsPlugin({
-                drop_debugger: true,
-                dead_code: true,
-                join_vars: true,
-                reduce_vars: true,
-                drop_console: true,
-                comments: /[^\s\S]/g
+                allChunks: true,
+                // sourceMap: true
             }));
     }
 

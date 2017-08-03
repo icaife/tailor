@@ -6,7 +6,8 @@
 
 const
 	_ = require("lodash"),
-	Util = require("../Util"),
+	Yargs = require("yargs"),
+	Util = require("../lib/util/util"),
 	Path = require("path"),
 	Entry = require("./mod/entry"),
 	Module = require("./mod/module"),
@@ -14,7 +15,8 @@ const
 	Plugin = require("./mod/plugin"),
 	Resolve = require("./mod/resolve"),
 	Constant = require("../constant"),
-	ResolveLoader = require("./mod/resolve-loader");
+	ResolveLoader = require("./mod/resolve-loader"),
+	argv = Yargs.argv;
 
 let
 	env = Constant.env[process.env.NODE_ENV] ? Constant.env[process.env.NODE_ENV] : Constant.env.development,
@@ -59,10 +61,10 @@ module.exports = {
 		resolveLoader: resolveLoader,
 		plugins: plugins,
 		profile: true,
-		watch: basic.env === Constant.env.development,
+		watch: basic.env === Constant.env.development, //middleware default true
 		devtool: ({
-			"development": "eval-source-map",
-			"production": "source-map"
+			"development": "cheap-module-eval-source-map",
+			"production": "eval-source-map",
 		})[basic.env === Constant.env.development ? "development" : "production"]
 	}
 };

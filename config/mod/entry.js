@@ -16,7 +16,7 @@ module.exports = (config) => {
 		envs = config.constant.env,
 		server = config.server,
 		cwd = Path.join(basic.root, basic.src),
-		hotClient = Path.resolve(__dirname, `../../helper/hot-client`),
+		hotClient = Path.resolve(`lib/helper/hot-client`),
 		hotClientQuery = `?path=${basic.cdn}__webpack_hmr&reload=true`;
 
 	if (basic.env !== envs.dll) {
