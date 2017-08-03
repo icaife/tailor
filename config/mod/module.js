@@ -113,10 +113,10 @@ let
                     }, */
 
             {
-                loader: "art-template-loader",
+                loader: /*lib/loader/*/ "art-template-loader",
                 options: {
                     htmlResourceRules: [
-                        /<(?:link|script|img)[^>]+\b(?:(?:data|original)-)?(?:src|href)="([^"]*)"/img,
+                        /<(?:link|script|img)[^>]+\b(?:(?:data|original)-)?(?:src|href)="([^"]*)"[^>]+>/img,
                     ],
                     //handle art-template and php template conflicts
                     rules: [{
@@ -155,8 +155,7 @@ let
                                 };
                             }
                         },
-                        require("art-template/lib/compile/adapter/rule.art"),
-                        require("art-template/lib/compile/adapter/rule.native")
+                        ...require("art-template").defaults.rules,
                     ],
                     extname: "." + config.basic.html.ext[0], //TODO
                     htmlResourceRoot: Path.join(config.basic.root, config.basic.src),
@@ -234,7 +233,7 @@ let
     imageRule = config => {
         let basic = config.basic,
             outputConfig = basic.output,
-            name = `${config.basic.assets}/[path][name]` + (outputConfig.useHash ? `.[${outputConfig.hashLen}]` : "") + `.[ext]`;
+            name = `${config.basic.assets}/[path][name]` + (outputConfig.useHash ? `.[hash:${outputConfig.hashLen}]` : "") + `.[ext]`;
 
         return [{
             test: {
@@ -278,7 +277,7 @@ let
     fileRule = config => {
         let basic = config.basic,
             outputConfig = basic.output,
-            name = `${config.basic.assets}/[path][name]` + (outputConfig.useHash ? `.[${outputConfig.hashLen}]` : "") + `.[ext]`;
+            name = `${config.basic.assets}/[path][name]` + (outputConfig.useHash ? `.[hash:${outputConfig.hashLen}]` : "") + `.[ext]`;
 
         return [{
             test: {

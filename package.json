@@ -5,9 +5,9 @@
     "main": "webpack",
     "scripts": {
         "dev": "cross-env NODE_ENV=development node ./index.js",
-        "test": "cross-env NODE_ENV=test webpack",
+        "test": "cross-env NODE_ENV=test node ./index.js",
         "prod": "cross-env NODE_ENV=production node ./index.js",
-        "dll": "cross-env NODE_ENV=dll webpack",
+        "dll": "cross-env NODE_ENV=dll node ./index.js",
         "deploy": ""
     },
     "repository": "https://github.com/icaife/tailor/",
@@ -61,7 +61,8 @@
         "webpack-hot-middleware": "^2.18.2",
         "webpack-manifest-plugin": "^1.1.0",
         "webpack-merge": "^4.1.0",
-        "write-file-webpack-plugin": "^4.1.0"
+        "write-file-webpack-plugin": "^4.1.0",
+        "yargs": "^8.0.2"
     },
     "dependencies": {}
 }
