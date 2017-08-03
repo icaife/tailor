@@ -7,7 +7,7 @@
 const
 	_ = require("lodash"),
 	Yargs = require("yargs"),
-	Util = require("../lib/util"),
+	Util = require("../lib/util/util"),
 	Path = require("path"),
 	Entry = require("./mod/entry"),
 	Module = require("./mod/module"),

@@ -7,12 +7,13 @@
 const
 	Path = require("path"),
 	Shell = require("shelljs"),
+	Log = require("./lib/util/log"),
 	Webpack = require("webpack"),
 	Constant = require("./constant"),
 	Config = require("./config"),
 	Serve = require("./server");
 
-console.log("[tailor]work path: " + Path.join(Config.basic.root));
+Log.info("work path-> " + Path.join(Config.basic.root));
 
 if (Config.basic.env === Constant.env.development) {
 	Serve.run();

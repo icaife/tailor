@@ -39,3 +39,6 @@
     ```
 	npm run dev
     ```
+
+
+> [IE兼容指南](http://www.zuojj.com/archives/2157.html)
