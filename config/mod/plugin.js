@@ -11,11 +11,9 @@ const
     HtmlWebpackPlugin = require("html-webpack-plugin"),
     HtmlWebpackReplaceUrlPlugin = require("html-webpack-replaceurl-plugin"),
     StringReplaceWebpackPlugin = require("string-replace-webpack-plugin"),
-    CleanWebpackPlguin = require("clean-webpack-plugin"),
     ManifestPlugin = require("webpack-manifest-plugin"),
     ExtractTextPlugin = require("extract-text-webpack-plugin"),
     StyleExtHtmlWebpackPlugin = require("style-ext-html-webpack-plugin"),
-    CopyWebpackPlugin = require("copy-webpack-plugin"),
     HtmlWebpackHarddiskPlugin = require("html-webpack-harddisk-plugin"),
     WriteFileWebpackPlugin = require("write-file-webpack-plugin"),
     UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
@@ -40,10 +38,6 @@ module.exports = (config) => {
             publicPath: `${basic.cdn}`
         }),
         new Webpack.ProvidePlugin(basic.globalVars),
-        new CleanWebpackPlguin([basic.dest], { //clean dirs
-            root: basic.root,
-            verbose: !true
-        }),
         /**
          * @see  https://doc.webpack-china.org/plugins/source-map-dev-tool-plugin/
          */
