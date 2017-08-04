@@ -15,13 +15,14 @@ const
     ExtractTextPlugin = require("extract-text-webpack-plugin"),
     StyleExtHtmlWebpackPlugin = require("style-ext-html-webpack-plugin"),
     WriteFileWebpackPlugin = require("write-file-webpack-plugin"),
-    UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
-    ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
-    CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin,
-    // FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin"),
+    FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin"),
     WebpackDashboard = require("webpack-dashboard"),
     WebpackDashboardPlugin = require('webpack-dashboard/plugin'),
     BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin,
+    UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
+    ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
+    CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin,
+    NamedModulesPlugin = Webpack.NamedModulesPlugin,
     SourceMapDevToolPlugin = Webpack.SourceMapDevToolPlugin;
 
 module.exports = (config) => {
@@ -34,8 +35,8 @@ module.exports = (config) => {
         assetsPath = Path.join(basic.root, basic.dest, basic.assets);
 
     plugin.push(
+        new NamedModulesPlugin(),
         new ModuleConcatenationPlugin(),
-        // new BundleAnalyzerPlugin(),
         new StringReplaceWebpackPlugin(),
         new ManifestPlugin({
             fileName: `${basic.assets}/manifest.json`,
@@ -70,17 +71,23 @@ module.exports = (config) => {
     );
 
     if (basic.env === envs.development) {
-        // let dashboard = new WebpackDashboard();
         plugin.push( //for webpack hot middleware
             new Webpack.optimize.OccurrenceOrderPlugin(),
             new Webpack.HotModuleReplacementPlugin(),
             new Webpack.NoEmitOnErrorsPlugin(),
-            // new WebpackDashboardPlugin(dashboard.setData),
         );
+        if (Path.sep === "/") { // not windows
+            let dashboard = new WebpackDashboard();
+            plugin.push(new WebpackDashboardPlugin(dashboard.setData));
+        }
     }
 
     if (basic.env === envs.test) {
 
+    }
+
+    if (basic.env === envs.analysis) {
+        plugin.push(new BundleAnalyzerPlugin());
     }
 
     if (basic.env == envs.production || basic.env === envs.test) {
@@ -93,13 +100,13 @@ module.exports = (config) => {
             /**
              * @see  https://github.com/geowarin/friendly-errors-webpack-plugin
              */
-            // new FriendlyErrorsWebpackPlugin({
-            //     clearConsole: false,
-            //     onErrors: function() {
-            //         // process.exit(-1);
-            //         console.log(arguments);
-            //     }
-            // })
+            new FriendlyErrorsWebpackPlugin({
+                clearConsole: false,
+                onErrors: function() {
+                    // process.exit(-1);
+                    console.log(arguments);
+                }
+            })
         );
 
         plugin.push();
