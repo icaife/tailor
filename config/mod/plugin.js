@@ -14,7 +14,6 @@ const
     ManifestPlugin = require("webpack-manifest-plugin"),
     ExtractTextPlugin = require("extract-text-webpack-plugin"),
     StyleExtHtmlWebpackPlugin = require("style-ext-html-webpack-plugin"),
-    HtmlWebpackHarddiskPlugin = require("html-webpack-harddisk-plugin"),
     WriteFileWebpackPlugin = require("write-file-webpack-plugin"),
     UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
     ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
@@ -22,6 +21,7 @@ const
     // FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin"),
     WebpackDashboard = require("webpack-dashboard"),
     WebpackDashboardPlugin = require('webpack-dashboard/plugin'),
+    BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin,
     SourceMapDevToolPlugin = Webpack.SourceMapDevToolPlugin;
 
 module.exports = (config) => {
@@ -35,6 +35,7 @@ module.exports = (config) => {
 
     plugin.push(
         new ModuleConcatenationPlugin(),
+        // new BundleAnalyzerPlugin(),
         new StringReplaceWebpackPlugin(),
         new ManifestPlugin({
             fileName: `${basic.assets}/manifest.json`,
@@ -46,7 +47,8 @@ module.exports = (config) => {
          */
         new SourceMapDevToolPlugin({
             filename: `${basic.assets}/[name].map`,
-            exclude: [/vendor/]
+            exclude: [/vendor/],
+            // append: `#sourceMappingURL=/${basic.assets}/[name].map`
         }),
         /**
          * @see  https://github.com/mishoo/UglifyJS2
@@ -91,13 +93,13 @@ module.exports = (config) => {
             /**
              * @see  https://github.com/geowarin/friendly-errors-webpack-plugin
              */
-            new FriendlyErrorsWebpackPlugin({
-                clearConsole: false,
-                onErrors: function() {
-                    // process.exit(-1);
-                    console.log(arguments);
-                }
-            })
+            // new FriendlyErrorsWebpackPlugin({
+            //     clearConsole: false,
+            //     onErrors: function() {
+            //         // process.exit(-1);
+            //         console.log(arguments);
+            //     }
+            // })
         );
 
         plugin.push();
@@ -115,16 +117,11 @@ module.exports = (config) => {
                 opts = {
                     filename: `${basic.views}/${fileName}.${basic.output.html.ext}`,
                     template: `${fileName}.${basic.html.ext[0]}`,
-                    inject: !false,
-                    alwaysWriteToDisk: true,
+                    inject: !false
                 };
 
             plugin.push(new HtmlWebpackPlugin(opts));
         });
-
-        // plugin.push(new HtmlWebpackHarddiskPlugin({
-        //     alwaysWriteToDisk: true
-        // }));
         plugin.push(new WriteFileWebpackPlugin({
             test: /(assets|views)/
         }));
@@ -141,7 +138,7 @@ module.exports = (config) => {
             //     return /[\\\/]common[\\\/]/.test(context);
             // },
             // children: true,
-            filename: `${basic.assets}/[name].common` + (basic.output.useHash ? `.[chunkhash:${basic.output.hashLen}]` : "") + `.js`,
+            filename: `${basic.assets}/[name]` + (basic.output.useHash ? `.[chunkhash:${basic.output.hashLen}]` : "") + `.js`,
         }));
 
         // Object.keys(basic.vendor).forEach((item) => {

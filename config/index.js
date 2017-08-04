@@ -86,8 +86,10 @@ module.exports = {
         profile: true,
         watch: basic.env === Constant.env.development, //middleware default true
         devtool: ({
+            // "development": "cheap-module-eval-source-map",
+            // "production": "eval-source-map",
             "development": "cheap-module-eval-source-map",
-            "production": "eval-source-map",
+            "production": "cheap-module-source-map",
         })[basic.env === Constant.env.development ? "development" : "production"]
     }
 };
