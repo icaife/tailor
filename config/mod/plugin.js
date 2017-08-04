@@ -48,7 +48,7 @@ module.exports = (config) => {
         new SourceMapDevToolPlugin({
             filename: `${basic.assets}/[name].map`,
             exclude: [/vendor/],
-            // append: `#sourceMappingURL=/${basic.assets}/[name].map`
+            append: `\n/*${(new Date()).toLocaleString()} built*/`
         }),
         /**
          * @see  https://github.com/mishoo/UglifyJS2
