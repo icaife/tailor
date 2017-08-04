@@ -19,7 +19,11 @@ const
     UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
     ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
     CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin,
-    SourceMapDevToolPlugin = Webpack.SourceMapDevToolPlugin;
+    // FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin"),
+    WebpackDashboard = require("webpack-dashboard"),
+    WebpackDashboardPlugin = require('webpack-dashboard/plugin'),
+    SourceMapDevToolPlugin = Webpack.SourceMapDevToolPlugin,
+    dashboard = new WebpackDashboard();
 
 module.exports = (config) => {
     let plugin = [],
@@ -31,6 +35,7 @@ module.exports = (config) => {
         assetsPath = Path.join(basic.root, basic.dest, basic.assets);
 
     plugin.push(
+        new WebpackDashboardPlugin(dashboard.setData),
         new ModuleConcatenationPlugin(),
         new StringReplaceWebpackPlugin(),
         new ManifestPlugin({
@@ -82,7 +87,20 @@ module.exports = (config) => {
                 filename: `${basic.assets}/[name]` + (basic.output.useHash ? `.[contenthash:${basic.output.hashLen}]` : "") + `.css`,
                 allChunks: true,
                 // sourceMap: true
-            }));
+            }),
+            /**
+             * @see  https://github.com/geowarin/friendly-errors-webpack-plugin
+             */
+            /*new FriendlyErrorsWebpackPlugin({
+                clearConsole: false,
+                onErrors: function() {
+                    // process.exit(-1);
+                    console.log(arguments);
+                }
+            })*/
+        );
+
+        plugin.push();
     }
 
     if (basic.env === envs.dll) {
@@ -134,11 +152,13 @@ module.exports = (config) => {
         //     }));
         // });
     } else { //build dll env
-        plugin.push(new Webpack.DllPlugin({
-            context: Path.join(assetsPath),
-            path: Path.join(assetsPath, "dll/[name]-dll-manifest.json"),
-            name: "[name]" + (basic.output.useHash ? `.[chunkhash:${basic.output.hashLen}]` : "")
-        }));
+        plugin.push(
+            new Webpack.DllPlugin({
+                context: Path.join(assetsPath),
+                path: Path.join(assetsPath, "dll/[name]-dll-manifest.json"),
+                name: "[name]" + (basic.output.useHash ? `.[chunkhash:${basic.output.hashLen}]` : "")
+            })
+        );
     }
 
     //todo:

@@ -5,9 +5,11 @@
 "use strict";
 
 const
+	FSE = require("fs-extra"),
 	Path = require("path"),
 	Shell = require("shelljs"),
 	Log = require("./lib/util/log"),
+	PreCommit = require("./lib/hook/pre-commit"),
 	Webpack = require("webpack"),
 	Constant = require("./constant"),
 	Config = require("./config"),
@@ -15,11 +17,24 @@ const
 
 Log.info(`\nwork info:\n\tpath:${Log.chalk.blue(Path.join(Config.basic.root))}\n\tenv:${Log.chalk.blue(Config.basic.env)}`);
 let destPath = Path.join(Config.basic.root, Config.basic.dest);
-Shell.rm("-rf", destPath)
-Log.info("\nclean " + Log.chalk.blue(destPath) + " done");
 
-if (Config.basic.env === Constant.env.development) {
-	Serve.run();
-} else {
-	Shell.exec("webpack --colors --config webpack.config.js");
+//clean dest path if exists
+FSE.existsSync(destPath) && (Shell.rm("-rf", destPath), Log.info("clean " + Log.chalk.blue(destPath) + " done"));
+
+//init
+Log.info("Enjoy yourself! :)\n");
+
+init();
+
+function init() {
+	let isDev = Config.basic.env === Constant.env.development;
+
+	PreCommit(Config); //init pre commit
+
+	if (isDev) { // if development,run webpack server
+		Serve.run();
+	} else { //run webpack
+		Shell.exec("webpack --colors --config webpack.config.js --progress --hide-modules");
+		Shell.exit(0);
+	}
 }

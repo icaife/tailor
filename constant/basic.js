@@ -7,7 +7,8 @@ const
     cur = Path.resolve(__dirname, `../`),
     config = {
         cur: cur,
-        domain: "localhost:8080",
+        domain: "/",
+        cdn: "/",
         configFile: "tailor.config.js",
         src: "src",
         dest: "dest",

@@ -15,7 +15,7 @@ function redirectMiddleware(req, res, next) {
 
     if (!/^\/?assets/.test(reqUrl)) {}
 
-    console.log(reqUrl);
+    // console.log(reqUrl);
     return next();
 }
 

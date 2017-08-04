@@ -114,10 +114,11 @@ let
                 loader: "eslint-loader",
                 options: {
                     configFile: Path.join(config.basic.root, ".eslintrc"),
+                    stdin: true,
                     failOnWarning: false, // warning occured then stop
                     failOnError: !isDev, // error occured then stop
                     cache: false, // disable cache
-                    formatter: require("eslint-friendly-formatter")
+                    // formatter: require("eslint-friendly-formatter")
                 }
             }]
         }]
