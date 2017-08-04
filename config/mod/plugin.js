@@ -22,8 +22,7 @@ const
     // FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin"),
     WebpackDashboard = require("webpack-dashboard"),
     WebpackDashboardPlugin = require('webpack-dashboard/plugin'),
-    SourceMapDevToolPlugin = Webpack.SourceMapDevToolPlugin,
-    dashboard = new WebpackDashboard();
+    SourceMapDevToolPlugin = Webpack.SourceMapDevToolPlugin;
 
 module.exports = (config) => {
     let plugin = [],
@@ -35,7 +34,6 @@ module.exports = (config) => {
         assetsPath = Path.join(basic.root, basic.dest, basic.assets);
 
     plugin.push(
-        new WebpackDashboardPlugin(dashboard.setData),
         new ModuleConcatenationPlugin(),
         new StringReplaceWebpackPlugin(),
         new ManifestPlugin({
@@ -70,10 +68,12 @@ module.exports = (config) => {
     );
 
     if (basic.env === envs.development) {
+        let dashboard = new WebpackDashboard();
         plugin.push( //for webpack hot middleware
             new Webpack.optimize.OccurrenceOrderPlugin(),
             new Webpack.HotModuleReplacementPlugin(),
-            new Webpack.NoEmitOnErrorsPlugin()
+            new Webpack.NoEmitOnErrorsPlugin(),
+            new WebpackDashboardPlugin(dashboard.setData),
         );
     }
 
