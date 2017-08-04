@@ -118,7 +118,13 @@ let
                     failOnWarning: false, // warning occured then stop
                     failOnError: !isDev, // error occured then stop
                     cache: false, // disable cache
-                    // formatter: require("eslint-friendly-formatter")
+                    emitError: false,
+                    //@ see https://www.npmjs.com/package/eslint-loader#outputreport-default-false-
+                    // outputReport: {
+                    //     filePath: "d:/checkstyle.json",
+                    //     formatter: require("eslint/lib/formatters/checkstyle")
+                    // }
+                    formatter: require("eslint-friendly-formatter")
                 }
             }]
         }]

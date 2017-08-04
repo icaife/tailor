@@ -7,8 +7,9 @@ module.exports = {
     domain: "localhost",
     port: 8080,
     devServer: {
-        noInfo: false,
+        noInfo: true,
         quiet: true,
+        log: () => {},
         clientLogLevel: "info",
         disableHostCheck: true,
         // 是否启用压缩

@@ -68,12 +68,12 @@ module.exports = (config) => {
     );
 
     if (basic.env === envs.development) {
-        let dashboard = new WebpackDashboard();
+        // let dashboard = new WebpackDashboard();
         plugin.push( //for webpack hot middleware
             new Webpack.optimize.OccurrenceOrderPlugin(),
             new Webpack.HotModuleReplacementPlugin(),
             new Webpack.NoEmitOnErrorsPlugin(),
-            new WebpackDashboardPlugin(dashboard.setData),
+            // new WebpackDashboardPlugin(dashboard.setData),
         );
     }
 
@@ -91,13 +91,13 @@ module.exports = (config) => {
             /**
              * @see  https://github.com/geowarin/friendly-errors-webpack-plugin
              */
-            /*new FriendlyErrorsWebpackPlugin({
+            new FriendlyErrorsWebpackPlugin({
                 clearConsole: false,
                 onErrors: function() {
                     // process.exit(-1);
                     console.log(arguments);
                 }
-            })*/
+            })
         );
 
         plugin.push();

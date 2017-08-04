@@ -20,6 +20,7 @@ function redirectMiddleware(req, res, next) {
 }
 
 function run() {
+    // console.log(serverConfig.devServer);
     const
         compiler = Webpack(webpackConfig),
         devMiddleware = DevMiddleware(compiler, serverConfig.devServer),
