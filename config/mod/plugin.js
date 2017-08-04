@@ -48,7 +48,7 @@ module.exports = (config) => {
          * @see  https://doc.webpack-china.org/plugins/source-map-dev-tool-plugin/
          */
         new SourceMapDevToolPlugin({
-            filename: "[name].map",
+            filename: `${basic.assets}/[name].map`,
             exclude: [/vendor/]
         }),
         /**

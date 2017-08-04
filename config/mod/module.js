@@ -25,7 +25,11 @@ let
         spritePath: Path.join(config.basic.root, config.basic.src /*, config.basic.assets*/ ),
         // stylesheetPath: Path.join(config.basic.root, config.basic.src /*, config.basic.assets*/ ),
         spritesmith: {
-            padding: 4
+            padding: 4,
+            algorithm: "binary-tree", //default
+            algorithmOpts: {
+                sort: true
+            }
         },
         filterBy: (image) => {
             return /([^\/\\]+-sprite)[\/\\]/ /*TODO*/ .test(image.url) ? Promise.resolve() : Promise.reject();
