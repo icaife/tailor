@@ -7,7 +7,7 @@ module.exports = {
     domain: "localhost",
     port: 8080,
     devServer: {
-        noInfo: true,
+        noInfo: false,
         quiet: true,
         log: () => {},
         clientLogLevel: "info",

@@ -114,17 +114,17 @@ let
                 loader: "eslint-loader",
                 options: {
                     configFile: Path.join(config.basic.root, ".eslintrc"),
-                    stdin: true,
                     failOnWarning: false, // warning occured then stop
-                    failOnError: !isDev, // error occured then stop
+                    failOnError: false, // error occured then stop
                     cache: false, // disable cache
                     emitError: false,
+                    quiet: true,
                     //@ see https://www.npmjs.com/package/eslint-loader#outputreport-default-false-
                     // outputReport: {
                     //     filePath: "d:/checkstyle.json",
                     //     formatter: require("eslint/lib/formatters/checkstyle")
                     // }
-                    formatter: require("eslint-friendly-formatter")
+                    // formatter: require("eslint-friendly-formatter")
                 }
             }]
         }]

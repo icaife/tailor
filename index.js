@@ -34,7 +34,7 @@ function init() {
 	if (isDev) { // if development,run webpack server
 		Serve.run();
 	} else { //run webpack
-		Shell.exec("webpack --colors --config webpack.config.js --progress --hide-modules");
+		Shell.exec("webpack --colors --config webpack.config.js  --hide-modules"); //--progress
 		Shell.exit(0);
 	}
 }

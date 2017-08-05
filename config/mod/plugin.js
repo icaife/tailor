@@ -62,7 +62,17 @@ module.exports = (config) => {
             drop_console: true,
             comments: /[^\s\S]/g,
             sourceMap: true
-        }),
+        }), {
+            /**
+             * @see https://doc.webpack-china.org/api/plugins/compiler/#-
+             * @see tttps://webpack.github.io/docs/plugins.html#the-compiler-instance
+             */
+            apply: function(compiler) {
+                compiler.plugin("done", function(stats, type, msg) {
+                    // console.log("comlier done->", stats, type, msg);
+                });
+            }
+        }
         /**
          * @see https://doc.webpack-china.org/guides/author-libraries/#-library
          * @see https://github.com/webpack/webpack/tree/master/examples/multiple-commons-chunks
@@ -100,13 +110,10 @@ module.exports = (config) => {
             /**
              * @see  https://github.com/geowarin/friendly-errors-webpack-plugin
              */
-            new FriendlyErrorsWebpackPlugin({
-                clearConsole: false,
-                onErrors: function() {
-                    // process.exit(-1);
-                    console.log(arguments);
-                }
-            })
+            // new FriendlyErrorsWebpackPlugin({
+            //     clearConsole: true,
+            //     onErrors: function() {}
+            // })
         );
 
         plugin.push();
