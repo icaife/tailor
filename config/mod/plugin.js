@@ -12,6 +12,7 @@ const
     HtmlWebpackReplaceUrlPlugin = require("html-webpack-replaceurl-plugin"),
     StringReplaceWebpackPlugin = require("string-replace-webpack-plugin"),
     ManifestPlugin = require("webpack-manifest-plugin"),
+    CopyWebpackPlugin = require('copy-webpack-plugin'),
     ExtractTextPlugin = require("extract-text-webpack-plugin"),
     StyleExtHtmlWebpackPlugin = require("style-ext-html-webpack-plugin"),
     WriteFileWebpackPlugin = require("write-file-webpack-plugin"),
@@ -36,6 +37,14 @@ module.exports = (config) => {
 
     plugin.push(
         new NamedModulesPlugin(),
+        new CopyWebpackPlugin([{
+            context: Path.join(basic.root, basic.src),
+            from: {
+                glob: "**/vendor/*.*",
+                dot: true
+            },
+            to: Path.join(basic.root, basic.dest, basic.assets)
+        }]),
         new ModuleConcatenationPlugin(),
         new StringReplaceWebpackPlugin(),
         new ManifestPlugin({

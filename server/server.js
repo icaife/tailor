@@ -29,14 +29,26 @@ function run() {
 
     compiler.plugin("compilation", function(compilation) {
         compilation.plugin("succeed-module", function(module) {
-            let resource = module.resource;
-            let reg = new RegExp(`.(${basic.html.ext.join("|")})$`.replace(/\./g, "\\."), "i");
+            let resource = module.resource,
+                reg = new RegExp(`.(${basic.html.ext.join("|")})$`.replace(/\./g, "\\."), "i");
+
             if (reg.test(resource)) {
-                hotMiddleware.publish({
-                    action: "reload",
-                    src: resource
-                });
+                refresh.queue.push(resource);
             }
+        });
+
+        function refresh(resource) {
+            hotMiddleware.publish({
+                action: "reload",
+                src: resource
+            });
+        }
+
+        refresh.queue = [];
+
+        compiler.plugin("done", function() {
+            refresh.queue.length && refresh(refresh.queue);
+            refresh.queue.length = 0;
         });
     });
 

@@ -115,10 +115,11 @@ let
                 options: {
                     configFile: Path.join(config.basic.root, ".eslintrc"),
                     failOnWarning: false, // warning occured then stop
-                    failOnError: false, // error occured then stop
+                    failOnError: true, // error occured then stop
                     cache: false, // disable cache
-                    emitError: false,
-                    quiet: true,
+                    emitError: true,
+                    emitOnWarning: true,
+                    quiet: false,
                     //@ see https://www.npmjs.com/package/eslint-loader#outputreport-default-false-
                     // outputReport: {
                     //     filePath: "d:/checkstyle.json",
@@ -146,7 +147,7 @@ let
                 loader: /*lib/loader/*/ "art-template-loader",
                 options: {
                     htmlResourceRules: [
-                        /<(?:link|script|img)[^>]+\b(?:(?:data|original)-)?(?:src|href)="([^"]*)"[^>]*?>/img,
+                        /<(?:img)[^>]+\b(?:(?:data|original)-)?(?:src|href)="([^"]*)"[^>]*?>/img, //img tag
                     ],
                     //handle art-template and php template conflicts
                     rules: [{
