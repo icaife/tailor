@@ -8,6 +8,8 @@
 const
     Webpack = require("webpack"),
     Path = require("path"),
+    Shell = require("shelljs"),
+    Log = require("../../lib/util/log"),
     HtmlWebpackPlugin = require("html-webpack-plugin"),
     HtmlWebpackReplaceUrlPlugin = require("html-webpack-replaceurl-plugin"),
     StringReplaceWebpackPlugin = require("string-replace-webpack-plugin"),
@@ -71,17 +73,7 @@ module.exports = (config) => {
             drop_console: true,
             comments: /[^\s\S]/g,
             sourceMap: true
-        }), {
-            /**
-             * @see https://doc.webpack-china.org/api/plugins/compiler/#-
-             * @see tttps://webpack.github.io/docs/plugins.html#the-compiler-instance
-             */
-            apply: function(compiler) {
-                compiler.plugin("done", function(stats, type, msg) {
-                    // console.log("comlier done->", stats, type, msg);
-                });
-            }
-        }
+        }),
         /**
          * @see https://doc.webpack-china.org/guides/author-libraries/#-library
          * @see https://github.com/webpack/webpack/tree/master/examples/multiple-commons-chunks
@@ -95,6 +87,7 @@ module.exports = (config) => {
             new Webpack.HotModuleReplacementPlugin(),
             new Webpack.NoEmitOnErrorsPlugin(),
         );
+
         if (Path.sep === "/") { // not windows
             let dashboard = new WebpackDashboard();
             plugin.push(new WebpackDashboardPlugin(dashboard.setData));
@@ -115,17 +108,25 @@ module.exports = (config) => {
                 filename: `${basic.assets}/[name]` + (basic.output.useHash ? `.[contenthash:${basic.output.hashLen}]` : "") + `.css`,
                 allChunks: true,
                 // sourceMap: true
-            }),
-            /**
-             * @see  https://github.com/geowarin/friendly-errors-webpack-plugin
-             */
-            // new FriendlyErrorsWebpackPlugin({
-            //     clearConsole: true,
-            //     onErrors: function() {}
-            // })
+            }), {
+                /**
+                 * @see https://doc.webpack-china.org/api/plugins/compiler/#-
+                 * @see tttps://webpack.github.io/docs/plugins.html#the-compiler-instance
+                 */
+                apply: function(compiler) {
+                    compiler.plugin("done", function(stats, type, msg) {
+                        if (stats.hasErrors()) { //有错误,退出 exit -1
+                            let errors = stats.compilation.errors || [];
+                            Log.error(`some errors occurred:\n${errors.join("\n")}\n`);
+                            // Shell.set("-e");
+                            // Shell.exec("exit 1");
+                            Shell.exit(-1);
+                            process.exit(-1);
+                        }
+                    });
+                }
+            }
         );
-
-        plugin.push();
     }
 
     if (basic.env === envs.dll) {
