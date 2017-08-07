@@ -11,7 +11,7 @@ const
     Shell = require("shelljs"),
     Log = require("../../lib/util/log"),
     HtmlWebpackPlugin = require("html-webpack-plugin"),
-    HtmlWebpackReplaceUrlPlugin = require("html-webpack-replaceurl-plugin"),
+    // HtmlWebpackReplaceUrlPlugin = require("html-webpack-replaceurl-plugin"),
     StringReplaceWebpackPlugin = require("string-replace-webpack-plugin"),
     ManifestPlugin = require("webpack-manifest-plugin"),
     CopyWebpackPlugin = require('copy-webpack-plugin'),
@@ -20,8 +20,9 @@ const
     WriteFileWebpackPlugin = require("write-file-webpack-plugin"),
     FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin"),
     WebpackDashboard = require("webpack-dashboard"),
-    WebpackDashboardPlugin = require('webpack-dashboard/plugin'),
-    BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin,
+    WebpackDashboardPlugin = require("webpack-dashboard/plugin"),
+    BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin,
+    StyleLintPlugin = require("stylelint-webpack-plugin"),
     UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
     ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
     CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin,
@@ -49,6 +50,18 @@ module.exports = (config) => {
         }]),
         new ModuleConcatenationPlugin(),
         new StringReplaceWebpackPlugin(),
+        /**
+         * @see https://stylelint.io/user-guide/rules/
+         */
+        new StyleLintPlugin({
+            configFile: Path.join(basic.root, ".stylelintrc"),
+            failOnWarning: false, // warning occured then stop
+            failOnError: false, // error occured then stop
+            emitError: true,
+            emitOnWarning: true,
+            files: ["**/*.css", "**/*.less"],
+            quiet: false,
+        }),
         new ManifestPlugin({
             fileName: `${basic.assets}/manifest.json`,
             publicPath: `${basic.cdn}`

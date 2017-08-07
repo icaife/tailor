@@ -112,10 +112,11 @@ let
                  * @see https://www.npmjs.com/package/eslint-loader
                  */
                 loader: "eslint-loader",
+                // enforce: "pre",
                 options: {
                     configFile: Path.join(config.basic.root, ".eslintrc"),
                     failOnWarning: false, // warning occured then stop
-                    failOnError: true, // error occured then stop
+                    failOnError: false, // error occured then stop
                     cache: false, // disable cache
                     emitError: true,
                     emitOnWarning: true,
@@ -214,6 +215,19 @@ let
                     }]
                 })
             },
+            /*
+                        //todo;
+                        {
+                            loader: "htmllint-loader",
+                            // enforce: "pre",
+                            // exclude: /node_modules/,
+                            // @see https://github.com/mattlewis92/htmlhint-loader
+                            options: {
+                                configFile: Path.join(config.basic.root, ".htmllintrc"),
+                                config: Path.join(config.basic.root, ".htmllintrc"),
+                                // emitAs: "error"
+                            }
+                        }*/
         ]
     }];
 
