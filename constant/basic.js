@@ -7,7 +7,8 @@ const
     cur = Path.resolve(__dirname, `../`),
     config = {
         cur: cur,
-        domain: "localhost:8080",
+        domain: "/",
+        cdn: "/",
         configFile: "tailor.config.js",
         src: "src",
         dest: "dest",
@@ -39,7 +40,7 @@ const
             ext: ["css", "less"]
         },
         img: {
-            ext: ["jpg", "jpeg", "png", "gif", ]
+            ext: ["jpg", "jpeg", "png", "gif", "ico", "bmp"]
         },
         file: {
             ext: ["svg", "eof", "woff", "woff2", "eot", "ttf"]

@@ -16,8 +16,8 @@ module.exports = (config) => {
 		envs = config.constant.env,
 		server = config.server,
 		cwd = Path.join(basic.root, basic.src),
-		hotClient = Path.resolve(__dirname, `../../helper/hot-client`),
-		hotClientQuery = `?path=${basic.cdn}__webpack_hmr&reload=false`;
+		hotClient = Path.resolve(`lib/helper/hot-client`),
+		hotClientQuery = `?path=${basic.cdn}__webpack_hmr&reload=true`;
 
 	if (basic.env !== envs.dll) {
 		let entryConfig = basic.entry,
@@ -36,7 +36,8 @@ module.exports = (config) => {
 				mod = Path.join(name.replace(/[\/\\]+[^\/\\]+$/, ""), prefix).replace(/\\/g, "/");
 
 			entry[mod] = [`./${dir}`];
-			if (basic.env === envs.development) {
+
+			if (basic.env === envs.development) { //if in development,push hot client entry
 				entry[mod].push(hotClient + hotClientQuery);
 			}
 		});

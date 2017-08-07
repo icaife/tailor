@@ -1,112 +1,69 @@
 "use strict";
 
-// const
-// 	Path = require("path"),
-// 	Webpack = require("webpack"),
-// 	BrowserSync = require("browser-sync"),
-// 	Vinyl = require("vinyl-fs"),
-// 	Constant = require("../constant"),
-// 	bs = BrowserSync.create(),
-// 	basic = Constant.basic,
-// 	server = Constant.server;
-
-// let queue = [];
-
-// function reload(event, file) {
-// 	queue.push(file);
-
-// 	setTimeout(function() {
-// 		file = queue[0];
-
-// 		if (/\.css$/.test(file)) {
-// 			Vinyl
-// 				.src(file)
-// 				.pipe(bs.stream({
-// 					once: false
-// 				}));
-// 		} else {
-// 			bs.reload();
-// 		}
-// 		queue.length = 0;
-// 	}, 1000);
-// }
-
-// module.exports = {
-// 	run: function(callback) {
-// 		return new Promise((resolve, reject) => {
-// 			bs.init({
-// 				proxy: basic.domain,
-// 				port: server.port,
-// 				open: false,
-// 				relaodDelay: 200,
-// 				reloadDebounce: 1000
-// 			}, function(e) {
-// 				resolve(e);
-// 				// bs.watch(Path.join(basic.root, basic.dest, "**/*.{php,html,js,css}"), reload);
-// 			});
-// 		});
-// 	}
-// };
-
-
-// const
-// 	Webpack = require("webpack"),
-// 	WebpackDevServer = require("webpack-dev-server"),
-// 	webpackConfig = require("./webpack.config.js"),
-// 	compiler = Webpack(webpackConfig),
-// 	config = require("./constant").server,
-// 	server = new WebpackDevServer(compiler, config.devServer);
-
-// server.listen(8080);
-
 const
-	Webpack = require("webpack"),
-	DevMiddleware = require("webpack-dev-middleware"),
-	HotMiddleware = require("webpack-hot-middleware"),
-	Config = require("../config"),
-	basic = Config.basic,
-	webpackConfig = Config.webpack,
-	serverConfig = Config.server;
+    Webpack = require("webpack"),
+    DevMiddleware = require("webpack-dev-middleware"),
+    HotMiddleware = require("webpack-hot-middleware"),
+    Express = require("express"),
+    Config = require("../config"),
+    basic = Config.basic,
+    webpackConfig = Config.webpack,
+    serverConfig = Config.server;
 
-function redirectMiddle(req, res, next) {
-	let reqUrl = req.url;
+function redirectMiddleware(req, res, next) {
+    let reqUrl = req.url;
 
-	if (!/^\/?assets/.test(reqUrl)) {}
+    if (!/^\/?assets/.test(reqUrl)) {}
 
-	next();
+    // console.log(reqUrl);
+    return next();
 }
 
 function run() {
-	const
-		compiler = Webpack(webpackConfig),
-		Http = require("http"),
-		Express = require("express"),
-		devMiddleware = DevMiddleware(compiler, serverConfig.devServer),
-		hotMiddleware = HotMiddleware(compiler),
-		app = new Express();
+    // console.log(serverConfig.devServer);
+    const
+        compiler = Webpack(webpackConfig),
+        devMiddleware = DevMiddleware(compiler, serverConfig.devServer),
+        hotMiddleware = HotMiddleware(compiler),
+        app = new Express();
 
-	compiler.plugin("compilation", function(compilation) {
-		compilation.plugin("html-webpack-plugin-after-emit", function(data, cb) {
-			console.log("[HMR] html changed,reload page..");
-			hotMiddleware.publish({
-				action: "reload"
-			});
-			cb();
-		});
-	});
+    compiler.plugin("compilation", function(compilation) {
+        compilation.plugin("succeed-module", function(module) {
+            let resource = module.resource,
+                reg = new RegExp(`.(${basic.html.ext.join("|")})$`.replace(/\./g, "\\."), "i");
 
-	app
-		.set("trust proxy", "loopback")
-		.use(devMiddleware)
-		.use(hotMiddleware)
-		.use(redirectMiddle)
-		.listen(serverConfig.port, serverConfig.host, function(err) {
-			if (err) {
-				throw new Error(err);
-			}
-		});
+            if (reg.test(resource)) {
+                refresh.queue.push(resource);
+            }
+        });
+
+        function refresh(resource) {
+            hotMiddleware.publish({
+                action: "reload",
+                src: resource
+            });
+        }
+
+        refresh.queue = [];
+
+        compiler.plugin("done", function() {
+            refresh.queue.length && refresh(refresh.queue);
+            refresh.queue.length = 0;
+        });
+    });
+
+    app
+        .use(devMiddleware)
+        .use(hotMiddleware)
+        // .use(redirectMiddleware)
+        .listen(serverConfig.port, serverConfig.host, function(err) {
+            if (err) {
+                throw new Error(err);
+            }
+        });
+
 }
 
 module.exports = {
-	run: run
+    run: run
 };

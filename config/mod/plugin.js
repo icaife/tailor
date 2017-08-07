@@ -8,18 +8,25 @@
 const
     Webpack = require("webpack"),
     Path = require("path"),
+    Shell = require("shelljs"),
+    Log = require("../../lib/util/log"),
     HtmlWebpackPlugin = require("html-webpack-plugin"),
     HtmlWebpackReplaceUrlPlugin = require("html-webpack-replaceurl-plugin"),
     StringReplaceWebpackPlugin = require("string-replace-webpack-plugin"),
-    CleanWebpackPlguin = require("clean-webpack-plugin"),
     ManifestPlugin = require("webpack-manifest-plugin"),
+    CopyWebpackPlugin = require('copy-webpack-plugin'),
     ExtractTextPlugin = require("extract-text-webpack-plugin"),
     StyleExtHtmlWebpackPlugin = require("style-ext-html-webpack-plugin"),
-    CopyWebpackPlugin = require("copy-webpack-plugin"),
-    HtmlWebpackHarddiskPlugin = require("html-webpack-harddisk-plugin"),
+    WriteFileWebpackPlugin = require("write-file-webpack-plugin"),
+    FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin"),
+    WebpackDashboard = require("webpack-dashboard"),
+    WebpackDashboardPlugin = require('webpack-dashboard/plugin'),
+    BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin,
     UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
     ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
-    CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin;
+    CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin,
+    NamedModulesPlugin = Webpack.NamedModulesPlugin,
+    SourceMapDevToolPlugin = Webpack.SourceMapDevToolPlugin;
 
 module.exports = (config) => {
     let plugin = [],
@@ -31,32 +38,41 @@ module.exports = (config) => {
         assetsPath = Path.join(basic.root, basic.dest, basic.assets);
 
     plugin.push(
+        new NamedModulesPlugin(),
+        new CopyWebpackPlugin([{
+            context: Path.join(basic.root, basic.src),
+            from: {
+                glob: "**/vendor/*.*",
+                dot: true
+            },
+            to: Path.join(basic.root, basic.dest, basic.assets)
+        }]),
         new ModuleConcatenationPlugin(),
         new StringReplaceWebpackPlugin(),
-        // new HtmlWebpackPluginReplace({ //add js and css to file end
-        //     replace: (html, obj) => {
-        //         //todo
-        //         html = html.replace(/$/, addCss(obj.css) + addJs(obj.js));
-        //         return html;
-        //     },
-        //     config: config
-        // }),
         new ManifestPlugin({
             fileName: `${basic.assets}/manifest.json`,
             publicPath: `${basic.cdn}`
-        }), /*new StyleExtHtmlWebpackPlugin()*/
-        // new CopyWebpackPlugin([{
-        //     context: Path.join(basic.root, basic.src),
-        //     from: {
-        //         glob: "**/*.{blade.php,html}",
-        //         dot: true
-        //     },
-        //     to: Path.join(basic.root, basic.dest, basic.views)
-        // }]),
+        }),
         new Webpack.ProvidePlugin(basic.globalVars),
-        new CleanWebpackPlguin([basic.dest], { //clean dirs
-            root: basic.root,
-            verbose: !true
+        /**
+         * @see  https://doc.webpack-china.org/plugins/source-map-dev-tool-plugin/
+         */
+        new SourceMapDevToolPlugin({
+            filename: `${basic.assets}/[name].map`,
+            exclude: [/vendor/],
+            append: `\n/*${(new Date()).toLocaleString()} built*/`
+        }),
+        /**
+         * @see  https://github.com/mishoo/UglifyJS2
+         */
+        new UglifyJsPlugin({
+            drop_debugger: true,
+            dead_code: true,
+            join_vars: true,
+            reduce_vars: true,
+            drop_console: true,
+            comments: /[^\s\S]/g,
+            sourceMap: true
         }),
         /**
          * @see https://doc.webpack-china.org/guides/author-libraries/#-library
@@ -69,31 +85,46 @@ module.exports = (config) => {
         plugin.push( //for webpack hot middleware
             new Webpack.optimize.OccurrenceOrderPlugin(),
             new Webpack.HotModuleReplacementPlugin(),
-            new Webpack.NoEmitOnErrorsPlugin()
+            new Webpack.NoEmitOnErrorsPlugin(),
         );
+
+        if (Path.sep === "/") { // not windows
+            let dashboard = new WebpackDashboard();
+            plugin.push(new WebpackDashboardPlugin(dashboard.setData));
+        }
     }
 
     if (basic.env === envs.test) {
 
     }
 
+    if (basic.env === envs.analysis) {
+        plugin.push(new BundleAnalyzerPlugin());
+    }
+
     if (basic.env == envs.production || basic.env === envs.test) {
         plugin.push(
             new ExtractTextPlugin({ //extract css
                 filename: `${basic.assets}/[name]` + (basic.output.useHash ? `.[contenthash:${basic.output.hashLen}]` : "") + `.css`,
-                allChunks: true
-            }),
-            /**
-             * @see  https://github.com/mishoo/UglifyJS2
-             */
-            new UglifyJsPlugin({
-                drop_debugger: true,
-                dead_code: true,
-                join_vars: true,
-                reduce_vars: true,
-                drop_console: true,
-                comments: /[^\s\S]/g
-            }));
+                allChunks: true,
+                // sourceMap: true
+            }), {
+                /**
+                 * @see https://doc.webpack-china.org/api/plugins/compiler/#-
+                 * @see tttps://webpack.github.io/docs/plugins.html#the-compiler-instance
+                 */
+                apply: function(compiler) {
+                    compiler.plugin("done", function(stats, type, msg) {
+                        if (stats.hasErrors()) { //有错误,退出 exit -1
+                            let errors = stats.compilation.errors || [],
+                                msg = errors.join("\n");
+                            Log.error(`some errors occurred:\n${msg}\n`);
+                            process.exit(1);
+                        }
+                    });
+                }
+            }
+        );
     }
 
     if (basic.env === envs.dll) {
@@ -108,15 +139,13 @@ module.exports = (config) => {
                 opts = {
                     filename: `${basic.views}/${fileName}.${basic.output.html.ext}`,
                     template: `${fileName}.${basic.html.ext[0]}`,
-                    inject: !false,
-                    alwaysWriteToDisk: true
+                    inject: !false
                 };
 
             plugin.push(new HtmlWebpackPlugin(opts));
         });
-
-        plugin.push(new HtmlWebpackHarddiskPlugin({
-            alwaysWriteToDisk: true
+        plugin.push(new WriteFileWebpackPlugin({
+            test: /(assets|views)/
         }));
 
         plugin.push(new CommonsChunkPlugin({
@@ -131,7 +160,7 @@ module.exports = (config) => {
             //     return /[\\\/]common[\\\/]/.test(context);
             // },
             // children: true,
-            filename: `${basic.assets}/[name].common` + (basic.output.useHash ? `.[chunkhash:${basic.output.hashLen}]` : "") + `.js`,
+            filename: `${basic.assets}/[name]` + (basic.output.useHash ? `.[chunkhash:${basic.output.hashLen}]` : "") + `.js`,
         }));
 
         // Object.keys(basic.vendor).forEach((item) => {
@@ -142,11 +171,13 @@ module.exports = (config) => {
         //     }));
         // });
     } else { //build dll env
-        plugin.push(new Webpack.DllPlugin({
-            context: Path.join(assetsPath),
-            path: Path.join(assetsPath, "dll/[name]-dll-manifest.json"),
-            name: "[name]" + (basic.output.useHash ? `.[chunkhash:${basic.output.hashLen}]` : "")
-        }));
+        plugin.push(
+            new Webpack.DllPlugin({
+                context: Path.join(assetsPath),
+                path: Path.join(assetsPath, "dll/[name]-dll-manifest.json"),
+                name: "[name]" + (basic.output.useHash ? `.[chunkhash:${basic.output.hashLen}]` : "")
+            })
+        );
     }
 
     //todo:

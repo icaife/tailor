@@ -25,7 +25,11 @@ let
         spritePath: Path.join(config.basic.root, config.basic.src /*, config.basic.assets*/ ),
         // stylesheetPath: Path.join(config.basic.root, config.basic.src /*, config.basic.assets*/ ),
         spritesmith: {
-            padding: 4
+            padding: 4,
+            algorithm: "binary-tree", //default
+            algorithmOpts: {
+                sort: true
+            }
         },
         filterBy: (image) => {
             return /([^\/\\]+-sprite)[\/\\]/ /*TODO*/ .test(image.url) ? Promise.resolve() : Promise.reject();
@@ -85,20 +89,47 @@ let
         }
     });
 let
-    jsRule = config => [{
-        test: /\.js/,
-        exclude: /node_modules|vendor/,
-        use: [{
-            loader: "babel-loader",
-            options: {
-                presets: [
-                    Path.join(config.basic.cur, "./node_modules/babel-preset-es2015"),
-                    Path.join(config.basic.cur, "./node_modules/babel-preset-stage-2")
-                ],
-                babelrc: false
-            }
+    jsRule = config => {
+        let
+            isDev = config.basic.env === config.constant.env.development;
+
+        return [{
+            test: /\.js/,
+            exclude: /node_modules|vendor/,
+            use: [{
+                loader: "babel-loader",
+                options: {
+                    presets: [
+                        Path.join(config.basic.cur, "./node_modules/babel-preset-es2015"),
+                        Path.join(config.basic.cur, "./node_modules/babel-preset-stage-2")
+                    ],
+                    babelrc: false,
+                    retainLines: true,
+                    cacheDirectory: true
+                }
+            }, {
+                /**
+                 * @see https://www.npmjs.com/package/eslint-loader
+                 */
+                loader: "eslint-loader",
+                options: {
+                    configFile: Path.join(config.basic.root, ".eslintrc"),
+                    failOnWarning: false, // warning occured then stop
+                    failOnError: true, // error occured then stop
+                    cache: false, // disable cache
+                    emitError: true,
+                    emitOnWarning: true,
+                    quiet: false,
+                    //@ see https://www.npmjs.com/package/eslint-loader#outputreport-default-false-
+                    // outputReport: {
+                    //     filePath: "d:/checkstyle.json",
+                    //     formatter: require("eslint/lib/formatters/checkstyle")
+                    // }
+                    // formatter: require("eslint-friendly-formatter")
+                }
+            }]
         }]
-    }];
+    };
 let
     htmlRule = config => [{
         test: new RegExp(`.(${config.basic.html.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
@@ -113,28 +144,40 @@ let
                     }, */
 
             {
-                loader: "art-template-loader",
+                loader: /*lib/loader/*/ "art-template-loader",
                 options: {
+                    htmlResourceRules: [
+                        /<(?:img)[^>]+\b(?:(?:data|original)-)?(?:src|href)="([^"]*)"[^>]*?>/img, //img tag
+                    ],
                     //handle art-template and php template conflicts
                     rules: [{
-                            test: /@{{([@#]?)[ \t]*([\w\W]*?)[ \t]*}}/, //vue or other javascript,php blade template
+                            test: /{{raw}}([\w\W]*?){{\/raw}}/,
+                            use: function(match, code) {
+                                return {
+                                    output: 'raw',
+                                    code: JSON.stringify(code)
+                                }
+                            }
+                        }, {
+                            test: /@{{([@#]?)[ \t]*([\w\W]*?)[ \t]*}}/, //TODO:vue or other javascript,php blade template
                             use: function(match, raw, close, code) {
-
                                 return {
                                     code: `"${match.toString()}"`,
                                     output: "raw"
                                 };
                             }
-                        }, {
-                            test: /{{[ \t]*\$([\w\W]*?)[ \t]*}}/, //php blade template
-                            use: function(match, raw, close, code) {
+                        }
+                        /*, {
+                                                    test: /{{[ \t]*\$([\w\W]*?)[ \t]*}}/, //php blade template
+                                                    use: function(match, raw, close, code) {
 
-                                return {
-                                    code: `"${match.toString()}"`,
-                                    output: "raw"
-                                };
-                            }
-                        }, {
+                                                        return {
+                                                            code: `"${match.toString()}"`,
+                                                            output: "raw"
+                                                        };
+                                                    }
+                                                }*/
+                        , {
                             test: /{{[ \t]*\w+\([ \t]*\$([\w\W]*?)?\)[ \t]*}}/, //php blade template with function
                             use: function(match, raw, close, code) {
                                 return {
@@ -143,10 +186,9 @@ let
                                 };
                             }
                         },
-                        require("art-template/lib/compile/adapter/rule.art"),
-                        require("art-template/lib/compile/adapter/rule.native")
+                        ...require("art-template").defaults.rules,
                     ],
-                    extname: "." + config.basic.html.ext[0],
+                    extname: "." + config.basic.html.ext[0], //TODO
                     htmlResourceRoot: Path.join(config.basic.root, config.basic.src),
                     root: Path.join(config.basic.root, config.basic.src)
                 }
@@ -214,7 +256,7 @@ let
             test: new RegExp(`.(${config.basic.css.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
             use: isDev ? styleLoaders : ExtractTextPlugin.extract({
                 fallback: "style-loader",
-                use: styleLoaders
+                use: styleLoaders.slice(1)
             })
         }]
     };
@@ -222,7 +264,7 @@ let
     imageRule = config => {
         let basic = config.basic,
             outputConfig = basic.output,
-            name = `${config.basic.assets}/[path][name]` + (outputConfig.useHash ? `.[${outputConfig.hashLen}]` : "") + `.[ext]`;
+            name = `${config.basic.assets}/[path][name]` + (outputConfig.useHash ? `.[hash:${outputConfig.hashLen}]` : "") + `.[ext]`;
 
         return [{
             test: {
@@ -262,11 +304,12 @@ let
             }]
         }];
     };
+
 let
     fileRule = config => {
         let basic = config.basic,
             outputConfig = basic.output,
-            name = `${config.basic.assets}/[path][name]` + (outputConfig.useHash ? `.[${outputConfig.hashLen}]` : "") + `.[ext]`;
+            name = `${config.basic.assets}/[path][name]` + (outputConfig.useHash ? `.[hash:${outputConfig.hashLen}]` : "") + `.[ext]`;
 
         return [{
             test: {

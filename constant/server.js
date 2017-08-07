@@ -5,13 +5,14 @@
 
 module.exports = {
     domain: "localhost",
-    port: 8888,
+    port: 8080,
     devServer: {
-        noInfo: true,
+        noInfo: false,
         quiet: true,
-        clientLogLevel: 'info',
+        log: () => {},
+        clientLogLevel: "info",
         disableHostCheck: true,
-        // 不启用压缩
+        // 是否启用压缩
         compress: true,
         // enable hmr
         hot: true,
@@ -28,11 +29,17 @@ module.exports = {
             error: true
         },
         headers: {
-            "Access-Control-Allow-Origin": "*"
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": true,
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Methods": "*",
+            "Accept": "*/*"
         },
         // options for formating the statistics
         stats: {
             children: false,
+            // Add public path information
+            publicPath: true,
             errors: true,
             colors: true,
             chunks: false,
