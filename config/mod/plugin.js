@@ -116,12 +116,10 @@ module.exports = (config) => {
                 apply: function(compiler) {
                     compiler.plugin("done", function(stats, type, msg) {
                         if (stats.hasErrors()) { //有错误,退出 exit -1
-                            let errors = stats.compilation.errors || [];
-                            Log.error(`some errors occurred:\n${errors.join("\n")}\n`);
-                            // Shell.set("-e");
-                            // Shell.exec("exit 1");
-                            Shell.exit(-1);
-                            process.exit(-1);
+                            let errors = stats.compilation.errors || [],
+                                msg = errors.join("\n");
+                            Log.error(`some errors occurred:\n${msg}\n`);
+                            process.exit(1);
                         }
                     });
                 }

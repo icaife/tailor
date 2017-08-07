@@ -22,7 +22,7 @@ let destPath = Path.join(Config.basic.root, Config.basic.dest);
 FSE.existsSync(destPath) && (Shell.rm("-rf", destPath), Log.info("clean " + Log.chalk.blue(destPath) + " done"));
 
 //init
-Log.info("Enjoy yourself! :)\n");
+Log.info("Enjoy yourself! :)");
 
 init();
 
@@ -34,7 +34,7 @@ function init() {
 	if (isDev) { // if development,run webpack server
 		Serve.run();
 	} else { //run webpack
-		Shell.exec("webpack --colors --config webpack.config.js  --hide-modules "); //--progress --bail
-		Shell.exit(0);
+		let exitCode = Shell.exec("webpack --config webpack.config.js --colors --hide-modules --bail").code; //--progress --bail
+		process.exit(exitCode);
 	}
 }

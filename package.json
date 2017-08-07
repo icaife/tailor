@@ -74,5 +74,7 @@
         "write-file-webpack-plugin": "^4.1.0",
         "yargs": "^8.0.2"
     },
-    "dependencies": {}
+    "dependencies": {
+        "pre-commit": "^1.2.2"
+    }
 }
