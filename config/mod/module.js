@@ -195,9 +195,21 @@ let
             }, {
                 loader: StringReplaceWebpackPlugin.replace({ //TODO replace something
                     replacements: [{
-                        pattern: /<script[^>]+>[\s\S]*?<\/script>/ig,
-                        replacement: function(match, p1, offset, string) {
-                            return match;
+                        pattern: /<script[^>]+src="([^"]+)"[^>]*?>[\s\S]*?<\/script>/img,
+                        replacement: function(match, src, offset, string) {
+                            let result = /^(\w+:)?(\/\/)/.test(src) ? src : Path.join(config.basic.cdn, config.basic.assets, src).replace(/\\/g, "/");
+
+                            return match.toString().replace(src, result);
+                            //TODO: webpack loader async
+                            // return new Promise((resolve, reject) => {
+                            //     require.resolve(this.options.context, src, function(err, result) {
+                            //         if (err) {
+                            //             reject(err);
+                            //         } else {
+                            //             resolve(result);
+                            //         }
+                            //     });
+                            // });
                         }
                     }]
                 })
