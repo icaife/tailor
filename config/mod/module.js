@@ -167,6 +167,14 @@ let
                                     output: "raw"
                                 };
                             }
+                        }, {
+                            test: /{#([@#]?)[ \t]*([\w\W]*?)[ \t]*#}/, //TODO:vue or other javascript,php blade template
+                            use: function(match, raw, close, code) {
+                                return {
+                                    code: `"${match.toString()}"`.replace(/{#/g, "{{").replace(/#}/g, "}}"),
+                                    output: "raw"
+                                };
+                            }
                         }
                         /*, {
                                                     test: /{{[ \t]*\$([\w\W]*?)[ \t]*}}/, //php blade template
