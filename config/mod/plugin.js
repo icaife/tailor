@@ -101,7 +101,7 @@ module.exports = (config) => {
             new Webpack.NoEmitOnErrorsPlugin(),
         );
 
-        if (Path.sep === "/") { // not windows
+        if (Path.sep === "/") { //webpack dashboard not support windows
             let dashboard = new WebpackDashboard();
             plugin.push(new WebpackDashboardPlugin(dashboard.setData));
         }
