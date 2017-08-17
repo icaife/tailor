@@ -29,6 +29,9 @@ let
             algorithm: "binary-tree", //default
             algorithmOpts: {
                 sort: true
+            },
+            exportOpts: {
+                quality: 85
             }
         },
         filterBy: (image) => {
@@ -258,9 +261,9 @@ let
                 }),
             ];
 
-        if (!isDev) {
-            postcssPlugins.push(PostCssSprites(spritesConfig(config)));
-        }
+        // if (!isDev) {
+        postcssPlugins.push(PostCssSprites(spritesConfig(config)));
+        // }
 
         let styleLoaders = [{
             loader: "style-loader",

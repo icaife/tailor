@@ -1,6 +1,7 @@
 /**
  * @description get entries
  * @author Leon.Cai
+ * @see TODO:https://github.com/gwuhaolin/web-webpack-plugin html as entry
  */
 "use strict";
 
