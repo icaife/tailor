@@ -84,6 +84,7 @@ module.exports = {
         resolveLoader: resolveLoader,
         plugins: plugins,
         profile: true,
+        externals: basic.globalVars,
         watch: basic.env === Constant.env.development, //middleware default true
         devtool: ({
             // "development": "cheap-module-eval-source-map",

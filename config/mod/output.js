@@ -18,7 +18,9 @@ module.exports = (config) => {
 		filename: `${basic.assets}/${fileName}`,
 		chunkFilename: `${basic.assets}/${chunkFilename}`,
 		sourceMapFilename: `${basic.assets}/[name].map`,
-		pathinfo: true
+		pathinfo: true,
+		libraryTarget: "umd",
+		library: ""
 	};
 
 	return output;
