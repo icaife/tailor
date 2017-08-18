@@ -20,7 +20,7 @@ module.exports = (config) => {
 		sourceMapFilename: `${basic.assets}/[name].map`,
 		pathinfo: true,
 		libraryTarget: "umd",
-		library: ""
+		library: basic.globalVars
 	};
 
 	return output;

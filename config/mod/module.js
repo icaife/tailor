@@ -209,7 +209,7 @@ let
                     replacements: [{
                         pattern: /<script[^>]+src="([^"]+)"[^>]*?>[\s\S]*?<\/script>/img,
                         replacement: function(match, src, offset, string) {
-                            let result = /^(\w+:)?(\/\/)/.test(src) ? src : Path.join(config.basic.cdn, config.basic.assets, src).replace(/\\/g, "/");
+                            let result = /^(\w+:)?(\/\/)/.test(src) ? src : (`${config.basic.cdn}/${config.basic.assets }/${src}`).replace(/\\/g, "/");
 
                             return match.toString().replace(src, result);
                             //TODO: webpack loader async

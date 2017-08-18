@@ -43,7 +43,7 @@ module.exports = (config) => {
         new CopyWebpackPlugin([{
             context: Path.join(basic.root, basic.src),
             from: {
-                glob: "**/vendor/*.*",
+                glob: "**/vendor/**/*.*",
                 dot: true
             },
             to: Path.join(basic.root, basic.dest, basic.assets)
@@ -66,7 +66,7 @@ module.exports = (config) => {
             fileName: `${basic.assets}/manifest.json`,
             publicPath: `${basic.cdn}`
         }),
-        new Webpack.ProvidePlugin(basic.globalVars),
+        // new Webpack.ProvidePlugin(basic.globalVars),
         /**
          * @see  https://doc.webpack-china.org/plugins/source-map-dev-tool-plugin/
          */
