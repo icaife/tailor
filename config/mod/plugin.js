@@ -73,7 +73,7 @@ module.exports = (config) => {
         new SourceMapDevToolPlugin({
             filename: `${basic.assets}/[name].map`,
             exclude: [/vendor/],
-            append: `\n/*${(new Date()).toLocaleString()} built*/`
+            append: basic.env !== envs.production ? "" : `\n/*${(new Date()).toLocaleString()} built*/`
         }),
         /**
          * @see  https://github.com/mishoo/UglifyJS2
@@ -101,7 +101,7 @@ module.exports = (config) => {
             new Webpack.NoEmitOnErrorsPlugin(),
         );
 
-        if (Path.sep === "/") { // not windows
+        if (Path.sep === "/") { //webpack dashboard not support windows
             let dashboard = new WebpackDashboard();
             plugin.push(new WebpackDashboardPlugin(dashboard.setData));
         }
@@ -135,6 +135,16 @@ module.exports = (config) => {
                             process.exit(1);
                         }
                     });
+
+                    // compiler.plugin("compilation", function(compilation) {
+                    //     compilation.plugin("html-webpack-plugin-before-html-processing", (htmlPluginData, callback) => {
+                    //         let outputName = htmlPluginData.outputName,
+                    //             assets = htmlPluginData.assets,
+                    //             chunks = Object.keys(assets.chunks || {});
+
+                    //         // console.log(outputName, assets, chunks);
+                    //     });
+                    // });
                 }
             }
         );
@@ -151,12 +161,18 @@ module.exports = (config) => {
                 fileName = `${page}`, //TODO
                 opts = {
                     filename: `${basic.views}/${fileName}.${basic.output.html.ext}`,
+                    chunks: [fileName],
                     template: `${fileName}.${basic.html.ext[0]}`,
-                    inject: !false
+                    inject: !false,
+                    // chunksSortMode: function(a, b) {
+                    //     console.log(a, b);
+                    // },
+                    // chunksSortMode: "manual" //Allowed values: 'none' | 'auto' | 'dependency' |'manual' | {function} - default: 'auto'
                 };
 
             plugin.push(new HtmlWebpackPlugin(opts));
         });
+
         plugin.push(new WriteFileWebpackPlugin({
             test: /(assets|views)/
         }));
