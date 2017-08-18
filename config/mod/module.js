@@ -29,6 +29,9 @@ let
             algorithm: "binary-tree", //default
             algorithmOpts: {
                 sort: true
+            },
+            exportOpts: {
+                quality: 85
             }
         },
         filterBy: (image) => {
@@ -167,6 +170,14 @@ let
                                     output: "raw"
                                 };
                             }
+                        }, {
+                            test: /{#([@#]?)[ \t]*([\w\W]*?)[ \t]*#}/, //TODO:vue or other javascript,php blade template
+                            use: function(match, raw, close, code) {
+                                return {
+                                    code: `"${match.toString()}"`.replace(/{#/g, "{{").replace(/#}/g, "}}"),
+                                    output: "raw"
+                                };
+                            }
                         }
                         /*, {
                                                     test: /{{[ \t]*\$([\w\W]*?)[ \t]*}}/, //php blade template
@@ -198,7 +209,7 @@ let
                     replacements: [{
                         pattern: /<script[^>]+src="([^"]+)"[^>]*?>[\s\S]*?<\/script>/img,
                         replacement: function(match, src, offset, string) {
-                            let result = /^(\w+:)?(\/\/)/.test(src) ? src : Path.join(config.basic.cdn, config.basic.assets, src).replace(/\\/g, "/");
+                            let result = /^(\w+:)?(\/\/)/.test(src) ? src : (`${config.basic.cdn}/${config.basic.assets }/${src}`).replace(/\\/g, "/");
 
                             return match.toString().replace(src, result);
                             //TODO: webpack loader async
@@ -250,9 +261,9 @@ let
                 }),
             ];
 
-        if (!isDev) {
-            postcssPlugins.push(PostCssSprites(spritesConfig(config)));
-        }
+        // if (!isDev) {
+        postcssPlugins.push(PostCssSprites(spritesConfig(config)));
+        // }
 
         let styleLoaders = [{
             loader: "style-loader",

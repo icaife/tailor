@@ -12,7 +12,7 @@
 - TODO List
 	- Development
 		- [x] multi-page support
-		- [ ] Compile
+		- [x] Compile
 			- [x] less to css
 			- [x] js uglify
 			- [x] css sprite
@@ -20,7 +20,7 @@
 		- [x] hot reload
 		- [ ] Lint
 			- [x] eslint
-			- [ ] stylelint
+			- [x] stylelint
 			- [ ] htmlint
 		- [x] ES6 supported
 		- [x] Vue spported
@@ -28,7 +28,7 @@
 	- [ ] Test
 		- [ ] [Jest](http://facebook.github.io/jest/docs/zh-Hans/getting-started.html)
 		- [x] git precommit hook
-	- [ ] Build 
+	- [ ] Build
 		- [x] env diff:DEV QA PROD
 	- [ ] [CI](https://zhuanlan.zhihu.com/p/26701038)
 		- [ ] [Jekins](https://www.liaoxuefeng.com/article/001463233913442cdb2d1bd1b1b42e3b0b29eb1ba736c5e000)
