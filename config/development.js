@@ -4,11 +4,10 @@
  */
 
 module.exports = {
-	basic: {
-		env: "development",
-		output: {
-			useHash: false
-		}
-	},
-	server: {}
+    basic: {
+        output: {
+            useHash: false
+        }
+    },
+    server: {}
 };

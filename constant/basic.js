@@ -4,52 +4,45 @@
  */
 const
     Path = require("path"),
+    proj = "tffview",
     cur = Path.resolve(__dirname, `../`),
-    config = {
-        cur: cur,
-        domain: "/",
-        cdn: "/",
-        configFile: "tailor.config.js",
-        src: "src",
-        dest: "dest",
-        views: "views",
-        assets: "assets",
-        cdn: "",
-        entry: {
-            prefix: "index",
-            glob: "**",
-            ext: "js"
-        },
-        output: {
-            useHash: true,
-            hashLen: 6,
-            html: {
-                ext: "blade.php"
-            }
-        },
-        html: {
-            ext: ["html"]
-        },
-        js: {
-            ext: ["js"],
-            attrs: {
-                defer: true
-            }
-        },
-        css: {
-            ext: ["css", "less"]
-        },
-        img: {
-            ext: ["jpg", "jpeg", "png", "gif", "ico", "bmp"]
-        },
-        file: {
-            ext: ["svg", "eof", "woff", "woff2", "eot", "ttf"]
-        },
-        alias: {},
-        vendor: {},
-        globalVars: {},
-        modules: [],
-        extensions: []
-    };
+    root = Path.resolve(cur, `../${proj}`);
 
-module.exports = config;
+module.exports = {
+    // env: env,
+    cur: cur,
+    root: root,
+    domain: "http://duang.tff.com",
+    src: "src",
+    dest: "dest",
+    views: "views",
+    assets: "assets",
+    cdn: "//cdn.tff.com/",
+    entry: {
+        prefix: "index",
+        glob: "**",
+        ext: "js"
+    },
+    output: {
+        useHash: true,
+        hashLen: 6,
+        html: {
+            ext: "blade.php"
+        }
+    },
+    html: {
+        ext: ["html"]
+    },
+    js: {
+        ext: ["js"],
+        attrs: {
+            defer: true
+        }
+    },
+    css: {
+        ext: ["css", "less"]
+    },
+    img: {
+        ext: ["jpg", "jpeg", "png", "gif", "svg", "eof", "woff", "woff2", "eot", "ttf"]
+    }
+};

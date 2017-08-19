@@ -12,16 +12,11 @@ module.exports = (config) => {
 		fileName = outputConfig.useHash ? `[name].[chunkhash:${outputConfig.hashLen}].js` : '[name].js',
 		chunkFilename = outputConfig.useHash ? `[name].[chunkhash:${outputConfig.hashLen}].js` : "[name].js";
 
-	let output = {
+	return {
 		path: Path.join(basic.root, basic.dest),
+		// pathinfo: true,
 		publicPath: basic.cdn,
 		filename: `${basic.assets}/${fileName}`,
-		chunkFilename: `${basic.assets}/${chunkFilename}`,
-		sourceMapFilename: `${basic.assets}/[name].map`,
-		pathinfo: true,
-		libraryTarget: "umd",
-		library: basic.globalVars
+		chunkFilename: `${basic.assets}/${chunkFilename}`
 	};
-
-	return output;
 };

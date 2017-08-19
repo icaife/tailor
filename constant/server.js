@@ -1,18 +1,19 @@
+#!/usr/bin/env node
+
 /**
  * @description constant server
  * @author Leon.Cai
  */
 
 module.exports = {
-    domain: "localhost",
+    host: "localhost",
     port: 8080,
     devServer: {
-        noInfo: false,
+        noInfo: true,
         quiet: true,
-        log: () => {},
-        clientLogLevel: "info",
+        clientLogLevel: 'info',
         disableHostCheck: true,
-        // 是否启用压缩
+        // 不启用压缩
         compress: true,
         // enable hmr
         hot: true,
@@ -29,17 +30,11 @@ module.exports = {
             error: true
         },
         headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Credentials": true,
-            "Access-Control-Allow-Headers": "*",
-            "Access-Control-Allow-Methods": "*",
-            "Accept": "*/*"
+            "Access-Control-Allow-Origin": "*"
         },
         // options for formating the statistics
         stats: {
             children: false,
-            // Add public path information
-            publicPath: true,
             errors: true,
             colors: true,
             chunks: false,

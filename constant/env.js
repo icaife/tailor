@@ -6,7 +6,5 @@
 module.exports = {
     test: "test",
     production: "production",
-    development: "development",
-    dll: "dll",
-    analysis: "analysis",
+    development: "development"
 };
