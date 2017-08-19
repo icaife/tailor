@@ -27,7 +27,7 @@ const
     ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
     CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin,
     // NamedModulesPlugin = Webpack.NamedModulesPlugin,
-    HashedModuleIdsPlugin = webpack.HashedModuleIdsPlugin,
+    HashedModuleIdsPlugin = Webpack.HashedModuleIdsPlugin,
     SourceMapDevToolPlugin = Webpack.SourceMapDevToolPlugin;
 
 module.exports = (config) => {
@@ -40,7 +40,6 @@ module.exports = (config) => {
         assetsPath = Path.join(basic.root, basic.dest, basic.assets);
 
     plugin.push(
-        new NamedModulesPlugin(),
         new HashedModuleIdsPlugin(),
         new CopyWebpackPlugin([{
             context: Path.join(basic.root, basic.src),
