@@ -164,6 +164,11 @@ module.exports = (config) => {
                     chunks: [fileName],
                     template: `${fileName}.${basic.html.ext[0]}`,
                     inject: !false,
+                    minify: {
+                        // removeTagWhitespace: true,
+                        // collapseWhitespace: true,
+                        // collapseInlineTagWhitespace: true
+                    }
                     // chunksSortMode: function(a, b) {
                     //     console.log(a, b);
                     // },

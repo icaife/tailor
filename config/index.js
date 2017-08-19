@@ -17,6 +17,10 @@ const
     Resolve = require("./mod/resolve"),
     Constant = require("../constant"),
     ResolveLoader = require("./mod/resolve-loader"),
+    // HappyPack = require("happypack"),
+    // happyThreadPool = new HappyPack.ThreadPool({
+    //     size: 5
+    // }),
     args = parse(Yargs.argv._);
 
 let
@@ -71,6 +75,25 @@ function parse(args) {
 
     return obj;
 }
+
+//TODO happy pack
+// env === Constant.env.development && mod.rules.forEach(item => {
+
+//     let id = item.test.toString(),
+//         loaders = item.use;
+
+//     if (!/less|html/.test(id)) {
+//         item.use = [`happypack/loader?id=${id}`];
+
+//         plugins.push(
+//             new HappyPack({
+//                 id: id,
+//                 threadPool: happyThreadPool,
+//                 loaders: loaders
+//             })
+//         );
+//     }
+// });
 
 module.exports = {
     basic: basic,
