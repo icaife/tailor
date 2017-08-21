@@ -151,7 +151,7 @@ let
                 loader: /*lib/loader/*/ "art-template-loader",
                 options: {
                     htmlResourceRules: [
-                        /<(?:img)[^>]+\b(?:(?:data|original)-)?(?:src|href)="([^"]*)"[^>]*?>/img, //img tag
+                        /<(?:img)[^>]+\b(?:(?:data|original)-)?(?:src|href)="([^"{}]*)"[^>]*?>/img, //img tag
                     ],
                     //handle art-template and php template conflicts
                     rules: [{
@@ -165,6 +165,7 @@ let
                         }, {
                             test: /@{{([@#]?)[ \t]*([\w\W]*?)[ \t]*}}/, //TODO:vue or other javascript,php blade template
                             use: function(match, raw, close, code) {
+
                                 return {
                                     code: `"${match.toString()}"`,
                                     output: "raw"
@@ -173,8 +174,9 @@ let
                         }, {
                             test: /{#([@#]?)[ \t]*([\w\W]*?)[ \t]*#}/, //TODO:vue or other javascript,php blade template
                             use: function(match, raw, close, code) {
+
                                 return {
-                                    code: `"${match.toString()}"`.replace(/{#/g, "{{").replace(/#}/g, "}}"),
+                                    code: `"${match.toString()}"`.replace(/\.(\w+)/g, '[\'$1\']').replace(/{#/g, "{{").replace(/#}/g, "}}"),
                                     output: "raw"
                                 };
                             }

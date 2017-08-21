@@ -179,7 +179,7 @@ module.exports = (config) => {
         });
 
         plugin.push(new WriteFileWebpackPlugin({
-            test: /(assets|views)/
+            test: /views/ //TODO
         }));
 
         plugin.push(new CommonsChunkPlugin({
