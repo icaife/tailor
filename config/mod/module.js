@@ -241,7 +241,29 @@ let
                                 // emitAs: "error"
                             }
                         }*/
-        ]
+        ],
+    }, {
+        test: /\.tag$/,
+        use: [{
+            loader: "riotjs-loader",
+            options: {
+                sourceMap: true
+            }
+        }]
+    }, {
+        test: /\.vue$/,
+        use: [{
+            //@see https://github.com/vuejs/vue-loader/blob/master/docs/en/options.md
+            loader: "vue-loader",
+            options: {
+                sourceMap: true,
+                esModule: false,
+                loaders: {
+
+                }
+                // extractCSS: false,
+            }
+        }]
     }];
 
 let

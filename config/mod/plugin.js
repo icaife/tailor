@@ -26,7 +26,7 @@ const
     UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
     ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
     CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin,
-    NamedModulesPlugin = Webpack.NamedModulesPlugin,
+    HashedModuleIdsPlugin = Webpack.HashedModuleIdsPlugin,
     SourceMapDevToolPlugin = Webpack.SourceMapDevToolPlugin;
 
 module.exports = (config) => {
@@ -39,7 +39,7 @@ module.exports = (config) => {
         assetsPath = Path.join(basic.root, basic.dest, basic.assets);
 
     plugin.push(
-        new NamedModulesPlugin(),
+        new HashedModuleIdsPlugin(),
         new CopyWebpackPlugin([{
             context: Path.join(basic.root, basic.src),
             from: {
@@ -48,7 +48,7 @@ module.exports = (config) => {
             },
             to: Path.join(basic.root, basic.dest, basic.assets)
         }]),
-        new ModuleConcatenationPlugin(),
+        // new ModuleConcatenationPlugin(),
         new StringReplaceWebpackPlugin(),
         /**
          * @see https://stylelint.io/user-guide/rules/
