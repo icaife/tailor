@@ -134,6 +134,7 @@ let
             }]
         }]
     };
+
 let
     htmlRule = config => [{
         test: new RegExp(`.(${config.basic.html.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
@@ -254,12 +255,18 @@ let
         test: /\.vue$/,
         use: [{
             //@see https://github.com/vuejs/vue-loader/blob/master/docs/en/options.md
+            //@see https://vue-loader.vuejs.org/zh-cn/
             loader: "vue-loader",
             options: {
                 sourceMap: true,
                 esModule: false,
+                transformToRequire: {
+                    script: ["src"],
+                    style: ["src"],
+                    img: ["src", "data-src", "data-original"]
+                },
                 loaders: {
-
+                    js: "babel-loader!eslint-loader"
                 }
                 // extractCSS: false,
             }
@@ -388,8 +395,10 @@ let
     };
 
 module.exports = (config) => {
+    let rules = [...jsRule(config), ...htmlRule(config), ...styleRule(config), ...imageRule(config), ...fileRule(config)];
+
     return {
-        rules: [...jsRule(config), ...htmlRule(config), ...styleRule(config), ...imageRule(config), ...fileRule(config)],
+        rules: rules,
         noParse: [/vendor/]
     }
-}
+};
