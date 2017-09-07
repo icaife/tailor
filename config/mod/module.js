@@ -350,12 +350,12 @@ let
                 loader: "image-webpack-loader",
                 options: {
                     mozjpeg: { //jpeg
-                        quality: 80
+                        quality: 80,
+                        progressive: true,
                     },
                     bypassOnDebug: true,
-                    progressive: true,
                     optipng: { //png
-                        optimizationLevel: 3
+                        optimizationLevel: 4
                     },
                     pngquant: { //png
                         quality: "75-90",
