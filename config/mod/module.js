@@ -108,7 +108,8 @@ let
                     ],
                     babelrc: false,
                     retainLines: true,
-                    cacheDirectory: true
+                    cacheDirectory: true,
+                    // exclude: /node_modules|vendor/
                 }
             }, {
                 /**
@@ -124,12 +125,13 @@ let
                     emitError: true,
                     emitOnWarning: true,
                     quiet: false,
-                    //@ see https://www.npmjs.com/package/eslint-loader#outputreport-default-false-
-                    // outputReport: {
-                    //     filePath: "d:/checkstyle.json",
-                    //     formatter: require("eslint/lib/formatters/checkstyle")
-                    // }
-                    // formatter: require("eslint-friendly-formatter")
+                    exclude: /node_modules|vendor/
+                        //@ see https://www.npmjs.com/package/eslint-loader#outputreport-default-false-
+                        // outputReport: {
+                        //     filePath: "d:/checkstyle.json",
+                        //     formatter: require("eslint/lib/formatters/checkstyle")
+                        // }
+                        // formatter: require("eslint-friendly-formatter")
                 }
             }]
         }]
