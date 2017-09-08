@@ -17,17 +17,13 @@ const
     Resolve = require("./mod/resolve"),
     Constant = require("../constant"),
     ResolveLoader = require("./mod/resolve-loader"),
-    // HappyPack = require("happypack"),
-    // happyThreadPool = new HappyPack.ThreadPool({
-    //     size: 5
-    // }),
     args = parse(Yargs.argv._);
 
 let
     env = Constant.env[process.env.NODE_ENV] ? Constant.env[process.env.NODE_ENV] : Constant.env.development, //default development
     commonConfig = require("./common"),
     envConfig = require(`./${env}`),
-    projRoot = Util.findRoot(args.proj ? `../${args.proj}` : "", commonConfig.basic.configFile),
+    projRoot = Util.findRoot(args.proj ? `${args.proj}` : "../", commonConfig.basic.configFile),
     projConfig = null;
 
 if (projRoot) {

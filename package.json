@@ -1,6 +1,6 @@
 {
     "name": "tf-tailor",
-    "version": "1.2.4",
+    "version": "1.2.5",
     "description": "tailor for toursforfun frontend",
     "main": "webpack",
     "scripts": {
@@ -20,7 +20,8 @@
     ],
     "author": "leon.cai@toursforfun.com",
     "license": "ISC",
-    "devDependencies": {
+    "devDependencies": {},
+    "dependencies": {
         "art-template": "^4.12.1",
         "art-template-loader": "^1.4.3",
         "autoprefixer": "^7.1.1",
@@ -30,6 +31,7 @@
         "babel-preset-stage-2": "^6.24.1",
         "chalk": "^2.0.1",
         "clean-webpack-plugin": "^0.1.16",
+        "commander": "^2.11.0",
         "copy-webpack-plugin": "^4.0.1",
         "cross-env": "^5.0.1",
         "css-loader": "^0.28.4",
@@ -82,6 +84,5 @@
         "webpack-merge": "^4.1.0",
         "write-file-webpack-plugin": "^4.1.0",
         "yargs": "^8.0.2"
-    },
-    "dependencies": {}
+    }
 }
