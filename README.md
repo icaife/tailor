@@ -35,17 +35,16 @@
 	- [ ] more...
 
 ## Geting Started
-- ### Install with Yarn
+- ### Install tailor global
 
-    ```
-    npm install yarn --save-dev
-	yarn install --dev
-    ```
-- ### Run scripts
+```
+npm install -g tf-tailor
+```
 
-    ```
-	npm run dev
-    ```
+- ### Run tailor
 
+```
+tailor
+```
 
 > [IE兼容指南](http://www.zuojj.com/archives/2157.html)

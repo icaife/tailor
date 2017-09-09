@@ -2,9 +2,32 @@
 
 /**
  * @description tf-tailor cli
- * @see http://hao.jobbole.com/commander-js/
+ *     -p   production
+ *     -t   test
+ *     -d   development
+ *     -e   envioronment，for finding get config file
  */
+
 
 const
     Yargs = require("yargs"),
-    pkg = require("../package.json");
+    Path = require("path"),
+    pkg = require("../package.json"),
+    args = Yargs.argv,
+    tailor = require("../index.js");
+
+Yargs
+    .usage("Usage: $0 <command> [options]")
+    .alias("p", "production")
+    .alias("t", "test")
+    .alias("d", "development")
+    .alias("e", "envioronment")
+    .alias("h", "help")
+    .epilog("Leon.Cai copyright 2017 ");
+
+tailor({
+    env: "dev",
+    ctx: Path.resolve(process.cwd())
+});
+
+console.log("tailor cli.");
