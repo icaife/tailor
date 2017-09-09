@@ -31,7 +31,6 @@
         "babel-preset-stage-2": "^6.24.1",
         "chalk": "^2.0.1",
         "clean-webpack-plugin": "^0.1.16",
-        "commander": "^2.11.0",
         "copy-webpack-plugin": "^4.0.1",
         "cross-env": "^5.0.1",
         "css-loader": "^0.28.4",
