@@ -23,7 +23,7 @@ let
     env = Constant.env[process.env.NODE_ENV] ? Constant.env[process.env.NODE_ENV] : Constant.env.development, //default development
     commonConfig = require("./common"),
     envConfig = require(`./${env}`),
-    projRoot = Util.findRoot(args.proj ? `${args.proj}` : "../", commonConfig.basic.configFile),
+    projRoot = Util.findRoot(args.proj ? `${args.proj}` : "./", commonConfig.basic.configFile),
     projConfig = null;
 
 if (projRoot) {
