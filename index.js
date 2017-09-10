@@ -32,16 +32,68 @@ function init(args) {
     //init
     Log.info("Enjoy yourself! :)");
 
-    let isDev = config.basic.env === Constant.env.development;
+    let isDev = config.basic.env === Constant.env.development,
+        compiler = null;
 
-    PreCommit(Config); //init pre commit
+    PreCommit(config); //init pre commit
 
     if (isDev) { // if development,run webpack server
-        Serve.run();
+        Serve(config);
     } else { //run webpack
-        let exitCode = Shell.exec("webpack --config webpack.config.js --colors --hide-modules").code; //--progress --bail
-        process.exit(exitCode);
+        // let exitCode = Shell.exec("webpack --config webpack.config.js --colors --hide-modules").code; //--progress --bail
+        // process.exit(exitCode);
+        compiler = Webpack(config.webpack);
+        compiler.run(compilerCallback);
+    }
+
+    function compilerCallback(err, stat) {
+        if (err) {
+            Log.error(err.stack);
+            process.exit(1);
+        }
+        const Stats = stat.toJson();
+        if (Stats.errors.length !== 0) {
+            Log.error(Stats.errors);
+            process.exit(1);
+        }
+        // 输出构建结果
+        process.stdout.write(stat.toString({
+            colors: true,
+            modules: false,
+            children: false,
+            chunks: false,
+            chunkModules: false
+        }) + '\n');
+        Log.info('Build successfully!');
+
+        process.exit(0);
+
+        // let options = config.webpack;
+
+        // if (!options.watch || err) {
+        //     // Do not keep cache anymore
+        //     compiler.purgeInputFileSystem();
+        // }
+        // if (err) {
+        //     lastHash = null;
+        //     console.error(err.stack || err);
+        //     if (err.details) console.error(err.details);
+        //     process.exit(1); // eslint-disable-line
+        // }
+        // if (outputOptions.json) {
+        //     process.stdout.write(JSON.stringify(stats.toJson(outputOptions), null, 2) + "\n");
+        // } else if (stats.hash !== lastHash) {
+        //     lastHash = stats.hash;
+        //     var statsString = stats.toString(outputOptions);
+        //     if (statsString)
+        //         process.stdout.write(statsString + "\n");
+        // }
+        // if (!options.watch && stats.hasErrors()) {
+        //     process.exitCode = 2;
+        // }
     }
 }
+
+
 
 module.exports = init;

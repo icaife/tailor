@@ -39,12 +39,10 @@ function init(args) {
         env = Constant.env[args.env] ? Constant.env[args.env] : Constant.env.development, //default development
         commonConfig = require("./common"),
         envConfig = require(`./${env}`),
-        projRoot = Path.join(args.ctx, commonConfig.basic.configFile),
-        projConfig = null;
+        projRoot = args.ctx,
+        projConfig = args.config;
 
-    if (projRoot) {
-        projConfig = require(Path.join(projRoot, commonConfig.basic.configFile))[env];
-    } else {
+    if (!projConfig) {
         Log.error(`not found project which contains the tailor config file,plz check it.`);
         process.exit(-1); //error ,exit 1
     }

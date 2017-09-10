@@ -2,32 +2,40 @@
 
 /**
  * @description tf-tailor cli
- *     -p   production
- *     -t   test
- *     -d   development
- *     -e   envioronment，for finding get config file
  */
 
-
+/**
+ * @example
+ *     tailor -e dev -f qa1
+ */
 const
     Yargs = require("yargs"),
     Path = require("path"),
+    Constant = require("../constant"),
+    _ = require("lodash"),
     pkg = require("../package.json"),
-    args = Yargs.argv,
-    tailor = require("../index.js");
-
-Yargs
+    tailor = require("../index.js"),
+    envs = Constant.env,
+    OPTIONS = {
+        e: "envioronment",
+        h: "help",
+        f: "file"
+    },
+    configDir = Path.resolve(process.cwd(), "config/env"),
+    argv = Yargs
     .usage("Usage: $0 <command> [options]")
-    .alias("p", "production")
+    .default("e", envs.development) //default development
+    .default("f", "dev.env.json")
     .alias("t", "test")
-    .alias("d", "development")
-    .alias("e", "envioronment")
     .alias("h", "help")
-    .epilog("Leon.Cai copyright 2017 ");
+    .epilog("Leon.Cai copyright 2017 ")
+    .argv;
+
+let
+    config = _.merge(require(Path.join(configDir, "base.env.json")), require(Path.join(configDir, argv.f)));
 
 tailor({
-    env: "dev",
-    ctx: Path.resolve(process.cwd())
+    env: argv.e, //environment
+    ctx: Path.resolve(process.cwd()), //project root
+    config: config
 });
-
-console.log("tailor cli.");
