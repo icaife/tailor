@@ -9,7 +9,6 @@ const
         cur: cur,
         domain: "/",
         cdn: "/",
-        configFile: "tailor.config.js",
         src: "src",
         dest: "dest",
         views: "views",

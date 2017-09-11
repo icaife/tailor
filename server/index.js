@@ -4,9 +4,6 @@
  * @author Leon.Cai
  */
 const
-	Serve = require("./server");
-
-// Serve.run();
-
+    Serve = require("./server");
 
 module.exports = Serve;

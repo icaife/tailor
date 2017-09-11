@@ -94,7 +94,7 @@ let
 let
     jsRule = config => {
         let
-            isDev = config.basic.env === config.constant.env.development;
+            isDev = config.env === config.constant.env.dev;
 
         return [{
             test: /\.js/,
@@ -278,7 +278,7 @@ let
 let
     styleRule = config => {
         let
-            isDev = config.basic.env === config.constant.env.development,
+            isDev = config.env === config.constant.env.dev,
             postcssPlugins = [AutoPrefixer({
                     browsers: ["Chrome >= 35", "FireFox >= 40", "ie > 8", "Android >= 4", "Safari >= 5.1", "iOS >= 7"],
                     remove: true

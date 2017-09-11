@@ -5,8 +5,8 @@
 
 module.exports = {
     test: "test",
-    production: "production",
-    development: "development",
+    prod: "prod",
+    dev: "dev",
     dll: "dll",
     analysis: "analysis",
 };
