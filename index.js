@@ -19,10 +19,10 @@ function init(args) {
     let config = Config(args);
 
     Log.info(`
-		work info:
-			path:${Log.chalk.blue(Path.join(config.basic.root))}
-			env:${Log.chalk.blue(config.basic.env)}
-	`);
+work info:
+    path:${Log.chalk.blue(Path.join(config.basic.root))}
+    env:${Log.chalk.blue(config.env)}
+    `);
 
     let destPath = Path.join(config.basic.root, config.basic.dest);
 
@@ -32,7 +32,7 @@ function init(args) {
     //init
     Log.info("Enjoy yourself! :)");
 
-    let isDev = config.basic.env === Constant.env.development,
+    let isDev = config.env === Constant.env.dev,
         compiler = null;
 
     PreCommit(config); //init pre commit
@@ -51,6 +51,7 @@ function init(args) {
             Log.error(err.stack);
             process.exit(1);
         }
+
         const Stats = stat.toJson();
         if (Stats.errors.length !== 0) {
             Log.error(Stats.errors);
@@ -64,33 +65,10 @@ function init(args) {
             chunks: false,
             chunkModules: false
         }) + '\n');
+
         Log.info('Build successfully!');
 
         process.exit(0);
-
-        // let options = config.webpack;
-
-        // if (!options.watch || err) {
-        //     // Do not keep cache anymore
-        //     compiler.purgeInputFileSystem();
-        // }
-        // if (err) {
-        //     lastHash = null;
-        //     console.error(err.stack || err);
-        //     if (err.details) console.error(err.details);
-        //     process.exit(1); // eslint-disable-line
-        // }
-        // if (outputOptions.json) {
-        //     process.stdout.write(JSON.stringify(stats.toJson(outputOptions), null, 2) + "\n");
-        // } else if (stats.hash !== lastHash) {
-        //     lastHash = stats.hash;
-        //     var statsString = stats.toString(outputOptions);
-        //     if (statsString)
-        //         process.stdout.write(statsString + "\n");
-        // }
-        // if (!options.watch && stats.hasErrors()) {
-        //     process.exitCode = 2;
-        // }
     }
 }
 

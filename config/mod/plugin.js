@@ -73,7 +73,7 @@ module.exports = (config) => {
         new SourceMapDevToolPlugin({
             filename: `${basic.assets}/[name].map`,
             exclude: [/vendor/],
-            append: basic.env !== envs.production ? "" : `\n/*${(new Date()).toLocaleString()} built*/`
+            append: config.env !== envs.prod ? "" : `\n/*${(new Date()).toLocaleString()} built*/`
         }),
         /**
          * @see  https://github.com/mishoo/UglifyJS2
@@ -94,7 +94,7 @@ module.exports = (config) => {
          */
     );
 
-    if (basic.env === envs.development) {
+    if (config.env === envs.dev) {
         plugin.push( //for webpack hot middleware
             new Webpack.optimize.OccurrenceOrderPlugin(),
             new Webpack.HotModuleReplacementPlugin(),
@@ -107,15 +107,15 @@ module.exports = (config) => {
         }
     }
 
-    if (basic.env === envs.test) {
+    if (config.env === envs.test) {
 
     }
 
-    if (basic.env === envs.analysis) {
+    if (config.env === envs.analysis) {
         plugin.push(new BundleAnalyzerPlugin());
     }
 
-    if (basic.env == envs.production || basic.env === envs.test) {
+    if (config.env == envs.prod || config.env === envs.test) {
         plugin.push(
             new ExtractTextPlugin({ //extract css
                 filename: `${basic.assets}/[name]` + (basic.output.useHash ? `.[contenthash:${basic.output.hashLen}]` : "") + `.css`,
@@ -150,11 +150,11 @@ module.exports = (config) => {
         );
     }
 
-    if (basic.env === envs.dll) {
+    if (config.env === envs.dll) {
 
     }
 
-    if (basic.env !== envs.dll) { //not dll env
+    if (config.env !== envs.dll) { //not dll env
         Object.keys(entry).forEach((page) => {
             let item = entry[page],
                 obj = Path.parse(page),

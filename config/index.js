@@ -36,9 +36,7 @@ function parse(args) {
 
 function init(args) {
     let
-        env = Constant.env[args.env] ? Constant.env[args.env] : Constant.env.development, //default development
         commonConfig = require("./common"),
-        envConfig = require(`./${env}`),
         projRoot = args.ctx,
         projConfig = args.config;
 
@@ -51,17 +49,16 @@ function init(args) {
     projConfig.basic.root = projRoot.replace(/[\\]/g, "/");
 
     let
-        mergedConfig = _.merge({
-            constant: Constant
-        }, commonConfig, envConfig, projConfig),
-        basic = mergedConfig.basic,
-        server = mergedConfig.server;
+        config = _.merge(commonConfig, projConfig),
+        basic = config.basic;
+
+    config.constant = Constant;
 
     let
-        entry = Entry(mergedConfig),
+        entry = Entry(config),
         params = _.merge({
             entry: entry
-        }, mergedConfig);
+        }, config);
 
     let
         context = Path.resolve(basic.root, basic.src),
@@ -71,9 +68,7 @@ function init(args) {
         resolveLoader = ResolveLoader(params),
         plugins = Plugin(params);
 
-    return {
-        basic: basic,
-        server: server,
+    return _.merge(config, {
         webpack: {
             context: context,
             entry: entry,
@@ -84,16 +79,13 @@ function init(args) {
             plugins: plugins,
             profile: true,
             externals: basic.globalVars,
-            watch: basic.env === Constant.env.development, //middleware default true
+            watch: config.env === Constant.env.dev, //middleware default true
             devtool: ({
-                // "development": "cheap-module-eval-source-map",
-                // "production": "eval-source-map",
-                "development": "cheap-module-eval-source-map",
-                "production": "cheap-module-source-map",
-            })[basic.env === Constant.env.development ? "development" : "production"]
+                "dev": "cheap-module-eval-source-map",
+                "prod": "cheap-module-source-map",
+            })[config.env === Constant.env.dev ? "dev" : "prod"]
         }
-    }
-
+    });
 }
 
 module.exports = init;
