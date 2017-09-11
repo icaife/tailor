@@ -44,7 +44,15 @@ npm install -g tf-tailor
 - ### Run tailor
 
 ```
-tailor
+tailor -e test
+```
+
+- options
+```
+-e -> environment
+	dev  (default)
+	test
+	prod
 ```
 
 > [IE兼容指南](http://www.zuojj.com/archives/2157.html)

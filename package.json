@@ -1,6 +1,6 @@
 {
     "name": "tf-tailor",
-    "version": "1.2.10",
+    "version": "1.2.11",
     "description": "tailor for toursforfun frontend",
     "main": "webpack",
     "scripts": {
@@ -18,6 +18,9 @@
         "webpack",
         "tailor"
     ],
+    "bin": {
+        "tailor": "./bin/cli.js"
+    },
     "author": "leon.cai@toursforfun.com",
     "license": "ISC",
     "devDependencies": {},
