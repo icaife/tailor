@@ -26,7 +26,7 @@ const
     UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
     ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
     CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin,
-    NamedModulesPlugin = Webpack.NamedModulesPlugin,
+    HashedModuleIdsPlugin = Webpack.HashedModuleIdsPlugin,
     SourceMapDevToolPlugin = Webpack.SourceMapDevToolPlugin;
 
 module.exports = (config) => {
@@ -39,7 +39,7 @@ module.exports = (config) => {
         assetsPath = Path.join(basic.root, basic.dest, basic.assets);
 
     plugin.push(
-        new NamedModulesPlugin(),
+        new HashedModuleIdsPlugin(),
         new CopyWebpackPlugin([{
             context: Path.join(basic.root, basic.src),
             from: {
@@ -48,7 +48,7 @@ module.exports = (config) => {
             },
             to: Path.join(basic.root, basic.dest, basic.assets)
         }]),
-        new ModuleConcatenationPlugin(),
+        // new ModuleConcatenationPlugin(),
         new StringReplaceWebpackPlugin(),
         /**
          * @see https://stylelint.io/user-guide/rules/
@@ -73,7 +73,7 @@ module.exports = (config) => {
         new SourceMapDevToolPlugin({
             filename: `${basic.assets}/[name].map`,
             exclude: [/vendor/],
-            append: basic.env !== envs.production ? "" : `\n/*${(new Date()).toLocaleString()} built*/`
+            append: config.env !== envs.prod ? "" : `\n/*${(new Date()).toLocaleString()} built*/`
         }),
         /**
          * @see  https://github.com/mishoo/UglifyJS2
@@ -94,7 +94,7 @@ module.exports = (config) => {
          */
     );
 
-    if (basic.env === envs.development) {
+    if (config.env === envs.dev) {
         plugin.push( //for webpack hot middleware
             new Webpack.optimize.OccurrenceOrderPlugin(),
             new Webpack.HotModuleReplacementPlugin(),
@@ -107,15 +107,15 @@ module.exports = (config) => {
         }
     }
 
-    if (basic.env === envs.test) {
+    if (config.env === envs.test) {
 
     }
 
-    if (basic.env === envs.analysis) {
+    if (config.env === envs.analysis) {
         plugin.push(new BundleAnalyzerPlugin());
     }
 
-    if (basic.env == envs.production || basic.env === envs.test) {
+    if (config.env == envs.prod || config.env === envs.test) {
         plugin.push(
             new ExtractTextPlugin({ //extract css
                 filename: `${basic.assets}/[name]` + (basic.output.useHash ? `.[contenthash:${basic.output.hashLen}]` : "") + `.css`,
@@ -150,11 +150,11 @@ module.exports = (config) => {
         );
     }
 
-    if (basic.env === envs.dll) {
+    if (config.env === envs.dll) {
 
     }
 
-    if (basic.env !== envs.dll) { //not dll env
+    if (config.env !== envs.dll) { //not dll env
         Object.keys(entry).forEach((page) => {
             let item = entry[page],
                 obj = Path.parse(page),
@@ -179,7 +179,7 @@ module.exports = (config) => {
         });
 
         plugin.push(new WriteFileWebpackPlugin({
-            test: /(assets|views)/
+            test: /views/ //TODO
         }));
 
         plugin.push(new CommonsChunkPlugin({

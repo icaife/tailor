@@ -17,10 +17,10 @@ module.exports = (config) => {
 		envs = config.constant.env,
 		server = config.server,
 		cwd = Path.join(basic.root, basic.src),
-		hotClient = Path.resolve(`lib/helper/hot-client`),
+		hotClient = Path.resolve(`${basic.cur}/lib/helper/hot-client`),
 		hotClientQuery = `?path=${basic.cdn}__webpack_hmr&reload=true`;
 
-	if (basic.env !== envs.dll) {
+	if (config.env !== envs.dll) {
 		let entryConfig = basic.entry,
 			glob = entryConfig.glob,
 			prefix = entryConfig.prefix,
@@ -38,7 +38,7 @@ module.exports = (config) => {
 
 			entry[mod] = [`./${dir}`];
 
-			if (basic.env === envs.development) { //if in development,push hot client entry
+			if (config.env === envs.dev) { //if in development,push hot client entry
 				entry[mod].push(hotClient + hotClientQuery);
 			}
 		});

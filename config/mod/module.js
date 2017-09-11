@@ -94,7 +94,7 @@ let
 let
     jsRule = config => {
         let
-            isDev = config.basic.env === config.constant.env.development;
+            isDev = config.env === config.constant.env.dev;
 
         return [{
             test: /\.js/,
@@ -108,7 +108,8 @@ let
                     ],
                     babelrc: false,
                     retainLines: true,
-                    cacheDirectory: true
+                    cacheDirectory: true,
+                    // exclude: /node_modules|vendor/
                 }
             }, {
                 /**
@@ -124,16 +125,18 @@ let
                     emitError: true,
                     emitOnWarning: true,
                     quiet: false,
-                    //@ see https://www.npmjs.com/package/eslint-loader#outputreport-default-false-
-                    // outputReport: {
-                    //     filePath: "d:/checkstyle.json",
-                    //     formatter: require("eslint/lib/formatters/checkstyle")
-                    // }
-                    // formatter: require("eslint-friendly-formatter")
+                    exclude: /node_modules|vendor/
+                        //@ see https://www.npmjs.com/package/eslint-loader#outputreport-default-false-
+                        // outputReport: {
+                        //     filePath: "d:/checkstyle.json",
+                        //     formatter: require("eslint/lib/formatters/checkstyle")
+                        // }
+                        // formatter: require("eslint-friendly-formatter")
                 }
             }]
         }]
     };
+
 let
     htmlRule = config => [{
         test: new RegExp(`.(${config.basic.html.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
@@ -151,7 +154,7 @@ let
                 loader: /*lib/loader/*/ "art-template-loader",
                 options: {
                     htmlResourceRules: [
-                        /<(?:img)[^>]+\b(?:(?:data|original)-)?(?:src|href)="([^"]*)"[^>]*?>/img, //img tag
+                        /<(?:img)[^>]+\b(?:(?:data|original)-)?(?:src|href)="([^"{}]*)"[^>]*?>/img, //img tag
                     ],
                     //handle art-template and php template conflicts
                     rules: [{
@@ -165,6 +168,7 @@ let
                         }, {
                             test: /@{{([@#]?)[ \t]*([\w\W]*?)[ \t]*}}/, //TODO:vue or other javascript,php blade template
                             use: function(match, raw, close, code) {
+
                                 return {
                                     code: `"${match.toString()}"`,
                                     output: "raw"
@@ -173,8 +177,9 @@ let
                         }, {
                             test: /{#([@#]?)[ \t]*([\w\W]*?)[ \t]*#}/, //TODO:vue or other javascript,php blade template
                             use: function(match, raw, close, code) {
+
                                 return {
-                                    code: `"${match.toString()}"`.replace(/{#/g, "{{").replace(/#}/g, "}}"),
+                                    code: `"${match.toString()}"`.replace(/\.(\w+)/g, '[\'$1\']').replace(/{#/g, "{{").replace(/#}/g, "}}"),
                                     output: "raw"
                                 };
                             }
@@ -239,13 +244,41 @@ let
                                 // emitAs: "error"
                             }
                         }*/
-        ]
+        ],
+    }, {
+        test: /\.tag$/,
+        use: [{
+            loader: "riotjs-loader",
+            options: {
+                sourceMap: true
+            }
+        }]
+    }, {
+        test: /\.vue$/,
+        use: [{
+            //@see https://github.com/vuejs/vue-loader/blob/master/docs/en/options.md
+            //@see https://vue-loader.vuejs.org/zh-cn/
+            loader: "vue-loader",
+            options: {
+                sourceMap: true,
+                esModule: false,
+                transformToRequire: {
+                    script: ["src"],
+                    style: ["src"],
+                    img: ["src", "data-src", "data-original"]
+                },
+                loaders: {
+                    js: "babel-loader!eslint-loader"
+                }
+                // extractCSS: false,
+            }
+        }]
     }];
 
 let
     styleRule = config => {
         let
-            isDev = config.basic.env === config.constant.env.development,
+            isDev = config.env === config.constant.env.dev,
             postcssPlugins = [AutoPrefixer({
                     browsers: ["Chrome >= 35", "FireFox >= 40", "ie > 8", "Android >= 4", "Safari >= 5.1", "iOS >= 7"],
                     remove: true
@@ -317,12 +350,12 @@ let
                 loader: "image-webpack-loader",
                 options: {
                     mozjpeg: { //jpeg
-                        quality: 80
+                        quality: 80,
+                        progressive: true,
                     },
                     bypassOnDebug: true,
-                    progressive: true,
                     optipng: { //png
-                        optimizationLevel: 3
+                        optimizationLevel: 4
                     },
                     pngquant: { //png
                         quality: "75-90",
@@ -364,8 +397,10 @@ let
     };
 
 module.exports = (config) => {
+    let rules = [...jsRule(config), ...htmlRule(config), ...styleRule(config), ...imageRule(config), ...fileRule(config)];
+
     return {
-        rules: [...jsRule(config), ...htmlRule(config), ...styleRule(config), ...imageRule(config), ...fileRule(config)],
+        rules: rules,
         noParse: [/vendor/]
     }
-}
+};

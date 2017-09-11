@@ -4,11 +4,7 @@ const
     Webpack = require("webpack"),
     DevMiddleware = require("webpack-dev-middleware"),
     HotMiddleware = require("webpack-hot-middleware"),
-    Express = require("express"),
-    Config = require("../config"),
-    basic = Config.basic,
-    webpackConfig = Config.webpack,
-    serverConfig = Config.server;
+    Express = require("express");
 
 function redirectMiddleware(req, res, next) {
     let reqUrl = req.url;
@@ -19,7 +15,12 @@ function redirectMiddleware(req, res, next) {
     return next();
 }
 
-function run() {
+function run(config) {
+    let
+        basic = config.basic,
+        webpackConfig = config.webpack,
+        serverConfig = config.server;
+
     // console.log(serverConfig.devServer);
     const
         compiler = Webpack(webpackConfig),
@@ -64,6 +65,4 @@ function run() {
 
 }
 
-module.exports = {
-    run: run
-};
+module.exports = run;
