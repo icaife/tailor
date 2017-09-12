@@ -24,9 +24,8 @@ const
     },
     ENV_FILES = {
         base: "base.env.json",
-        dev: "dev.env.json",
-        test: "test.env.json",
-        prod: "prod.env.json"
+        custom: "custom.env.json",
+        env: "env.json"
     },
     configDir = Path.resolve(process.cwd(), "config/env"),
     argv = Yargs
@@ -34,7 +33,6 @@ const
     .default("e", envs.dev) //default development
     .default("c", "")
     .default("f")
-    .alias("t", "test")
     .alias("h", "help")
     .alias("f", "file")
     .alias("e", "env")
@@ -46,7 +44,12 @@ let
     config = {};
 
 try {
-    config = _.merge(require(Path.join(configDir, ENV_FILES.base)), argv.f ? require(Path.join(configDir, argv.f)) : require(Path.join(configDir, ENV_FILES[argv.e])), fixJson(argv.c));
+    config = _.merge(
+        require(Path.join(configDir, ENV_FILES.base)),
+        require(Path.join(configDir, ENV_FILES.env)),
+        argv.f ? require(Path.join(configDir, argv.f)) : require(Path.join(configDir, ENV_FILES.custom)),
+        fixJson(argv.c)
+    );
 } catch (e) {
     Log.error(e.message);
 }

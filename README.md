@@ -48,11 +48,11 @@ tailor -e test
 ```
 
 - options
-```
--e -> environment
-	dev  (default)
-	test
-	prod
-```
+	- **e**: environment
+	- **c**: config, `dev`、`test`、`prod`,default `dev`
+	- **f**: file
+
+
+### TODO
 
 > [IE兼容指南](http://www.zuojj.com/archives/2157.html)

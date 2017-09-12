@@ -62,6 +62,11 @@ module.exports = (config) => {
             files: ["**/*.css", "**/*.less"],
             quiet: false,
         }),
+        /**
+         * defile define plugin
+         * @type {[type]}
+         */
+        new Webpack.DefinePlugin(config.vars || {}),
         new ManifestPlugin({
             fileName: `${basic.assets}/manifest.json`,
             publicPath: `${basic.cdn}`
