@@ -12,6 +12,7 @@ const
     Yargs = require("yargs"),
     Path = require("path"),
     Constant = require("../constant"),
+    FSE = require("fs-extra"),
     Log = require("../lib/util/log"),
     _ = require("lodash"),
     pkg = require("../package.json"),
@@ -37,22 +38,32 @@ const
     .alias("f", "file")
     .alias("e", "env")
     .alias("c", "config")
-    .epilog("Leon.Cai copyright 2017 ")
+    .epilog("toursforfun.com copyright 2017 ")
     .argv;
 
 let
     config = {};
 
+if (!FSE.existsSync(Path.join(configDir, ENV_FILES.base))) {
+    Log.error("not found the base.env.json,please check.");
+    process.exit(1);
+}
+
 try {
     config = _.merge(
         require(Path.join(configDir, ENV_FILES.base)),
-        require(Path.join(configDir, ENV_FILES.env)),
-        argv.f ? require(Path.join(configDir, argv.f)) : require(Path.join(configDir, ENV_FILES.custom)),
+        FSE.existsSync(configDir, ENV_FILES.env) ? require(Path.join(configDir, ENV_FILES.env)) : {},
+        argv.f ?
+        require(Path.join(configDir, argv.f)) :
+        (FSE.existsSync(configDir, ENV_FILES.custom) ? require(Path.join(configDir, ENV_FILES.custom)) : {}),
         fixJson(argv.c)
     );
 } catch (e) {
     Log.error(e.message);
+    process.exit(1);
 }
+
+config.env = argv.e;
 
 tailor({
     ctx: Path.resolve(process.cwd()), //project root
