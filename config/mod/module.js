@@ -123,7 +123,7 @@ let
                     failOnError: false, // error occured then stop
                     cache: false, // disable cache
                     emitError: true,
-                    emitOnWarning: true,
+                    emitOnWarning: false,
                     quiet: false,
                     exclude: /node_modules|vendor/
                         //@ see https://www.npmjs.com/package/eslint-loader#outputreport-default-false-

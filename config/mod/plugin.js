@@ -58,7 +58,7 @@ module.exports = (config) => {
             failOnWarning: false, // warning occured then stop
             failOnError: false, // error occured then stop
             emitError: true,
-            emitOnWarning: true,
+            emitOnWarning: false,
             files: ["**/*.css", "**/*.less"],
             quiet: false,
         }),

@@ -58,6 +58,7 @@ try {
         (FSE.existsSync(configDir, ENV_FILES.custom) ? require(Path.join(configDir, ENV_FILES.custom)) : {}),
         fixJson(argv.c)
     );
+
 } catch (e) {
     Log.error(e.message);
     process.exit(1);

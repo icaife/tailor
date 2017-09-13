@@ -8,7 +8,7 @@ module.exports = {
     port: 8080,
     devServer: {
         noInfo: false,
-        quiet: true,
+        quiet: false,
         log: () => {},
         clientLogLevel: "info",
         disableHostCheck: true,
