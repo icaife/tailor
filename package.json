@@ -1,6 +1,6 @@
 {
     "name": "tf-tailor",
-    "version": "1.2.11",
+    "version": "1.2.12",
     "description": "tailor for toursforfun frontend",
     "main": "webpack",
     "scripts": {
