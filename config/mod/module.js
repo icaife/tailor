@@ -324,6 +324,7 @@ let
 
         return [{
             test: new RegExp(`.(${config.basic.css.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
+            // exclude: /node_modules/,
             use: isDev ? styleLoaders : ExtractTextPlugin.extract({
                 fallback: "style-loader",
                 use: styleLoaders.slice(1)
