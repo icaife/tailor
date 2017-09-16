@@ -66,10 +66,10 @@ try {
 
 config.env = argv.e;
 
-tailor({
-    ctx: Path.resolve(process.cwd()), //project root
-    config: config
-});
+// tailor({
+//     ctx: Path.resolve(process.cwd()), //project root
+//     config: config
+// });
 
 function fixJson(str) {
     if (typeof str !== "string" || !str) {

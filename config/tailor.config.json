@@ -1,0 +1,69 @@
+{
+    "base": {
+        "input": {
+            "entry": {
+                "prefix": "index",
+                "ext": "js"
+            },
+            "html": {
+                "ext": "html"
+            },
+            "assets": {
+                "js": ["js"],
+                "css": ["css", "less"],
+                "img": ["jpg", "jpeg", "png", "gif", "ico", "bmp"],
+                "file": ["svg", "eof", "woff", "woff2", "eot", "ttf"]
+            },
+            "dir": "src"
+        },
+        "output": {
+            "hash": false,
+            "dir": "dest",
+            "cdn": "//cdn.tff.com",
+            "html": {
+                "dir": "views",
+                "ext": "blade.php"
+            },
+            "assets": {
+                "dir": "assets"
+            }
+        },
+        "alias": {
+            "common": "@/common",
+            "lib": "common/lib",
+            "vendor": "common/vendor",
+            "ui": "lib/ui",
+            "jquery": "vendor/jquery/jquery.min.js",
+            "vue": "vendor/vue/vue.min.js",
+            "lodash": "vendor/util/lodash.core.js",
+            "riot": "vendor/riot/riot.min.js"
+        },
+        "vars": {
+            "CDN": ""
+        },
+        "global": {
+            "$": "jquery",
+            "jQuery": "jquery",
+            "Vue": "vue",
+            "lodash": "lodash",
+            "riot": "riot",
+            "_": "lodash"
+        },
+        "server": {
+            "port": 8080,
+            "host": "localhost"
+        }
+    },
+    "dev": {
+
+    },
+    "test": {
+
+    },
+    "prod": {
+
+    },
+    "dll": {
+
+    }
+}
