@@ -1,7 +1,6 @@
 /**
  * @description get entries
  * @author Leon.Cai
- * @see TODO:https://github.com/gwuhaolin/web-webpack-plugin html as entry
  */
 
 "use strict";
@@ -13,11 +12,10 @@ const
 
 module.exports = (config) => {
     let entries = {},
-        plugins = [],
-        basic = config.basic,
-        cwd = Path.join(basic.root, basic.src),
-        entryConfig = basic.entry,
-        glob = entryConfig.glob,
+        inputConfig = config.input,
+        cwd = Path.join(config.root, inputConfig.path),
+        entryConfig = inputConfig.entry,
+        glob = "**",
         prefix = entryConfig.prefix,
         ext = entryConfig.ext,
         options = {

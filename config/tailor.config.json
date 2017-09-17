@@ -1,43 +1,59 @@
 {
     "base": {
         "input": {
+            "path": "src",
             "entry": {
                 "prefix": "index",
                 "ext": "js"
             },
+            "js": {
+                "ext": ["js"]
+            },
+            "style": {
+                "ext": ["css", "less"]
+            },
             "html": {
-                "ext": "html"
+                "ext": ["html"]
             },
-            "assets": {
-                "js": ["js"],
-                "css": ["css", "less"],
-                "img": ["jpg", "jpeg", "png", "gif", "ico", "bmp"],
-                "file": ["svg", "eof", "woff", "woff2", "eot", "ttf"]
+            "image": {
+                "ext": ["jpg", "jpeg", "png", "gif", "ico", "bmp"]
             },
-            "dir": "src"
+            "file": {
+                "ext": ["svg", "eof", "woff", "woff2", "eot", "ttf"]
+            }
         },
         "output": {
             "useHash": false,
-            "dir": "dest",
-            "cdn": "//cdn.tff.com",
+            "path": "dist",
+            "publicPath": "//cdn.tff.com",
+            "global": {
+                "$": "jquery",
+                "jQuery": "jquery",
+                "Vue": "vue",
+                "lodash": "lodash",
+                "riot": "riot",
+                "_": "lodash"
+            },
+            "js": {
+                "path": "assets"
+            },
             "html": {
-                "dir": "views",
+                "path": "views",
                 "ext": "blade.php"
             },
-            "assets": {
-                "dir": "assets"
+            "style": {
+                "path": "assets",
+                "extract": true
+            },
+            "image": {
+                "path": "assets"
+            },
+            "file": {
+                "path": "assets"
             }
         },
         "vars": {
             "CDN": ""
-        },
-        "global": {
-            "$": "jquery",
-            "jQuery": "jquery",
-            "Vue": "vue",
-            "lodash": "lodash",
-            "riot": "riot",
-            "_": "lodash"
         },
         "resolve": {
             "alias": {
@@ -64,13 +80,20 @@
         }
     },
     "dev": {
-
+        "output": {
+            "path": "dest",
+            "style": {
+                "extract": false
+            }
+        }
     },
     "test": {
-
+        "output": {}
     },
     "prod": {
-
+        "output": {
+            "useHash": true
+        }
     },
     "dll": {
 

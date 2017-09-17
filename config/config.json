@@ -1,0 +1,53 @@
+{
+    "input": {
+        "entry": {
+            "prefix": "index",
+            "ext": "js"
+        },
+        "html": {
+            "ext": "html"
+        },
+        "assets": {
+            "js": ["js"],
+            "css": ["css", "less"],
+            "img": ["jpg", "jpeg", "png", "gif", "ico", "bmp"],
+            "file": ["svg", "eof", "woff", "woff2", "eot", "ttf"]
+        },
+        "path": "src"
+    },
+    "output": {
+        "clean": true,
+        "useHash": false,
+        "hashLen": 6,
+        "path": "dist",
+        "publicPath": "",
+        "html": {
+            "path": "views",
+            "ext": "html"
+        },
+        "assets": {
+            "path": "assets"
+        },
+        "library": {},
+        "libraryTarget": "umd"
+    },
+    "vars": {
+        "CDN": ""
+    },
+    "resolve": {
+        "alias": {
+
+        },
+        "modules": [],
+        "extensions": []
+    },
+    "resolveLoader": {
+        "modules": [],
+        "extensions": []
+    },
+    "modules": {},
+    "server": {
+        "port": 8080,
+        "host": "localhost"
+    }
+}
