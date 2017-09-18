@@ -17,7 +17,8 @@ const
  * @return {[type]}        [description]
  */
 function run(config) {
-    let webpackConfig = Config(config),
+    let
+        webpackConfig = Config(config),
         outputConfig = config.output,
         compiler = null;
 

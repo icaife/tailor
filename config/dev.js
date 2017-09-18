@@ -7,6 +7,7 @@ const
     Path = require("path"),
     Base = require("./base"),
     Webpack = require("webpack"),
+    WebpackDashboard = require("webpack-dashboard"),
     WebpackDashboardPlugin = require("webpack-dashboard/plugin");
 
 /**
@@ -17,10 +18,13 @@ function generateConfig(config) {
     let
         base = Base(config),
         inputConfig = config.input,
-        context = Path.resolve(config.root, inputConfig.path),
+        context = Path.join(config.root, inputConfig.path),
         entry = generateEntry(config, base.entry),
         module = generateModule(config, base.module),
         plugins = generatePlugins(config, base.plugins);
+
+    console.log(module);
+    process.exit(1);
 
     return {
         context: context,
@@ -108,16 +112,17 @@ function generatePlugins(config, plugins) {
     let
         commonPlugin = plugins.common,
         htmlPlugin = plugins.html,
-        result = [...commonPlugin,
+        result = [
+            // ...commonPlugin,
             ...htmlPlugin,
-            new Webpack.optimize.OccurrenceOrderPlugin(),
-            new Webpack.HotModuleReplacementPlugin(),
-            new Webpack.NoEmitOnErrorsPlugin()
+            // new Webpack.optimize.OccurrenceOrderPlugin(),
+            // new Webpack.HotModuleReplacementPlugin(),
+            // new Webpack.NoEmitOnErrorsPlugin()
         ];
 
     if (Path.sep === "/") { //webpack dashboard not support windows
-        let dashboard = new WebpackDashboard();
-        result.push(new WebpackDashboardPlugin(dashboard.setData));
+        // let dashboard = new WebpackDashboard();
+        // result.push(new WebpackDashboardPlugin(dashboard.setData));
     }
 
     return result;

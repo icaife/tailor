@@ -18,7 +18,8 @@ const
  */
 
 module.exports = (config) => {
-    let tailorConfig = config.tailor,
+    let
+        tailorConfig = config.tailor,
         resolveConfig = config.resolve,
         inputConfig = config.input,
         projModule = Path.resolve(config.root, inputConfig.path);
@@ -28,8 +29,8 @@ module.exports = (config) => {
             "root": Path.resolve(config.root),
             "@": `root/${inputConfig.path}`,
         }, resolveConfig.alias),
-        modules: [Path.resolve(tailorConfig.path, "./node_modules"), "node_modules"],
-        extensions: [".js", ".less", ".css", ".html", ".json", ".blade.php"],
+        modules: [Path.join(tailorConfig.path, "node_modules"), "node_modules"],
+        extensions: [".js", ".less", ".css", ".html", ".json"],
         // cacheWithContext: true
     };
 };

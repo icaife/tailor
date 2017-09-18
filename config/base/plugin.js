@@ -95,23 +95,23 @@ function commonPlugin(config, entry) {
         //     minChunks: 4,
         //     filename: `${jsConfig.path}/[name]` + (outputConfig.useHash ? `.[chunkhash:${outputConfig.hashLen}]` : "") + `.js`,
         // }),
-        {
-            /**
-             * @description errors print
-             * @see https://doc.webpack-china.org/api/plugins/compiler/#-
-             * @see tttps://webpack.github.io/docs/plugins.html#the-compiler-instance
-             */
-            apply: function(compiler) {
-                compiler.plugin("done", function(stats, type, msg) {
-                    if (stats.hasErrors()) { //有错误,退出 exit -1
-                        let errors = stats.compilation.errors || [],
-                            msg = errors.join("\n");
-                        Log.error(`some errors occurred:\n${msg}\n`);
-                        process.exit(1);
-                    }
-                });
-            }
-        }
+        // {
+        //     /**
+        //      * @description errors print
+        //      * @see https://doc.webpack-china.org/api/plugins/compiler/#-
+        //      * @see tttps://webpack.github.io/docs/plugins.html#the-compiler-instance
+        //      */
+        //     apply: function(compiler) {
+        //         compiler.plugin("done", function(stats, type, msg) {
+        //             if (stats.hasErrors()) { //有错误,退出 exit -1
+        //                 let errors = stats.compilation.errors || [],
+        //                     msg = errors.join("\n");
+        //                 Log.error(`some errors occurred:\n${msg}\n`);
+        //                 process.exit(1);
+        //             }
+        //         });
+        //     }
+        // }
     );
 
     return plugins;
