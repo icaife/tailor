@@ -1,43 +1,56 @@
 {
+    "watch": false,
+    "devtool": false,
     "input": {
+        "path": "src",
         "entry": {
             "prefix": "index",
             "ext": "js"
         },
+        "js": {
+            "ext": ["js"]
+        },
+        "style": {
+            "ext": ["css", "less"]
+        },
         "html": {
-            "ext": "html"
+            "ext": ["html"]
         },
-        "assets": {
-            "js": ["js"],
-            "css": ["css", "less"],
-            "img": ["jpg", "jpeg", "png", "gif", "ico", "bmp"],
-            "file": ["svg", "eof", "woff", "woff2", "eot", "ttf"]
+        "image": {
+            "ext": ["jpg", "jpeg", "png", "gif", "ico", "bmp"]
         },
-        "path": "src"
+        "file": {
+            "ext": ["svg", "eof", "woff", "woff2", "eot", "ttf"]
+        }
     },
     "output": {
-        "clean": true,
         "useHash": false,
-        "hashLen": 6,
         "path": "dist",
-        "publicPath": "",
-        "html": {
-            "path": "views",
-            "ext": "html"
-        },
-        "assets": {
+        "publicPath": "//cdn.tff.com",
+        "global": {},
+        "js": {
             "path": "assets"
         },
-        "library": {},
-        "libraryTarget": "umd"
+        "html": {
+            "path": "views",
+            "ext": "blade.php"
+        },
+        "style": {
+            "path": "assets",
+            "extract": true
+        },
+        "image": {
+            "path": "assets"
+        },
+        "file": {
+            "path": "assets"
+        }
     },
     "vars": {
         "CDN": ""
     },
     "resolve": {
-        "alias": {
-
-        },
+        "alias": {},
         "modules": [],
         "extensions": []
     },

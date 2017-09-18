@@ -23,7 +23,9 @@
     },
     "author": "leon.cai@toursforfun.com",
     "license": "ISC",
-    "devDependencies": {},
+    "devDependencies": {
+        "try-require": "^1.2.1"
+    },
     "dependencies": {
         "art-template": "^4.12.1",
         "art-template-loader": "^1.4.3",

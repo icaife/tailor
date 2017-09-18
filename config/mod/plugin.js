@@ -39,8 +39,8 @@ module.exports = (config) => {
         assetsPath = Path.join(basic.root, basic.dest, basic.assets);
 
     plugin.push(
-        new HashedModuleIdsPlugin(),
-        new CopyWebpackPlugin([{
+        new HashedModuleIdsPlugin(), //done
+        new CopyWebpackPlugin([{ //done
             context: Path.join(basic.root, basic.src),
             from: {
                 glob: "**/vendor/**/*.*",
@@ -49,11 +49,11 @@ module.exports = (config) => {
             to: Path.join(basic.root, basic.dest, basic.assets)
         }]),
         // new ModuleConcatenationPlugin(),
-        new StringReplaceWebpackPlugin(),
+        new StringReplaceWebpackPlugin(), //done
         /**
          * @see https://stylelint.io/user-guide/rules/
          */
-        new StyleLintPlugin({
+        new StyleLintPlugin({ //TODO:ADD
             configFile: Path.join(basic.root, ".stylelintrc"),
             failOnWarning: false, // warning occured then stop
             failOnError: false, // error occured then stop
@@ -66,7 +66,7 @@ module.exports = (config) => {
          * defile define plugin
          * @type {[type]}
          */
-        new Webpack.DefinePlugin(config.vars || {}),
+        new Webpack.DefinePlugin(config.vars || {}), //done
         new ManifestPlugin({
             fileName: `${basic.assets}/manifest.json`,
             publicPath: `${basic.cdn}`
@@ -75,7 +75,7 @@ module.exports = (config) => {
         /**
          * @see  https://doc.webpack-china.org/plugins/source-map-dev-tool-plugin/
          */
-        new SourceMapDevToolPlugin({
+        new SourceMapDevToolPlugin({ //TODO:ADD
             filename: `${basic.assets}/[name].map`,
             exclude: [/vendor/],
             append: config.env !== envs.prod ? "" : `\n/*${(new Date()).toLocaleString()} built*/`
@@ -83,7 +83,7 @@ module.exports = (config) => {
         /**
          * @see  https://github.com/mishoo/UglifyJS2
          */
-        new UglifyJsPlugin({
+        new UglifyJsPlugin({ //TODO: uglify js
             drop_debugger: true,
             dead_code: true,
             join_vars: true,
@@ -162,7 +162,6 @@ module.exports = (config) => {
     if (config.env !== envs.dll) { //not dll env
         Object.keys(entry).forEach((page) => {
             let item = entry[page],
-                obj = Path.parse(page),
                 fileName = `${page}`, //TODO
                 opts = {
                     filename: `${basic.views}/${fileName}.${basic.output.html.ext}`,

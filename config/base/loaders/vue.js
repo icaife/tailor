@@ -16,7 +16,7 @@ module.exports = (config) => {
                 style: ["src"],
                 img: ["src", "data-src", "data-original"]
             },
-            loaders: {
+            loaders: { //TODO
                 js: "babel-loader!eslint-loader"
             }
         }

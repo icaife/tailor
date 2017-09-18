@@ -11,8 +11,8 @@ module.exports = (config) => {
         extensions = resolveLoaderConfig.extensions;
 
     return {
-        modules: [Path.resolve(tailorConfig.path, "node_modules")].concat(resolveLoaderConfig.modules),
-        extensions: extensions,
+        modules: [Path.resolve(tailorConfig.path, "./node_modules"), "node_modules"],
+        // moduleExtensions: ['-loader'],
         cacheWithContext: true,
     };
 };

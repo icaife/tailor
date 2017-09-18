@@ -4,14 +4,21 @@
  */
 
 const
-    ArtTemplateLoader = require("art-template-loader"),
+    Path = require("path"),
     StringReplaceWebpackPlugin = require("string-replace-webpack-plugin");
 
 module.exports = (config) => {
-    let outputConfig = config.output;
+    let outputConfig = config.output,
+        inputConfig = config.input;
+
+    console.log(inputConfig.html.ext[0], Path.join(config.root, inputConfig.path), Path.join(config.root, inputConfig.path));
+
     let artTemplateLoader = {
             loader: "art-template-loader",
             options: {
+                extname: "." + inputConfig.html.ext[0],
+                htmlResourceRoot: Path.join(config.root, inputConfig.path),
+                root: Path.join(config.root, inputConfig.path),
                 htmlResourceRules: [
                     /<(?:img)[^>]+\b(?:\w+-?)?(?:src)="([^"{}]*)"[^>]*?>/img, //img tag
                 ],

@@ -5,21 +5,29 @@
  */
 const
     Entry = require("./entry.js"),
-    Module = require("./module.js"),
     Resolve = require("./resolve.js"),
     ResolveLoader = require("./resolve-loader.js"),
     Plugin = require("./plugin.js"),
-    Output = require("./output.js");
+    Output = require("./output.js"),
+    Loaders = require("./loaders"),
+    Module = require("./module.js");
 
 module.exports = (config) => {
     let
+        loaders = Loaders(config),
+        module = Module(config, loaders),
         entry = Entry(config),
-        module = Module(config, entry),
-        resolve = Resolve(config, entry);
+        resolve = Resolve(config, entry),
+        resolveLoader = ResolveLoader(config, entry),
+        plugins = Plugin(config, entry),
+        output = Output(config, entry);
 
     return {
-        entry: entry,
-        module: module,
-        resolve: resolve
+        entry,
+        module,
+        resolve,
+        resolveLoader,
+        plugins,
+        output
     };
 };

@@ -9,16 +9,16 @@ const Loaders = require("./loaders");
  * js handler
  * @return {Array} [description]
  */
-function jsHandler(loaders, config) {
+function jsHandler(config, loaders) {
     let
         inputConfig = config.input,
-        entryConfig = inputConfig.entry;
+        jsConfig = inputConfig.js;
 
-    return [{
-        test: new RegExp(`\\.(${entryConfig.ext})$`, "i"),
+    return {
+        test: new RegExp(`\\.(${jsConfig.ext.join("|")})$`, "i"),
         exclude: /node_modules|vendor/,
         use: [loaders.babelLoader]
-    }];
+    };
 }
 
 /**
@@ -27,15 +27,15 @@ function jsHandler(loaders, config) {
  * @param  {Object} config  [description]
  * @return {Array}         [description]
  */
-function htmlHandler(loaders, config) {
+function htmlHandler(config, loaders) {
     let
         inputConfig = config.input,
         htmlConfig = inputConfig.html;
 
-    return [{
+    return {
         test: new RegExp(`\\.(${htmlConfig.ext.join("|")})$`, "i"),
-        use: [loaders.artTemplateLoader]
-    }];
+        use: [loaders.artTemplateLoader, loaders.stringReplaceLoader]
+    };
 }
 
 /**
@@ -44,15 +44,15 @@ function htmlHandler(loaders, config) {
  * @param  {Object} config  [description]
  * @return {Array}         [description]
  */
-function styleHandler(loaders, config) {
+function styleHandler(config, loaders) {
     let
         inputConfig = config.input,
         styleConfig = inputConfig.style;
 
-    return [{
+    return {
         test: new RegExp(`\\.(${styleConfig.ext.join("|")})$`, "i"),
-        use: styleConfig.extract ? loaders.extractTextLoader : [loaders.styleLoader, loaders.cssLoader];
-    }];
+        use: [loaders.styleLoader, loaders.cssLoader]
+    };
 }
 
 /**
@@ -61,15 +61,15 @@ function styleHandler(loaders, config) {
  * @param  {Object} config  [description]
  * @return {Array}         [description]
  */
-function imageHandler(loaders, config) {
+function imageHandler(config, loaders) {
     let
         inputConfig = config.input,
-        imageConfig = config.image;
+        imageConfig = inputConfig.image;
 
-    return [{
+    return {
         test: new RegExp(`\\.(${imageConfig.ext.join("|")})$`, "i"),
         use: [loaders.fileLoader]
-    }];
+    };
 }
 
 /**
@@ -78,25 +78,25 @@ function imageHandler(loaders, config) {
  * @param  {Object} config  [description]
  * @return {Array}         [description]
  */
-function fileHandler(loaders, config) {
+function fileHandler(config, loaders) {
     let
         inputConfig = config.input,
-        fileConfig = config.file;
+        fileConfig = inputConfig.file;
 
-    return [{
+    return {
         test: new RegExp(`\\.(${fileConfig.ext.join("|")})$`, "i"),
         use: [loaders.fileLoader]
-    }];
+    };
 }
 
 module.exports = (config) => {
     let
         loaders = Loaders(config),
-        jsRule = jsHandler(loaders.js, config),
-        htmlRule = htmlHandler(loaders.html, config),
-        styleRule = styleHandler(loaders.style, config),
-        imageRule = imageHandler(loaders.file, config),
-        fileRule = fileHandler(loaders.file, config);
+        jsRule = jsHandler(config, loaders.js),
+        htmlRule = htmlHandler(config, loaders.html),
+        styleRule = styleHandler(config, loaders.style),
+        imageRule = imageHandler(config, loaders.file),
+        fileRule = fileHandler(config, loaders.file);
 
     return {
         rules: {

@@ -21,7 +21,6 @@ function run(config) {
         webpackConfig = config.webpack,
         serverConfig = config.server;
 
-    // console.log(serverConfig.devServer);
     const
         compiler = Webpack(webpackConfig),
         devMiddleware = DevMiddleware(compiler, serverConfig.devServer),

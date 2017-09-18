@@ -4,7 +4,8 @@
  */
 
 module.exports = (config) => {
-    let outputConfig = config.output,
+    let
+        outputConfig = config.output,
         name = `${outputConfig.file.path}/[path][name]` + (outputConfig.useHash ? `.[hash:${outputConfig.hashLen}]` : "") + `.[ext]`;
 
     let fileLoader = {

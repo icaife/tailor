@@ -5,9 +5,8 @@
 const Path = require("path");
 
 module.exports = (config) => {
-    let tailorConfig = config.tailor;
-
-    let babelLoader = {
+    let tailorConfig = config.tailor,
+        babelLoader = {
             loader: "babel-loader",
             options: {
                 presets: [

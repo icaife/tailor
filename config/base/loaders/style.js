@@ -32,17 +32,12 @@ module.exports = (config) => {
             options: {
                 sourceMap: true
             }
-        },
-        extractTextLoader = ExtractTextPlugin.extract({
-            fallback: "style-loader",
-            use: [cssLoader, postcssLoader, lessLoader]
-        });
+        };
 
     return {
         styleLoader,
         cssLoader,
         postcssLoader,
-        lessLoader,
-        extractTextLoader
+        lessLoader
     };
 };

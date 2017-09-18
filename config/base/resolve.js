@@ -9,9 +9,6 @@ const
 
 /**
  *
- *
- *
- *
  * externals
  * 		script.src -> global var-> externals
  * output
@@ -23,15 +20,16 @@ const
 module.exports = (config) => {
     let tailorConfig = config.tailor,
         resolveConfig = config.resolve,
-        inputConfig = config.input;
+        inputConfig = config.input,
+        projModule = Path.resolve(config.root, inputConfig.path);
 
     return {
         alias: _.merge({
             "root": Path.resolve(config.root),
             "@": `root/${inputConfig.path}`,
         }, resolveConfig.alias),
-        modules: [Path.resolve(tailorConfig.path, "./node_modules")].concat(resolveConfig.modules),
-        extensions: resolveConfig.extensions,
-        // cacheWithContext: false,
+        modules: [projModule, Path.resolve(tailorConfig.path, "./node_modules"), "node_modules"],
+        // extensions: [".js", ".less", ".css", ".html"],
+        cacheWithContext: true
     };
 };

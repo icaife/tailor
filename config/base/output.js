@@ -10,9 +10,10 @@ module.exports = (config) => {
     let outputConfig = config.output,
         fileName = outputConfig.useHash ? `[name].[chunkhash:${outputConfig.hashLen}].js` : '[name].js',
         chunkFilename = outputConfig.useHash ? `[name].[chunkhash:${outputConfig.hashLen}].js` : "[name].js",
-        outputPath = Path.join(outputConfig.root, outputConfig.path),
+        outputPath = Path.join(config.root, outputConfig.path),
         publicPath = /\/$/.test(outputConfig.publicPath) ? outputConfig.publicPath : outputConfig.publicPath + "/",
-        assetsPath = config.assets.path;
+        jsConfig = outputConfig.js,
+        assetsPath = jsConfig.path;
 
     let output = {
         path: outputPath,
