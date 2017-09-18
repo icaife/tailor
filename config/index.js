@@ -3,11 +3,10 @@
  * @author Leon.Cai
  */
 "use strict";
-const
-    tryRequire = require("try-require");
 
 module.exports = (config) => {
-    let env = config.env,
+    let
+        env = config.env,
         generateConfig = require(`./${env}.js`);
 
     return generateConfig && generateConfig(config);

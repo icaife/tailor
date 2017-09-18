@@ -22,6 +22,11 @@ function generateConfig(config) {
         module = generateModule(config, base.module),
         plugins = generatePlugins(config, base.plugins);
 
+
+    console.log(module);
+
+    process.exit(1);
+
     return {
         context: context,
         entry: entry,

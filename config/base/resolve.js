@@ -28,8 +28,8 @@ module.exports = (config) => {
             "root": Path.resolve(config.root),
             "@": `root/${inputConfig.path}`,
         }, resolveConfig.alias),
-        modules: [Path.resolve(tailorConfig.path, "./node_modules"), "./node_modules"],
-        extensions: [".js", ".less", ".css", ".html", ".json"],
+        modules: [Path.resolve(tailorConfig.path, "./node_modules"), "node_modules"],
+        extensions: [".js", ".less", ".css", ".html", ".json", ".blade.php"],
         // cacheWithContext: true
     };
 };
