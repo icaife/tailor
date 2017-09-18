@@ -89,14 +89,21 @@ function fileHandler(config, loaders) {
     };
 }
 
-module.exports = (config) => {
+function vueHandler(config, loaders) {
+    return {
+        test: /\.vue$/,
+        use: [loaders.vueLoader]
+    };
+}
+
+module.exports = (config, loaders) => {
     let
-        loaders = Loaders(config),
         jsRule = jsHandler(config, loaders.js),
         htmlRule = htmlHandler(config, loaders.html),
         styleRule = styleHandler(config, loaders.style),
         imageRule = imageHandler(config, loaders.file),
-        fileRule = fileHandler(config, loaders.file);
+        fileRule = fileHandler(config, loaders.file),
+        vueRule = vueHandler(config, loaders.vue);
 
     return {
         rules: {
@@ -104,7 +111,8 @@ module.exports = (config) => {
             html: htmlRule,
             style: styleRule,
             image: imageRule,
-            file: fileRule
+            file: fileRule,
+            vue: vueRule
         },
         loaders: loaders
     };

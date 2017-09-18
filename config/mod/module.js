@@ -153,6 +153,9 @@ let
             {
                 loader: /*lib/loader/*/ "art-template-loader",
                 options: {
+                    extname: "." + config.basic.html.ext[0], //TODO
+                    htmlResourceRoot: Path.join(config.basic.root, config.basic.src),
+                    root: Path.join(config.basic.root, config.basic.src),
                     htmlResourceRules: [
                         /<(?:img)[^>]+\b(?:(?:data|original)-)?(?:src|href)="([^"{}]*)"[^>]*?>/img, //img tag
                     ],
@@ -205,9 +208,6 @@ let
                         },
                         ...require("art-template").defaults.rules,
                     ],
-                    extname: "." + config.basic.html.ext[0], //TODO
-                    htmlResourceRoot: Path.join(config.basic.root, config.basic.src),
-                    root: Path.join(config.basic.root, config.basic.src)
                 }
             }, {
                 loader: StringReplaceWebpackPlugin.replace({ //TODO replace something

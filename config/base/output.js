@@ -7,7 +7,8 @@ const
     Path = require("path");
 
 module.exports = (config) => {
-    let outputConfig = config.output,
+    let
+        outputConfig = config.output,
         fileName = outputConfig.useHash ? `[name].[chunkhash:${outputConfig.hashLen}].js` : '[name].js',
         chunkFilename = outputConfig.useHash ? `[name].[chunkhash:${outputConfig.hashLen}].js` : "[name].js",
         outputPath = Path.join(config.root, outputConfig.path),
@@ -21,9 +22,9 @@ module.exports = (config) => {
         filename: `${assetsPath}/${fileName}`,
         chunkFilename: `${assetsPath}/${chunkFilename}`,
         sourceMapFilename: `${assetsPath}/[name].map`,
-        pathinfo: false,
-        libraryTarget: outputConfig.libraryTarget,
-        library: outputConfig.library
+        pathinfo: true,
+        libraryTarget: "umd",
+        library: outputConfig.global
     };
 
     return output;

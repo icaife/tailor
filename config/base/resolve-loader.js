@@ -6,13 +6,14 @@
 const Path = require("path");
 
 module.exports = (config) => {
-    let tailorConfig = config.tailor,
+    let
+        tailorConfig = config.tailor,
         resolveLoaderConfig = config.resolveLoader,
         extensions = resolveLoaderConfig.extensions;
 
     return {
         modules: [Path.resolve(tailorConfig.path, "./node_modules"), "node_modules"],
-        // moduleExtensions: ['-loader'],
+        // extensions: [".js", ".json", ".less", ".css", ".art", ".html", ".blade.php"],
         cacheWithContext: true,
     };
 };

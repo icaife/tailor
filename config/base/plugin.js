@@ -38,7 +38,9 @@ function htmlPlugin(config, entry) {
     let
         plugins = [],
         inputConfig = config.input,
-        htmlConfig = inputConfig.html;
+        outputConfig = config.output,
+        htmlInputConfig = inputConfig.html,
+        htmlOutputConfig = outputConfig.html;
 
     Object
         .keys(entry)
@@ -46,9 +48,9 @@ function htmlPlugin(config, entry) {
             let
                 pageItem = entry[page],
                 options = {
-                    filename: `${htmlConfig.path}/${page}.${htmlConfig.ext}`,
+                    filename: `${htmlOutputConfig.path}/${page}.${htmlOutputConfig.ext}`,
                     chunks: [page], //TODO:add common js
-                    template: `${page}.${htmlConfig.ext}`,
+                    template: `${page}.${htmlInputConfig.ext[0]}`,
                     inject: !false, //TODO: auto inject
                     minify: {}
                 };

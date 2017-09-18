@@ -11,8 +11,6 @@ module.exports = (config) => {
     let outputConfig = config.output,
         inputConfig = config.input;
 
-    console.log(inputConfig.html.ext[0], Path.join(config.root, inputConfig.path), Path.join(config.root, inputConfig.path));
-
     let artTemplateLoader = {
             loader: "art-template-loader",
             options: {
@@ -40,11 +38,19 @@ module.exports = (config) => {
                             };
                         }
                     }, {
-                        test: /{#([@#]?)[ \t]*([\w\W]*?)[ \t]*#}/, //TODO:vue or other javascript,php blade template
+                        test: /{#([@#]?)[ \t]*([\w\W]*?)[ \t]*#}/, //TODO:php blade template
                         use: function(match, raw, close, code) {
 
                             return {
                                 code: `"${match.toString()}"`.replace(/\.(\w+)/g, '[\'$1\']').replace(/{#/g, "{{").replace(/#}/g, "}}"),
+                                output: "raw"
+                            };
+                        }
+                    }, {
+                        test: /{{[ \t]*\w+\([ \t]*\$([\w\W]*?)?\)[ \t]*}}/, //php blade template with function
+                        use: function(match, raw, close, code) {
+                            return {
+                                code: `"${match.toString()}"`,
                                 output: "raw"
                             };
                         }

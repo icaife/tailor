@@ -5,6 +5,7 @@
 const Path = require("path");
 
 module.exports = (config) => {
+
     let tailorConfig = config.tailor,
         babelLoader = {
             loader: "babel-loader",
@@ -21,6 +22,7 @@ module.exports = (config) => {
         },
         esLintLoader = {
             loader: "eslint-loader",
+            // exclude: /node_modules|vendor/,
             options: {
                 configFile: Path.join(config.root, ".eslintrc"),
                 failOnWarning: false, // warning occured then stop

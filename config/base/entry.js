@@ -26,10 +26,9 @@ module.exports = (config) => {
         dirs = globInstance.found;
 
     dirs.forEach(function(dir) {
-        let name = dir.replace(/\.[^.]+$/ig, ""),
-            mod = Path.join(name.replace(/[\/\\]+[^\/\\]+$/, ""), prefix).replace(/\\/g, "/");
+        let name = dir.replace(/\.[^.]+$/ig, "").replace(/\\/g, "/");
 
-        entries[mod] = [`./${dir}`];
+        entries[name] = [`./${dir}`];
     });
 
     return entries;

@@ -74,6 +74,7 @@ function generateModule(config, module) {
         styleRule = rules.style,
         imageRule = rules.image,
         fileRule = rules.file,
+        vueRule = rules.vue,
         htmlLoader = rules.html,
         jsLoader = loaders.js,
         styleLoader = loaders.style,
@@ -92,7 +93,8 @@ function generateModule(config, module) {
             jsRule,
             styleRule,
             imageRule,
-            fileRule
+            fileRule,
+            vueRule
         ],
         noParse: [/node_modules|vendor/]
     };
