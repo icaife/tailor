@@ -8,10 +8,16 @@ const
     StringReplaceWebpackPlugin = require("string-replace-webpack-plugin");
 
 module.exports = (config) => {
-    let outputConfig = config.output,
+    let
+        outputConfig = config.output,
         inputConfig = config.input;
 
-    let artTemplateLoader = {
+    let
+        htmlLoader = {
+            loader: "html-loader",
+            options: {}
+        },
+        artTemplateLoader = {
             loader: "art-template-loader",
             options: {
                 extname: "." + inputConfig.html.ext[0],
@@ -58,20 +64,10 @@ module.exports = (config) => {
                     ...require("art-template").defaults.rules,
                 ],
             }
-        },
-        stringReplaceLoader = StringReplaceWebpackPlugin.replace({ //TODO replace something
-            replacements: [{
-                pattern: /<script[^>]+src="([^"]+)"[^>]*?>[\s\S]*?<\/script>/img,
-                replacement: function(match, src, offset, string) {
-                    let result = /^(\w+:)?(\/\/)/.test(src) ? src : (`${outputConfig.publicPath}/${outputConfig.js.path}/${src}`).replace(/\\/g, "/");
-
-                    return match.toString().replace(src, result);
-                }
-            }]
-        });
+        };
 
     return {
-        artTemplateLoader,
-        stringReplaceLoader
+        htmlLoader,
+        artTemplateLoader
     };
 };

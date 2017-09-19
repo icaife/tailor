@@ -30,7 +30,7 @@ module.exports = (config) => {
             "@": `root/${inputConfig.path}`,
         }, resolveConfig.alias),
         modules: [Path.join(tailorConfig.path, "node_modules"), "node_modules"],
-        extensions: [".js", ".less", ".css", ".html", ".json"],
+        extensions: [".js", ".json"],
         // cacheWithContext: true
     };
 };

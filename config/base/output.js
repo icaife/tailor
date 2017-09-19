@@ -22,9 +22,9 @@ module.exports = (config) => {
         filename: `${assetsPath}/${fileName}`,
         chunkFilename: `${assetsPath}/${chunkFilename}`,
         sourceMapFilename: `${assetsPath}/[name].map`,
-        pathinfo: true,
+        pathinfo: !true,
         libraryTarget: "umd",
-        library: outputConfig.global
+        library: config.global || {}
     };
 
     return output;

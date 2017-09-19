@@ -5,7 +5,7 @@
 
 module.exports = (config) => {
 
-    let imageWebpackLoader = {
+    let imageLoader = {
         loader: "image-webpack-loader",
         options: {
             mozjpeg: { //jpeg
@@ -33,6 +33,6 @@ module.exports = (config) => {
     };
 
     return {
-        imageWebpackLoader
+        imageLoader
     };
 };

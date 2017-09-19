@@ -8,9 +8,9 @@ const
     HtmlLoader = require("./html.js"),
     ImageLoader = require("./image.js"),
     JSLoader = require("./js.js"),
-    RoitjsLoader = require("./roitjs.js"),
     StyleLoader = require("./style.js"),
-    VueLoader = require("./vue.js");
+    VueLoader = require("./vue.js"),
+    UtilLoader = require("./util.js");
 
 module.exports = (config) => {
     let
@@ -18,17 +18,9 @@ module.exports = (config) => {
         html = HtmlLoader(config),
         image = ImageLoader(config),
         js = JSLoader(config),
-        roitjs = RoitjsLoader(config),
         style = StyleLoader(config),
-        vue = VueLoader(config);
+        vue = VueLoader(config),
+        util = UtilLoader(config);
 
-    return {
-        file,
-        html,
-        image,
-        js,
-        roitjs,
-        style,
-        vue
-    };
+    return Object.assign({}, file, html, image, js, style, vue, util);
 };

@@ -17,6 +17,6 @@ module.exports = (config) => {
     };
 
     return {
-        fileLoader
+        fileLoader: fileLoader
     };
 };

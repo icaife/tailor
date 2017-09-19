@@ -12,7 +12,8 @@ const
     CssNano = require("cssnano"),
     PostCss = require("postcss"),
     PostCssSprites = require("postcss-sprites"),
-    updateRule = require("postcss-sprites/lib/core").updateRule;
+    updateRule = require("postcss-sprites/lib/core").updateRule,
+    ENV = require("../../constant/env.js");
 
 let
     spritesConfig = (config) => ({
@@ -22,8 +23,8 @@ let
          */
         retina: true,
         relativeTo: "rule",
-        spritePath: Path.join(config.basic.root, config.basic.src /*, config.basic.assets*/ ),
-        // stylesheetPath: Path.join(config.basic.root, config.basic.src /*, config.basic.assets*/ ),
+        spritePath: Path.join(config.root, config.input.path /*, config.basic.assets*/ ),
+        // stylesheetPath: Path.join(config.root, config.input.path /*, config.basic.assets*/ ),
         spritesmith: {
             padding: 4,
             algorithm: "binary-tree", //default
@@ -40,9 +41,9 @@ let
         groupBy: (image) => {
             let groups = image.url.match(/([^\/\\]+-sprite)[\/\\]/),
                 groupName = undefined;
-            //console.log(image.path.replace(Path.join(config.basic.root, config.basic.src), ""));
+            //console.log(image.path.replace(Path.join(config.root, config.input.path), ""));
             // groupName = groups ? groups[1] : "icons-sprite";
-            groupName = image.path.replace(Path.join(config.basic.root, config.basic.src), "").replace(/[\\\/]+[^\\\/]+$/, "").replace(/\\/g, "/");
+            groupName = image.path.replace(Path.join(config.root, config.input.path), "").replace(/[\\\/]+[^\\\/]+$/, "").replace(/\\/g, "/");
             image.retina = true;
             image.ratio = 1;
 
@@ -93,8 +94,6 @@ let
     });
 let
     jsRule = config => {
-        let
-            isDev = config.env === config.constant.env.dev;
 
         return [{
             test: /\.js/,
@@ -103,8 +102,8 @@ let
                 loader: "babel-loader",
                 options: {
                     presets: [
-                        Path.join(config.basic.cur, "./node_modules/babel-preset-es2015"),
-                        Path.join(config.basic.cur, "./node_modules/babel-preset-stage-2")
+                        Path.join(config.tailor.path, "./node_modules/babel-preset-es2015"),
+                        Path.join(config.tailor.path, "./node_modules/babel-preset-stage-2")
                     ],
                     babelrc: false,
                     retainLines: true,
@@ -118,7 +117,7 @@ let
                 loader: "eslint-loader",
                 // enforce: "pre",
                 options: {
-                    configFile: Path.join(config.basic.root, ".eslintrc"),
+                    configFile: Path.join(config.root, ".eslintrc"),
                     failOnWarning: false, // warning occured then stop
                     failOnError: false, // error occured then stop
                     cache: false, // disable cache
@@ -139,7 +138,7 @@ let
 
 let
     htmlRule = config => [{
-        test: new RegExp(`.(${config.basic.html.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
+        test: new RegExp(`.(${config.input.html.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
         use: [
             /*{
                         loader: "html-loader",
@@ -153,9 +152,9 @@ let
             {
                 loader: /*lib/loader/*/ "art-template-loader",
                 options: {
-                    extname: "." + config.basic.html.ext[0], //TODO
-                    htmlResourceRoot: Path.join(config.basic.root, config.basic.src),
-                    root: Path.join(config.basic.root, config.basic.src),
+                    extname: "." + config.input.html.ext[0], //TODO
+                    htmlResourceRoot: Path.join(config.root, config.input.path),
+                    root: Path.join(config.root, config.input.path),
                     htmlResourceRules: [
                         /<(?:img)[^>]+\b(?:(?:data|original)-)?(?:src|href)="([^"{}]*)"[^>]*?>/img, //img tag
                     ],
@@ -214,7 +213,7 @@ let
                     replacements: [{
                         pattern: /<script[^>]+src="([^"]+)"[^>]*?>[\s\S]*?<\/script>/img,
                         replacement: function(match, src, offset, string) {
-                            let result = /^(\w+:)?(\/\/)/.test(src) ? src : (`${config.basic.cdn}/${config.basic.assets }/${src}`).replace(/\\/g, "/");
+                            let result = /^(\w+:)?(\/\/)/.test(src) ? src : (`${config.output.publicPath}/${config.output.js.path}/${src}`).replace(/\\/g, "/");
 
                             return match.toString().replace(src, result);
                             //TODO: webpack loader async
@@ -239,8 +238,8 @@ let
                             // exclude: /node_modules/,
                             // @see https://github.com/mattlewis92/htmlhint-loader
                             options: {
-                                configFile: Path.join(config.basic.root, ".htmllintrc"),
-                                config: Path.join(config.basic.root, ".htmllintrc"),
+                                configFile: Path.join(config.root, ".htmllintrc"),
+                                config: Path.join(config.root, ".htmllintrc"),
                                 // emitAs: "error"
                             }
                         }*/
@@ -278,7 +277,7 @@ let
 let
     styleRule = config => {
         let
-            isDev = config.env === config.constant.env.dev,
+            isDev = config.env === ENV.dev,
             postcssPlugins = [AutoPrefixer({
                     browsers: ["Chrome >= 35", "FireFox >= 40", "ie > 8", "Android >= 4", "Safari >= 5.1", "iOS >= 7"],
                     remove: true
@@ -323,7 +322,7 @@ let
         }];
 
         return [{
-            test: new RegExp(`.(${config.basic.css.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
+            test: new RegExp(`.(${config.input.style.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
             // exclude: /node_modules/,
             use: isDev ? styleLoaders : ExtractTextPlugin.extract({
                 fallback: "style-loader",
@@ -333,14 +332,13 @@ let
     };
 let
     imageRule = config => {
-        let basic = config.basic,
-            outputConfig = basic.output,
-            name = `${config.basic.assets}/[path][name]` + (outputConfig.useHash ? `.[hash:${outputConfig.hashLen}]` : "") + `.[ext]`;
+        let
+            inputConfig = config.input,
+            outputConfig = config.output,
+            name = `${outputConfig.path}/[path][name]` + (outputConfig.useHash ? `.[hash:${outputConfig.hashLen}]` : "") + `.[ext]`;
 
         return [{
-            test: {
-                test: new RegExp(`.(${config.basic.img.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
-            },
+            test: new RegExp(`.(${inputConfig.image.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
             use: [{
                 loader: "file-loader", //url-loader
                 options: {
@@ -378,14 +376,13 @@ let
 
 let
     fileRule = config => {
-        let basic = config.basic,
-            outputConfig = basic.output,
-            name = `${config.basic.assets}/[path][name]` + (outputConfig.useHash ? `.[hash:${outputConfig.hashLen}]` : "") + `.[ext]`;
+        let
+            inputConfig = config.input,
+            outputConfig = config.output,
+            name = `${outputConfig.path}/[path][name]` + (outputConfig.useHash ? `.[hash:${outputConfig.hashLen}]` : "") + `.[ext]`;
 
         return [{
-            test: {
-                test: new RegExp(`.(${config.basic.file.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
-            },
+            test: new RegExp(`.(${inputConfig.file.ext.join("|")})$`.replace(/\./g, "\\."), "i"),
             use: [{
                 loader: "file-loader", //url-loader
                 options: {

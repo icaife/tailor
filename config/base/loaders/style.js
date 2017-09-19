@@ -3,10 +3,11 @@
  * @author Leon.Cai
  */
 const
-    postcssPlugins = require("./postcss-plugins.js"),
-    ExtractTextPlugin = require("extract-text-webpack-plugin");
+    PostcssPlugins = require("./postcss-plugins.js");
 
 module.exports = (config) => {
+    let postcssPlugins = PostcssPlugins(config);
+
     let
         styleLoader = {
             loader: "style-loader",
@@ -30,7 +31,7 @@ module.exports = (config) => {
         lessLoader = {
             loader: "less-loader",
             options: {
-                sourceMap: true
+                // sourceMap: true
             }
         };
 
@@ -38,6 +39,6 @@ module.exports = (config) => {
         styleLoader,
         cssLoader,
         postcssLoader,
-        lessLoader
+        lessLoader,
     };
 };

@@ -140,16 +140,6 @@ module.exports = (config) => {
                             process.exit(1);
                         }
                     });
-
-                    // compiler.plugin("compilation", function(compilation) {
-                    //     compilation.plugin("html-webpack-plugin-before-html-processing", (htmlPluginData, callback) => {
-                    //         let outputName = htmlPluginData.outputName,
-                    //             assets = htmlPluginData.assets,
-                    //             chunks = Object.keys(assets.chunks || {});
-
-                    //         // console.log(outputName, assets, chunks);
-                    //     });
-                    // });
                 }
             }
         );

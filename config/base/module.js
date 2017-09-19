@@ -3,7 +3,8 @@
  * @author Leon.Cai
  */
 "use strict";
-const Loaders = require("./loaders");
+const
+    Loaders = require("./loaders");
 
 /**
  * js handler
@@ -51,7 +52,7 @@ function styleHandler(config, loaders) {
 
     return {
         test: new RegExp(`\\.(${styleConfig.ext.join("|")})$`, "i"),
-        use: [loaders.styleLoader, loaders.cssLoader]
+        use: [loaders.styleLoader, loaders.cssLoader, loaders.lessLoader]
     };
 }
 
@@ -98,12 +99,12 @@ function vueHandler(config, loaders) {
 
 module.exports = (config, loaders) => {
     let
-        jsRule = jsHandler(config, loaders.js),
-        htmlRule = htmlHandler(config, loaders.html),
-        styleRule = styleHandler(config, loaders.style),
-        imageRule = imageHandler(config, loaders.file),
-        fileRule = fileHandler(config, loaders.file),
-        vueRule = vueHandler(config, loaders.vue);
+        jsRule = jsHandler(config, loaders),
+        htmlRule = htmlHandler(config, loaders),
+        styleRule = styleHandler(config, loaders),
+        imageRule = imageHandler(config, loaders),
+        fileRule = fileHandler(config, loaders),
+        vueRule = vueHandler(config, loaders);
 
     return {
         rules: {

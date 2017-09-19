@@ -3,9 +3,7 @@
     "version": "1.2.12",
     "description": "tailor for toursforfun frontend",
     "main": "webpack",
-    "scripts": {
-
-    },
+    "scripts": {},
     "repository": "https://github.com/icaife/tailor/",
     "keywords": [
         "toursforfun",
@@ -74,7 +72,6 @@
         "vue-template-loader": "^0.3.1",
         "webpack": "^3.6.0",
         "webpack-bundle-analyzer": "^2.8.3",
-        "webpack-dashboard": "^0.4.0",
         "webpack-dev-middleware": "^1.11.0",
         "webpack-dev-server": "^2.5.1",
         "webpack-hot-middleware": "^2.18.2",

@@ -2,7 +2,7 @@
  * @description module for css sprite
  * @author Leon.Cai
  * @see https://github.com/2createStudio/postcss-sprites
- * @see https://github.com/boijs/boi-kernel/blob/master/lib/config/generateConfig/mp/style.js   
+ * @see https://github.com/boijs/boi-kernel/blob/master/lib/config/generateConfig/mp/style.js
  */
 
 const

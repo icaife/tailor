@@ -20,7 +20,10 @@ module.exports = (config) => {
                 // exclude: /node_modules|vendor/
             }
         },
-        esLintLoader = {
+        eslintLoader = {
+            /**
+             * @see https://www.npmjs.com/package/eslint-loader
+             */
             loader: "eslint-loader",
             // exclude: /node_modules|vendor/,
             options: {
@@ -37,6 +40,6 @@ module.exports = (config) => {
 
     return {
         babelLoader,
-        esLintLoader
+        eslintLoader
     };
 };

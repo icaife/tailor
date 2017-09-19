@@ -1,6 +1,4 @@
 {
-    "watch": false,
-    "devtool": false,
     "input": {
         "path": "src",
         "entry": {
@@ -27,7 +25,6 @@
         "useHash": false,
         "path": "dist",
         "publicPath": "//cdn.tff.com",
-        "global": {},
         "js": {
             "path": "assets"
         },
@@ -46,11 +43,17 @@
             "path": "assets"
         }
     },
-    "vars": {
-        "CDN": ""
-    },
     "resolve": {
-        "alias": {},
+        "alias": {
+            "common": "@/common",
+            "lib": "common/lib",
+            "vendor": "common/vendor",
+            "ui": "lib/ui",
+            "jquery": "vendor/jquery/jquery.min.js",
+            "vue": "vendor/vue/vue.min.js",
+            "lodash": "vendor/util/lodash.core.js",
+            "riot": "vendor/riot/riot.min.js"
+        },
         "modules": [],
         "extensions": []
     },
@@ -58,9 +61,53 @@
         "modules": [],
         "extensions": []
     },
-    "modules": {},
+    "vars": {
+        "CDN": ""
+    },
+    "global": {
+        "$": "jquery",
+        "jQuery": "jquery",
+        "Vue": "vue",
+        "lodash": "lodash",
+        "riot": "riot",
+        "_": "lodash"
+    },
     "server": {
         "port": 8080,
-        "host": "localhost"
+        "host": "localhost",
+        "devServer": {
+            "noInfo": false,
+            "quiet": false,
+            "clientLogLevel": "info",
+            "disableHostCheck": true,
+            "compress": true,
+            "hot": true,
+            "hotOnly": true,
+            "lazy": false,
+            "watchOptions": {
+                "ignored": ["node_modules"],
+                "aggregateTimeout": 300,
+                "poll": true
+            },
+            "overlay": {
+                "warnings": false,
+                "error": true
+            },
+            "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Credentials": true,
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Allow-Methods": "*",
+                "Accept": "*/*"
+            },
+            "stats": {
+                "children": false,
+                "publicPath": true,
+                "errors": true,
+                "colors": true,
+                "chunks": false,
+                "chunkModules": false
+            }
+        }
     }
 }

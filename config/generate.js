@@ -7,69 +7,68 @@ const
     Path = require("path"),
     Base = require("./base"),
     Webpack = require("webpack"),
-    WebpackDashboard = require("webpack-dashboard"),
-    WebpackDashboardPlugin = require("webpack-dashboard/plugin");
+    ENV = require("../constant/env.js");
 
 /**
- * generage webpack config
+ * handler for webpack config
  * @return {[type]} [description]
  */
 function generateConfig(config) {
     let
         base = Base(config),
         inputConfig = config.input,
-        context = Path.join(config.root, inputConfig.path),
-        entry = generateEntry(config, base.entry),
-        module = generateModule(config, base.module),
-        plugins = generatePlugins(config, base.plugins);
-
-    console.log(module);
-    process.exit(1);
+        context = Path.resolve(config.root, inputConfig.path),
+        entry = entryHandler(config, base.entry),
+        module = moduleHandler(config, base.module),
+        plugins = pluginsHandler(config, base.plugins);
 
     return {
+        target: "web",
         context: context,
         entry: entry,
         module: module,
+        plugins: plugins,
         output: base.output,
         resolve: base.resolve,
         resolveLoader: base.resolveLoader,
-        plugins: plugins,
         profile: true,
-        externals: config.global, //TODO
+        externals: config.global || {}, //TODO
         watch: config.watch, //middleware default true
         devtool: config.devtool ? "cheap-module-eval-source-map" : false
     };
 }
 
 /**
- * generage entry
+ * handler for entry
  * @return {Object}
  */
-function generateEntry(config, entry) {
+function entryHandler(config, entry) {
     let
         tailorConfig = config.tailor,
         outputConfig = config.output,
         hotClient = Path.resolve(`${tailorConfig.path}/lib/helper/hot-client.js`),
         hotClientQuery = `?path=${outputConfig.publicPath}/__webpack_hmr&reload=true`;
 
-    Object
-        .keys(entry)
-        .forEach((page) => {
-            let chunks = entry[page] || [];
+    if (config.env === ENV.dev) { //if dev,add hot client in entry
+        Object
+            .keys(entry)
+            .forEach((page) => {
+                let chunks = entry[page] || [];
 
-            chunks.push(hotClient + hotClientQuery);
-        });
+                chunks.push(hotClient + hotClientQuery);
+            });
+    }
 
     return entry;
 }
 
 /**
- * generage module config
+ * handler for module config
  * @param  {Object} config [description]
  * @param  {Object} module [description]
  * @return {Object}        [description]
  */
-function generateModule(config, module) {
+function moduleHandler(config, module) {
     let
         rules = module.rules,
         loaders = module.loaders,
@@ -78,20 +77,21 @@ function generateModule(config, module) {
         styleRule = rules.style,
         imageRule = rules.image,
         fileRule = rules.file,
-        vueRule = rules.vue,
-        htmlLoader = rules.html,
-        jsLoader = loaders.js,
-        styleLoader = loaders.style,
-        imageLoader = loaders.image,
-        fileLoader = loaders.file,
-        roitjsLoader = loaders.roitjs,
-        vueLoader = loaders.vue;
+        vueRule = rules.vue;
 
     styleRule.use.push(
-        styleLoader.lessLoader
+        loaders.postcssLoader
     );
 
-    return {
+    jsRule.use.push(
+        loaders.eslintLoader
+    );
+
+    styleRule.use.push(
+        loaders.lessLoader
+    );
+
+    let result = {
         rules: [
             htmlRule,
             jsRule,
@@ -100,29 +100,32 @@ function generateModule(config, module) {
             fileRule,
             vueRule
         ],
-        noParse: [/node_modules|vendor/]
+        noParse: [/vendor/] // why not use node_modules??
     };
+
+    return result;
 }
 
 /**
  * generate plugins
  * @return {Array} [description]
  */
-function generatePlugins(config, plugins) {
+function pluginsHandler(config, plugins) {
     let
         commonPlugin = plugins.common,
         htmlPlugin = plugins.html,
+        stylePlugin = plugins.style,
+        devPlugin = plugins.dev,
         result = [
-            // ...commonPlugin,
+            ...commonPlugin,
             ...htmlPlugin,
-            // new Webpack.optimize.OccurrenceOrderPlugin(),
-            // new Webpack.HotModuleReplacementPlugin(),
-            // new Webpack.NoEmitOnErrorsPlugin()
+            ...stylePlugin
         ];
 
-    if (Path.sep === "/") { //webpack dashboard not support windows
-        // let dashboard = new WebpackDashboard();
-        // result.push(new WebpackDashboardPlugin(dashboard.setData));
+    if (config.env === ENV.dev) {
+        result.push(...devPlugin);
+    } else {
+        result.push(...plugins.lint); //style lint
     }
 
     return result;
