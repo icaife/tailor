@@ -55,6 +55,7 @@
         "postcss-import": "^10.0.0",
         "postcss-loader": "^2.0.6",
         "postcss-sprites": "^4.2.1",
+        "progress-bar-webpack-plugin": "^1.10.0",
         "raw-loader": "^0.5.1",
         "riotjs-loader": "^4.0.0",
         "shelljs": "^0.7.8",

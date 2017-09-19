@@ -79,13 +79,14 @@ function moduleHandler(config, module) {
         fileRule = rules.file,
         vueRule = rules.vue;
 
-    styleRule.use.push(
-        loaders.postcssLoader
-    );
-
     jsRule.use.push(
         loaders.eslintLoader
     );
+
+    // styleRule.use.push(
+    //     loaders.postcssLoader
+    // );
+
 
     styleRule.use.push(
         loaders.lessLoader

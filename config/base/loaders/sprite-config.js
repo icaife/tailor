@@ -7,7 +7,9 @@
 
 const
     Path = require("path"),
-    PostCssSprites = require("postcss-sprites");
+    PostCssSprites = require("postcss-sprites"),
+    PostCss = require("postcss"),
+    updateRule = require("postcss-sprites/lib/core").updateRule;
 
 module.exports = (config) => {
     let inputConfig = config.input;
