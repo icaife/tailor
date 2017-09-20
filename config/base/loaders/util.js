@@ -21,10 +21,6 @@ module.exports = (config) => {
         },
         cacheLoader = {
             loader: "cache-loader",
-            options: {}
-        },
-        cacheLoader = {
-            loader: "cache-loader",
             option: {}
         },
         threadLoader = {
@@ -34,7 +30,7 @@ module.exports = (config) => {
 
     return {
         stringReplaceLoader,
-        cacheLoader
+        cacheLoader,
         threadLoader
     };
 };
