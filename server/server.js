@@ -23,14 +23,6 @@ function run(config, compiler) {
         app = new Express();
 
     compiler.plugin("compilation", function(compilation) {
-        // compilation.plugin("html-webpack-plugin-after-emit", function(data, cb) {
-        //     hotMiddleware.publish({
-        //         action: "reload",
-        //         src: data,
-        //         data: data
-        //     });
-        //     cb();
-        // });
         compilation.plugin("succeed-module", function(module) { //html-webpack-plugin-after-emit
             let resource = module.resource,
                 reg = new RegExp(`.(${inputConfig.html.ext.join("|")})$`.replace(/\./g, "\\."), "i");
@@ -55,6 +47,8 @@ function run(config, compiler) {
         });
     });
 
+    Log.info(`start server on: ${serverConfig.host}:${serverConfig.port}`);
+
     app
         .use(devMiddleware)
         .use(hotMiddleware)
@@ -64,8 +58,6 @@ function run(config, compiler) {
                 throw new Error(err);
             }
         });
-
-    Log.info(`server: ${serverConfig.host}:${serverConfig.port}`);
 }
 
 module.exports = run;

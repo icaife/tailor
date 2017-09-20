@@ -26,8 +26,12 @@ function run(config) {
 
     Log.info(`
 work info:
-    path: ${Log.chalk.blue(Path.join(config.root))}
-    env: ${Log.chalk.blue(config.env)}
+    path: ${Path.join(config.root)}
+    env: ${config.env}
+
+env info:
+    buildPath: ${outputConfig.path}
+    publicPath: ${outputConfig.publicPath}
 `);
 
     Log.info("Enjoy yourself! :)");

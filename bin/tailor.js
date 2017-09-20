@@ -8,6 +8,7 @@
  * @example
  *     tailor -e dev -f qa1
  */
+
 const
     Yargs = require("yargs"),
     Path = require("path"),
@@ -17,6 +18,7 @@ const
     tryRequire = require("try-require"),
     pkg = require("../package.json"),
     tailor = require("../index.js"),
+    preCommit = require("../lib/hook/pre-commit.js"),
     ENV = require("../constant/env.js"),
     OPTIONS = {
         e: "env",
@@ -37,6 +39,7 @@ const
     .alias("v", "version")
     .epilog("toursforfun.com copyright 2017 ")
     .argv;
+
 
 if (argv.version) {
     Log.info(`${pkg.version}`);
@@ -81,6 +84,13 @@ config.root = Path.resolve(process.cwd());
 config.tailor = {
     path: Path.resolve(__dirname, "../")
 };
+
+let cmd = (argv._ || [])[0];
+
+if (cmd === "hook") {
+    preCommit(config); //install hook
+    process.exit(0);
+}
 
 tailor(config);
 

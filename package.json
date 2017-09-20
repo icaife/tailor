@@ -12,7 +12,7 @@
         "tailor"
     ],
     "bin": {
-        "tailor": "./bin/cli.js"
+        "tailor": "./bin/tailor.js"
     },
     "author": "leon.cai@toursforfun.com",
     "license": "ISC",
@@ -28,11 +28,12 @@
         "cache-loader": "^1.0.3",
         "chalk": "^2.0.1",
         "clean-webpack-plugin": "^0.1.16",
+        "cli-table": "^0.3.1",
         "copy-webpack-plugin": "^4.0.1",
         "cross-env": "^5.0.1",
         "css-loader": "^0.28.4",
         "cssnano": "^3.10.0",
-        "eslint": "^4.3.0",
+        "eslint": "^4.7.1",
         "eslint-config-airbnb": "^15.1.0",
         "eslint-friendly-formatter": "^3.0.0",
         "eslint-loader": "^1.9.0",
@@ -46,7 +47,7 @@
         "html-webpack-plugin": "^2.29.0",
         "html-webpack-replaceurl-plugin": "^1.0.0",
         "htmllint-loader": "^1.3.8",
-        "image-webpack-loader": "^3.3.1",
+        "img-loader": "^2.0.0",
         "jest": "^20.0.4",
         "less": "^2.7.2",
         "less-loader": "^4.0.4",

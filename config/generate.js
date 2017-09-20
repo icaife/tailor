@@ -80,23 +80,17 @@ function moduleHandler(config, module) {
         vueRule = rules.vue;
 
     //js rule
-    jsRule.use.push(
-        loaders.eslintLoader
-    );
+    //TODO
 
     //style rule
-    styleRule.use.push(
-        loaders.postcssLoader
-    );
-
-    styleRule.use.push(
-        loaders.lessLoader
-    );
+    //TODO
 
     // image rule
-    // imageRule.use.push(
-    //     loaders.imageLoader
-    // );
+    if (config.env !== ENV.dev) { //compress image if not dev,dev will be very slow
+        imageRule.use.push(
+            loaders.imageLoader
+        );
+    }
 
     let result = {
         rules: [
@@ -109,6 +103,13 @@ function moduleHandler(config, module) {
         ],
         noParse: [/vendor/] // why not use node_modules??
     };
+
+    if (config.isLint) {
+        result.rules = [
+            jsRule,
+            styleRule
+        ];
+    }
 
     return result;
 }

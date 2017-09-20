@@ -187,6 +187,7 @@ function commonPlugin(config, entry) {
     plugins.push(
         new HashedModuleIdsPlugin(),
         new StringReplaceWebpackPlugin(),
+        new FriendlyErrorsWebpackPlugin(),
         new ProgressBarWebpackPlugin({
             format: "tailor build [:bar] " + ":percent" + " (:elapsed seconds)",
             clear: !false,

@@ -1,34 +1,43 @@
 /**
  * @description loader for image
+ * @see https://github.com/imagemin
  * @author Leon.Cai
  */
 
 module.exports = (config) => {
 
     let imageLoader = {
-        loader: "image-webpack-loader",
+        loader: "img-loader",
         options: {
-            mozjpeg: { //jpeg
-                quality: 80,
+            enabled: true,
+            gifsicle: {
+                interlaced: false
+            },
+            mozjpeg: {
                 progressive: true,
+                arithmetic: false,
+                quality: 80
             },
-            bypassOnDebug: true,
             optipng: { //png
-                optimizationLevel: 4
+                optimizationLevel: 3
             },
-            pngquant: { //png
+            pngquant: {
                 quality: "75-90",
-                speed: 4,
+                floyd: 0.5,
+                speed: 8,
                 verbose: true
             },
-            svgo: { //svg
+            svgo: {
                 plugins: [{
+                    removeTitle: true
+                }, {
+                    convertPathData: false
+                }, {
                     removeViewBox: false
                 }, {
                     removeEmptyAttrs: false
                 }]
-            },
-            limit: 10 * 1024
+            }
         }
     };
 
