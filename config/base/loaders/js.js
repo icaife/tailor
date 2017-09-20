@@ -17,7 +17,7 @@ module.exports = (config) => {
                 babelrc: false,
                 retainLines: true,
                 cacheDirectory: true,
-                exclude: /node_modules|vendor/
+                // exclude: /vendor/
             }
         },
         eslintLoader = {
