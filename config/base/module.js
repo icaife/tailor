@@ -52,7 +52,7 @@ function styleHandler(config, loaders) {
 
     return {
         test: new RegExp(`\\.(${styleConfig.ext.join("|")})$`, "i"),
-        use: [loaders.styleLoader, loaders.cssLoader, loaders.lessLoader]
+        use: [loaders.cacheLoader, loaders.styleLoader, loaders.cssLoader]
     };
 }
 

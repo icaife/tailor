@@ -177,9 +177,7 @@ function commonPlugin(config, entry) {
         inputConfig = config.input,
         outputConfig = config.output,
         jsConfig = outputConfig.js,
-        fileConfig = outputConfig.file,
-        emojs = "😀,😁,😂,😃,😄,😎,🙈,🙉,🙊,🐵,🐒,👈,👉,👆,👇,👌,👍".split(","),
-        icon = emojs.slice(Math.random(emojs.length) | 0, 1);
+        fileConfig = outputConfig.file;
 
     /**
      * TODO:
@@ -192,7 +190,8 @@ function commonPlugin(config, entry) {
         new ProgressBarWebpackPlugin({
             format: "tailor build [:bar] " + ":percent" + " (:elapsed seconds)",
             clear: !false,
-            complete: icon,
+            complete: "▊",
+            incomplete: "░",
             renderThrottle: 1
         }),
         new CopyWebpackPlugin([{

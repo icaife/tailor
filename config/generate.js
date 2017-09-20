@@ -83,13 +83,16 @@ function moduleHandler(config, module) {
         loaders.eslintLoader
     );
 
-    // styleRule.use.push(
-    //     loaders.postcssLoader
-    // );
-
+    styleRule.use.push(
+        loaders.postcssLoader
+    );
 
     styleRule.use.push(
         loaders.lessLoader
+    );
+
+    imageRule.use.push(
+        loaders.imageLoader
     );
 
     let result = {
