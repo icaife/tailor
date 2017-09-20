@@ -148,7 +148,7 @@ function optmPlugin(config, entry) {
         fileConfig = outputConfig.file;
 
     plugins.push(
-        new UglifyJsPlugin({ //TODO: uglify js
+        new UglifyJsPlugin({ //this will be very slow
             drop_debugger: true,
             dead_code: true,
             join_vars: true,
@@ -177,9 +177,7 @@ function commonPlugin(config, entry) {
         inputConfig = config.input,
         outputConfig = config.output,
         jsConfig = outputConfig.js,
-        fileConfig = outputConfig.file,
-        emojs = "😀,😁,😂,😃,😄,😎,🙈,🙉,🙊,🐵,🐒,👈,👉,👆,👇,👌,👍".split(","),
-        icon = emojs.slice(Math.random(emojs.length) | 0, 1);
+        fileConfig = outputConfig.file;
 
     /**
      * TODO:
@@ -192,7 +190,8 @@ function commonPlugin(config, entry) {
         new ProgressBarWebpackPlugin({
             format: "tailor build [:bar] " + ":percent" + " (:elapsed seconds)",
             clear: !false,
-            complete: icon,
+            complete: "█",
+            incomplete: "░",
             renderThrottle: 1
         }),
         new CopyWebpackPlugin([{

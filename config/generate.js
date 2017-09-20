@@ -79,18 +79,24 @@ function moduleHandler(config, module) {
         fileRule = rules.file,
         vueRule = rules.vue;
 
+    //js rule
     jsRule.use.push(
         loaders.eslintLoader
     );
 
-    // styleRule.use.push(
-    //     loaders.postcssLoader
-    // );
-
+    //style rule
+    styleRule.use.push(
+        loaders.postcssLoader
+    );
 
     styleRule.use.push(
         loaders.lessLoader
     );
+
+    // image rule
+    // imageRule.use.push(
+    //     loaders.imageLoader
+    // );
 
     let result = {
         rules: [
@@ -120,13 +126,14 @@ function pluginsHandler(config, plugins) {
         result = [
             ...commonPlugin,
             ...htmlPlugin,
-            ...stylePlugin
+            ...stylePlugin,
+            ...plugins.lint //style lint plugin
         ];
 
     if (config.env === ENV.dev) {
         result.push(...devPlugin);
     } else {
-        result.push(...plugins.lint); //style lint
+        result.push(...plugins.optm);
     }
 
     return result;

@@ -1,5 +1,10 @@
 "use strict";
 
+/**
+ * @see http://webpack.github.io/docs/webpack-dev-server.html
+ *      http://webpack.github.io/docs/webpack-dev-middleware.html
+ */
+
 const
     Webpack = require("webpack"),
     DevMiddleware = require("webpack-dev-middleware"),

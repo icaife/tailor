@@ -18,7 +18,7 @@ function jsHandler(config, loaders) {
     return {
         test: new RegExp(`\\.(${jsConfig.ext.join("|")})$`, "i"),
         exclude: /node_modules|vendor/,
-        use: [loaders.babelLoader]
+        use: [loaders.babelLoader /*, loaders.eslintLoader*/ ]
     };
 }
 
@@ -52,7 +52,7 @@ function styleHandler(config, loaders) {
 
     return {
         test: new RegExp(`\\.(${styleConfig.ext.join("|")})$`, "i"),
-        use: [loaders.styleLoader, loaders.cssLoader, loaders.lessLoader]
+        use: [loaders.styleLoader, loaders.cssLoader]
     };
 }
 

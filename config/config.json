@@ -80,14 +80,13 @@
             "quiet": false,
             "clientLogLevel": "info",
             "disableHostCheck": true,
-            "compress": true,
             "hot": true,
             "hotOnly": true,
             "lazy": false,
             "watchOptions": {
                 "ignored": ["node_modules"],
                 "aggregateTimeout": 300,
-                "poll": true
+                "poll": 1000
             },
             "overlay": {
                 "warnings": false,
