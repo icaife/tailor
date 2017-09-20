@@ -11,13 +11,8 @@ module.exports = (config) => {
             loader: "babel-loader",
             options: {
                 presets: [
-                    "env", {
-                        targets: {
-                            browsers: ["last 2 version", "ie 9"]
-                        }
-                    }
-                    // Path.join(tailorConfig.path, "./node_modules/babel-preset-env"),
-                    // Path.join(tailorConfig.path, "./node_modules/babel-preset-stage-2")
+                    Path.join(tailorConfig.path, "./node_modules/babel-preset-es2015"),
+                    Path.join(tailorConfig.path, "./node_modules/babel-preset-stage-2")
                 ],
                 babelrc: false,
                 retainLines: true,
