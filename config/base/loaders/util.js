@@ -5,9 +5,9 @@ const
     StringReplaceWebpackPlugin = require("string-replace-webpack-plugin");
 
 module.exports = (config) => {
-    let outputConfig = config.output;
-
-    stringReplaceLoader = {
+    let
+        outputConfig = config.output,
+        stringReplaceLoader = {
             loader: StringReplaceWebpackPlugin.replace({ //TODO replace something
                 replacements: [{
                     pattern: /<script[^>]+src="([^"]+)"[^>]*?>[\s\S]*?<\/script>/img,
@@ -20,11 +20,21 @@ module.exports = (config) => {
             })
         },
         cacheLoader = {
-            loader: "cache-loader"
+            loader: "cache-loader",
+            options: {}
+        },
+        cacheLoader = {
+            loader: "cache-loader",
+            option: {}
+        },
+        threadLoader = {
+            loader: "thread-loader",
+            option: {}
         };
 
     return {
         stringReplaceLoader,
         cacheLoader
+        threadLoader
     };
 };

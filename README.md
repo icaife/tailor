@@ -52,20 +52,18 @@ tailor -e test
 	- **c**: config, json config in CLI
 	- **f**: config file
 - env config
-	- base.env.json
-	- env.json
-	- custom.env.json
+	- tailor.config.json
 	- json config in CLI,config will rewrite the config file
-	
+
 	```
-	CLI JSON config > file config = custom.env.json > env.json > base.env.json
+	CLI JSON config > file config > tailor.config.json
 	```
 - example
 
 	```
 	tailor -e dev  (default)
 	tailor -e test -f custom.env.json
-	tailor -e test -c {env:'dev',basic:{cdn:'//cdn.tff.com',domain:'//tff.com'}}	
+	tailor -e test -c {output:{path:'custom-dest'},input:{path:'custom-src'}}
 	```
 ### TODO
 

@@ -4,7 +4,8 @@
  */
 "use strict";
 const
-    Loaders = require("./loaders");
+    Loaders = require("./loaders"),
+    ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 /**
  * js handler
@@ -18,7 +19,7 @@ function jsHandler(config, loaders) {
     return {
         test: new RegExp(`\\.(${jsConfig.ext.join("|")})$`, "i"),
         exclude: /node_modules|vendor/,
-        use: [loaders.babelLoader]
+        use: [loaders.babelLoader, loaders.eslintLoader]
     };
 }
 
@@ -52,7 +53,10 @@ function styleHandler(config, loaders) {
 
     return {
         test: new RegExp(`\\.(${styleConfig.ext.join("|")})$`, "i"),
-        use: [loaders.cacheLoader, loaders.styleLoader, loaders.cssLoader]
+        use: ExtractTextPlugin.extract({
+            fallback: loaders.styleLoader.loader,
+            use: [loaders.cssLoader, loaders.postcssLoader, loaders.lessLoader]
+        })
     };
 }
 

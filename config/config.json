@@ -15,15 +15,15 @@
             "ext": ["html"]
         },
         "image": {
-            "ext": ["jpg", "jpeg", "png", "gif", "ico", "bmp"]
+            "ext": ["jpg", "jpeg", "png", "gif", "ico", "bmp", "svg"]
         },
         "file": {
-            "ext": ["svg", "eof", "woff", "woff2", "eot", "ttf"]
+            "ext": ["eof", "woff", "woff2", "eot", "ttf"]
         }
     },
     "output": {
         "useHash": false,
-        "path": "dist",
+        "path": "dest",
         "publicPath": "//cdn.tff.com",
         "js": {
             "path": "assets"
@@ -45,14 +45,7 @@
     },
     "resolve": {
         "alias": {
-            "common": "@/common",
-            "lib": "common/lib",
-            "vendor": "common/vendor",
-            "ui": "lib/ui",
-            "jquery": "vendor/jquery/jquery.min.js",
-            "vue": "vendor/vue/vue.min.js",
-            "lodash": "vendor/util/lodash.core.js",
-            "riot": "vendor/riot/riot.min.js"
+
         },
         "modules": [],
         "extensions": []
@@ -61,16 +54,9 @@
         "modules": [],
         "extensions": []
     },
-    "vars": {
-        "CDN": ""
-    },
+    "vars": {},
     "global": {
-        "$": "jquery",
-        "jQuery": "jquery",
-        "Vue": "vue",
-        "lodash": "lodash",
-        "riot": "riot",
-        "_": "lodash"
+
     },
     "server": {
         "port": 8080,
@@ -80,14 +66,13 @@
             "quiet": false,
             "clientLogLevel": "info",
             "disableHostCheck": true,
-            "compress": true,
             "hot": true,
             "hotOnly": true,
             "lazy": false,
             "watchOptions": {
                 "ignored": ["node_modules"],
                 "aggregateTimeout": 300,
-                "poll": true
+                "poll": 1000
             },
             "overlay": {
                 "warnings": false,

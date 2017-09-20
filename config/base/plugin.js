@@ -148,7 +148,7 @@ function optmPlugin(config, entry) {
         fileConfig = outputConfig.file;
 
     plugins.push(
-        new UglifyJsPlugin({ //TODO: uglify js
+        new UglifyJsPlugin({ //this will be very slow
             drop_debugger: true,
             dead_code: true,
             join_vars: true,
@@ -187,6 +187,7 @@ function commonPlugin(config, entry) {
     plugins.push(
         new HashedModuleIdsPlugin(),
         new StringReplaceWebpackPlugin(),
+        new FriendlyErrorsWebpackPlugin(),
         new ProgressBarWebpackPlugin({
             format: "tailor build [:bar] " + ":percent" + " (:elapsed seconds)",
             clear: !false,
