@@ -29,7 +29,7 @@ module.exports = (config) => {
             "root": Path.resolve(config.root),
             "@": `root/${inputConfig.path}`,
         }, resolveConfig.alias),
-        modules: [Path.join(tailorConfig.path, "node_modules"), "node_modules"],
+        modules: [Path.join(tailorConfig.path, "node_modules") /*, "node_modules"*/ ],
         extensions: [".js", ".json"],
         // cacheWithContext: true
     };

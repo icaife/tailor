@@ -55,7 +55,7 @@ function htmlPlugin(config, entry) {
                     chunks: [pageName], //TODO:add common js
                     template: `${pageName}.${pageInputExt}`,
                     inject: !false, //TODO: auto inject
-                    minify: {}
+                    minify: !outputConfig.html.minify
                 };
 
             plugins.push(new HtmlWebpackPlugin(options));

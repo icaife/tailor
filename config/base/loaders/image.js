@@ -16,10 +16,10 @@ module.exports = (config) => {
             mozjpeg: {
                 progressive: true,
                 arithmetic: false,
-                quality: 80
+                quality: 85
             },
             optipng: { //png
-                optimizationLevel: 3
+                optimizationLevel: 2
             },
             pngquant: {
                 quality: "75-90",
