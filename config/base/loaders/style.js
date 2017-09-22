@@ -26,7 +26,8 @@ module.exports = (config) => {
         postcssLoader = {
             loader: "postcss-loader",
             options: {
-                plugins: postcssPlugins
+                plugins: postcssPlugins,
+                sourceMap: sourceMap
             }
         },
         lessLoader = {
