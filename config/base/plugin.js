@@ -208,7 +208,7 @@ function commonPlugin(config, entry) {
             names: [...Object.keys(entry)], //TODO
             chunks: [],
             minChunks: 4,
-            filename: `${jsConfig.path}/[name]` + (outputConfig.useHash ? `.[chunkhash:${outputConfig.hashLen}]` : "") + `.js`,
+            filename: `${jsConfig.path}/[name]` + (outputConfig.useHash ? `.[chunkhash]` : "") + `.js`,
         }), {
             /**
              * @description errors print
