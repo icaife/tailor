@@ -48,11 +48,23 @@ tailor -e test
 ```
 
 - options
-```
--e -> environment
-	dev  (default)
-	test
-	prod
-```
+	- **e**: environment,`dev`、`test`、`prod`,default `dev`
+	- **c**: config, json config in CLI
+	- **f**: config file
+- env config
+	- tailor.config.json
+	- json config in CLI,config will rewrite the config file
+
+	```
+	CLI JSON config > file config > tailor.config.json
+	```
+- example
+
+	```
+	tailor -e dev  (default)
+	tailor -e test -f custom.env.json
+	tailor -e test -c {output:{path:'custom-dest'},input:{path:'custom-src'}}
+	```
+### TODO
 
 > [IE兼容指南](http://www.zuojj.com/archives/2157.html)

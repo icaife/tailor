@@ -3,75 +3,85 @@
  * @author Leon.Cai
  */
 "use strict";
-
 const
-    FSE = require("fs-extra"),
-    Path = require("path"),
-    Shell = require("shelljs"),
-    Log = require("./lib/util/log"),
-    PreCommit = require("./lib/hook/pre-commit"),
     Webpack = require("webpack"),
-    Constant = require("./constant"),
+    Path = require("path"),
+    FSE = require("fs-extra"),
+    Log = require("./lib/util/log"),
+    Shell = require("shelljs"),
     Config = require("./config"),
-    Serve = require("./server");
+    Server = require("./server"),
+    ENV = require("./constant/env.js");
 
-function init(args) {
-    let config = Config(args);
+/**
+ * run tailor
+ * @param  {[type]} config [description]
+ * @return {[type]}        [description]
+ */
+function run(config) {
+    let
+        webpackConfig = Config(config),
+        outputConfig = config.output,
+        compiler = null;
 
     Log.info(`
 work info:
-    path:${Log.chalk.blue(Path.join(config.basic.root))}
-    env:${Log.chalk.blue(config.env)}
-    `);
+    path: ${Path.join(config.root)}
+    env: ${config.env}
 
-    let destPath = Path.join(config.basic.root, config.basic.dest);
+env info:
+    buildPath: ${outputConfig.path}
+    publicPath: ${outputConfig.publicPath}
+`);
 
-    //clean dest path if exists
-    FSE.existsSync(destPath) && (Shell.rm("-rf", destPath), Log.info("clean " + Log.chalk.blue(destPath) + " done"));
-
-    //init
     Log.info("Enjoy yourself! :)");
 
-    let isDev = config.env === Constant.env.dev,
-        compiler = null;
+    if (outputConfig.clean) {
+        let outputPath = Path.join(config.root, outputConfig.path);
 
-    PreCommit(config); //init pre commit
+        FSE.existsSync(outputPath) && (Shell.rm("-rf", outputPath), Log.info("clean " + Log.chalk.blue(outputPath) + " done"));
+    }
 
-    if (isDev) { // if development,run webpack server
-        Serve(config);
-    } else { //run webpack
-        // let exitCode = Shell.exec("webpack --config webpack.config.js --colors --hide-modules").code; //--progress --bail
-        // process.exit(exitCode);
-        compiler = Webpack(config.webpack);
+    compiler = Webpack(webpackConfig);
+
+    if (config.env === ENV.dev) {
+        Server(config, compiler);
+    } else {
         compiler.run(compilerCallback);
     }
 
-    function compilerCallback(err, stat) {
-        if (err) {
-            Log.error(err.stack);
-            process.exit(1);
-        }
-
-        const Stats = stat.toJson();
-        if (Stats.errors.length !== 0) {
-            Log.error(Stats.errors);
-            process.exit(1);
-        }
-        // 输出构建结果
-        process.stdout.write(stat.toString({
-            colors: true,
-            modules: false,
-            children: false,
-            chunks: false,
-            chunkModules: false
-        }) + '\n');
-
-        Log.info('Build successfully!');
-
-        process.exit(0);
-    }
+    return compiler;
 }
 
+/**
+ * compiler callback
+ * @param  {Object} err  [description]
+ * @param  {Object} stat [description]
+ */
+function compilerCallback(err, stat) {
+    if (err) {
+        Log.error(err.stack);
+        process.exit(1);
+    }
 
+    const Stats = stat.toJson();
 
-module.exports = init;
+    if (Stats.errors.length !== 0) {
+        Log.error(Stats.errors);
+        process.exit(1);
+    }
+    // 输出构建结果
+    process.stdout.write(stat.toString({
+        colors: true,
+        modules: false,
+        children: false,
+        chunks: false,
+        chunkModules: false
+    }) + '\n');
+
+    Log.info('Build successfully!');
+
+    process.exit(0);
+}
+
+module.exports = run;

@@ -1,0 +1,101 @@
+{
+    "input": {
+        "path": "src",
+        "entry": {
+            "prefix": "index",
+            "ext": "js"
+        },
+        "js": {
+            "ext": ["js"]
+        },
+        "style": {
+            "ext": ["css", "less"]
+        },
+        "html": {
+            "ext": ["html"]
+        },
+        "image": {
+            "ext": ["jpg", "jpeg", "png", "gif", "ico", "bmp", "svg"]
+        },
+        "file": {
+            "ext": ["eof", "woff", "woff2", "eot", "ttf"]
+        }
+    },
+    "output": {
+        "useHash": false,
+        "hashLen": 6,
+        "path": "dest",
+        "publicPath": "//static.tff.com",
+        "js": {
+            "path": "assets"
+        },
+        "html": {
+            "path": "views",
+            "minify": true,
+            "ext": "blade.php"
+        },
+        "style": {
+            "path": "assets",
+            "extract": true
+        },
+        "image": {
+            "path": "assets"
+        },
+        "file": {
+            "path": "assets"
+        }
+    },
+    "resolve": {
+        "alias": {
+
+        },
+        "modules": [],
+        "extensions": []
+    },
+    "resolveLoader": {
+        "modules": [],
+        "extensions": []
+    },
+    "vars": {},
+    "global": {
+
+    },
+    "server": {
+        "port": 8080,
+        "host": "localhost",
+        "devServer": {
+            "noInfo": false,
+            "quiet": false,
+            "clientLogLevel": "info",
+            "disableHostCheck": true,
+            "hot": true,
+            "hotOnly": true,
+            "lazy": false,
+            "watchOptions": {
+                "ignored": ["node_modules"],
+                "aggregateTimeout": 300,
+                "poll": 1000
+            },
+            "overlay": {
+                "warnings": false,
+                "error": true
+            },
+            "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Credentials": true,
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Allow-Methods": "*",
+                "Accept": "*/*"
+            },
+            "stats": {
+                "children": false,
+                "publicPath": true,
+                "errors": true,
+                "colors": true,
+                "chunks": false,
+                "chunkModules": false
+            }
+        }
+    },
+    "devtool": "cheap-source-map"
+}
