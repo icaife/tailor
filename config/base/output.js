@@ -9,8 +9,8 @@ const
 module.exports = (config) => {
     let
         outputConfig = config.output,
-        fileName = outputConfig.useHash ? `[name].[chunkhash:${outputConfig.hashLen}].js` : '[name].js',
-        chunkFilename = outputConfig.useHash ? `[name].[chunkhash:${outputConfig.hashLen}].js` : "[name].js",
+        fileName = outputConfig.useHash ? `[name].[chunkhash].js` : '[name].js',
+        chunkFilename = outputConfig.useHash ? `[name].[chunkhash].js` : "[name].js",
         outputPath = Path.join(config.root, outputConfig.path),
         publicPath = /\/$/.test(outputConfig.publicPath) ? outputConfig.publicPath : outputConfig.publicPath + "/",
         jsConfig = outputConfig.js,
@@ -21,11 +21,15 @@ module.exports = (config) => {
         publicPath: publicPath,
         filename: `${assetsPath}/${fileName}`,
         chunkFilename: `${assetsPath}/${chunkFilename}`,
-        sourceMapFilename: `${assetsPath}/[name].map`,
+        sourceMapFilename: `[file].map`,
         pathinfo: !true,
         libraryTarget: "umd",
         library: config.global || {}
     };
+
+    if (outputConfig.useHash) {
+        output.hashDigestLength = outputConfig.hashLen;
+    }
 
     return output;
 };

@@ -6,7 +6,8 @@ const
     PostcssPlugins = require("./postcss-plugins.js");
 
 module.exports = (config) => {
-    let postcssPlugins = PostcssPlugins(config);
+    let postcssPlugins = PostcssPlugins(config),
+        sourceMap = !!config.devtool;
 
     let
         styleLoader = {
@@ -19,19 +20,20 @@ module.exports = (config) => {
             loader: "css-loader",
             options: {
                 importLoaders: 1,
-                // sourceMap: true
+                sourceMap: sourceMap
             }
         },
         postcssLoader = {
             loader: "postcss-loader",
             options: {
-                plugins: postcssPlugins
+                plugins: postcssPlugins,
+                sourceMap: sourceMap
             }
         },
         lessLoader = {
             loader: "less-loader",
             options: {
-                // sourceMap: true
+                sourceMap: sourceMap
             }
         };
 

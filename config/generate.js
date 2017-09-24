@@ -34,7 +34,10 @@ function generateConfig(config) {
         profile: true,
         externals: config.global || {}, //TODO
         watch: config.watch, //middleware default true
-        devtool: config.devtool ? "cheap-module-eval-source-map" : false
+        /**
+         * @see https://juejin.im/post/58293502a0bb9f005767ba2f
+         */
+        devtool: config.devtool ? config.devtool : false
     };
 }
 

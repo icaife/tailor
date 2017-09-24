@@ -4,23 +4,25 @@
  */
 
 module.exports = (config) => {
-    let vueLoader = {
-        //@see https://github.com/vuejs/vue-loader/blob/master/docs/en/options.md
-        //@see https://vue-loader.vuejs.org/zh-cn/
-        loader: "vue-loader",
-        options: {
-            sourceMap: true,
-            esModule: false,
-            transformToRequire: {
-                script: ["src"],
-                style: ["src"],
-                img: ["src", "data-src", "data-original"]
-            },
-            loaders: { //TODO
-                js: "babel-loader!eslint-loader"
+    let
+        outputConfig = config.output,
+        vueLoader = {
+            //@see https://github.com/vuejs/vue-loader/blob/master/docs/en/options.md
+            //@see https://vue-loader.vuejs.org/zh-cn/
+            loader: "vue-loader",
+            options: {
+                sourceMap: !!config.devtool,
+                esModule: false,
+                transformToRequire: {
+                    script: ["src"],
+                    style: ["src"],
+                    img: ["src", "data-src", "data-original"]
+                },
+                loaders: { //TODO
+                    js: "babel-loader!eslint-loader"
+                }
             }
-        }
-    };
+        };
     return {
         vueLoader
     };

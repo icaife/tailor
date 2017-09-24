@@ -23,8 +23,9 @@
     },
     "output": {
         "useHash": false,
+        "hashLen": 6,
         "path": "dest",
-        "publicPath": "//cdn.tff.com",
+        "publicPath": "//static.tff.com",
         "js": {
             "path": "assets"
         },
@@ -95,5 +96,6 @@
                 "chunkModules": false
             }
         }
-    }
+    },
+    "devtool": "cheap-source-map"
 }
