@@ -8,34 +8,34 @@
 # Tailor for ToursForFun Frontend
 
 ## Instructions
->Based on webpack@3.6
+Based on webpack@3.6
 
--HTML
-	-[x] Multi pages support
+- HTML
+	- [x]Multi pages support
 
--Style
-	-[x] Less to css
-	-[x] CSS sprite
+- Style
+	- [x] Less to css
+	- [x] CSS sprite
 
--DevTool
-	-[x] Source Map
+- DevTool
+	- [x] Source Map
+	- [x] Hot reload middleware
 
--ES6 spport
-	-[x] babel-preset-env
-	-[x] babel-preset-stage-2
-	-[x] Hot Middleware
-	-[] Mock Server
+- ES6 spport
+	- [x] babel-preset-env
+	- [x] babel-preset-stage-2
 
--Lint
-	-[x] ES Lint
-	-[x] Sty leLint
-	-[x] HTMLL Lint
-	-[] Pre push
+- Lint
+	- [x] ES Lint
+	- [x] Sty leLint
+	- [x] HTMLL Lint
+	- [ ] Pre push
 
--Advanced
-	[x] ES6 Support
-	[x] VUE Supported
-	[x] TODO MORE...
+- Advanced
+	- [x] ES6 Support
+	- [x] VUE Supported
+	- [ ] Mock Server
+	- [ ] TODO MORE...
 
 
 ## Geting Started
