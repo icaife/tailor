@@ -11,7 +11,7 @@
 Based on webpack@3.6
 
 - HTML
-	- [x]Multi pages support
+	- [x] Multi pages support
 
 - Style
 	- [x] Less to css
