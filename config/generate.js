@@ -15,9 +15,9 @@ const
  */
 function generateConfig(config) {
     let outputConfig = config.output,
-        publicPath = /\/$/.test(outputConfig.publicPath) ? outputConfig.publicPath : outputConfig.publicPath + "/",
+        publicPath = /\/$/.test(outputConfig.publicPath) ? outputConfig.publicPath : outputConfig.publicPath + "/";
 
-        outputConfig.publicPath = publicPath;
+    outputConfig.publicPath = publicPath;
 
     let
         base = Base(config),
