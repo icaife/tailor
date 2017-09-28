@@ -14,6 +14,11 @@ const
  * @return {[type]} [description]
  */
 function generateConfig(config) {
+    let outputConfig = config.output,
+        publicPath = /\/$/.test(outputConfig.publicPath) ? outputConfig.publicPath : outputConfig.publicPath + "/",
+
+        outputConfig.publicPath = publicPath;
+
     let
         base = Base(config),
         inputConfig = config.input,
