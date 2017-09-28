@@ -39,7 +39,8 @@
             "extract": true
         },
         "image": {
-            "path": "assets"
+            "path": "assets",
+            "compress": false
         },
         "file": {
             "path": "assets"

@@ -88,12 +88,8 @@ function moduleHandler(config, module) {
     //style rule
     //TODO
 
-    // image rule
-    if (config.env !== ENV.dev) { //compress image if not dev,dev will be very slow
-        imageRule.use.push(
-            loaders.imageLoader
-        );
-    }
+    //image rule
+    //TODO
 
     let result = {
         rules: [
@@ -106,13 +102,6 @@ function moduleHandler(config, module) {
         ],
         noParse: [/vendor/] // why not use node_modules??
     };
-
-    if (config.isLint) {
-        result.rules = [
-            jsRule,
-            styleRule
-        ];
-    }
 
     return result;
 }

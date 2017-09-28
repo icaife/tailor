@@ -69,12 +69,19 @@ function styleHandler(config, loaders) {
 function imageHandler(config, loaders) {
     let
         inputConfig = config.input,
-        imageConfig = inputConfig.image;
+        outputConfig = config.output,
+        imageInputConfig = inputConfig.image,
+        imageOutputConfig = outputConfig.image,
+        rule = {
+            test: new RegExp(`\\.(${imageInputConfig.ext.join("|")})$`, "i"),
+            use: [loaders.fileLoader]
+        };
 
-    return {
-        test: new RegExp(`\\.(${imageConfig.ext.join("|")})$`, "i"),
-        use: [loaders.fileLoader]
-    };
+    if (imageOutputConfig.compress) {
+        rule.use.push(loaders.imageLoader);
+    }
+
+    return rule;
 }
 
 /**
