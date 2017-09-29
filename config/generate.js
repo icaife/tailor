@@ -29,6 +29,7 @@ function generateConfig(config) {
 
     return {
         target: "web",
+        bail: true,
         context: context,
         entry: entry,
         module: module,
@@ -55,7 +56,7 @@ function entryHandler(config, entry) {
         tailorConfig = config.tailor,
         outputConfig = config.output,
         hotClient = Path.resolve(`${tailorConfig.path}/lib/helper/hot-client.js`),
-        hotClientQuery = `?path=${outputConfig.publicPath}/__webpack_hmr&reload=true`;
+        hotClientQuery = `?path=${outputConfig.publicPath}__webpack_hmr&reload=true`;
 
     if (config.env === ENV.dev) { //if dev,add hot client in entry
         Object

@@ -210,31 +210,33 @@ function commonPlugin(config, entry) {
             },
             to: Path.join(config.root, outputConfig.path, jsConfig.path)
         }]),
-        new DefinePlugin(config.vars || {}),
+        new DefinePlugin(varsHandler(config.vars)),
         new CommonsChunkPlugin({
             names: [...Object.keys(entry)], //TODO
             chunks: [],
             minChunks: 4,
             filename: `${jsConfig.path}/[name]` + (outputConfig.useHash ? `.[chunkhash]` : "") + `.js`,
-        }), {
-            /**
-             * @description errors print
-             * @see https://doc.webpack-china.org/api/plugins/compiler/#-
-             * @see tttps://webpack.github.io/docs/plugins.html#the-compiler-instance
-             */
-            apply: function(compiler) {
-                compiler.plugin("done", function(stats, type, msg) {
-                    if (stats.hasErrors()) { //有错误,退出 exit -1
-                        let errors = stats.compilation.errors || [],
-                            msg = errors.join("\n");
-
-                        Log.error(`some errors occurred:\n${msg}\n`);
-                        process.exit(1);
-                    }
-                });
-            }
-        }
+        })
     );
+
+    // plugins.push({
+    //     /**
+    //      * @description errors print
+    //      * @see https://doc.webpack-china.org/api/plugins/compiler/#-
+    //      * @see tttps://webpack.github.io/docs/plugins.html#the-compiler-instance
+    //      */
+    //     apply: function(compiler) {
+    //         compiler.plugin("done", function(stats, type, msg) {
+    //             if (stats.hasErrors()) { //有错误,退出 exit -1
+    //                 let errors = stats.compilation.errors || [],
+    //                     msg = errors.join("\n");
+
+    //                 Log.error(`some errors occurred:\n${msg}\n`);
+    //                 process.exit(1);
+    //             }
+    //         });
+    //     }
+    // });
 
     return plugins;
 }
@@ -244,6 +246,32 @@ function dllPlugin(config, entry) {
     let plugins = [];
 
     return plugins;
+}
+
+
+/**
+ * vars handler
+ * @param  {Object} json [description]
+ * @return {Object}      [description]
+ */
+function varsHandler(json) {
+    json = json || {};
+
+    let result = {};
+
+    for (let key in json) {
+        let val = json[key];
+
+        if (typeof val === "string") {
+            result[key] = JSON.stringify(val);
+        } else if (Object.prototype.toString.call(val) === "[object Object]") {
+            varsHandler(val);
+        } else {
+            result[key] = val;
+        }
+    }
+
+    return result;
 }
 
 module.exports = (config, entry) => {
