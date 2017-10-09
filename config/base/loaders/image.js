@@ -7,7 +7,7 @@
 module.exports = (config) => {
 
     let imageLoader = {
-        loader: "img-loader",
+        loader: "img-loader", //TODO
         options: {
             enabled: true,
             gifsicle: {

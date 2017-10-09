@@ -48,7 +48,6 @@
         "html-webpack-plugin": "^2.29.0",
         "html-webpack-replaceurl-plugin": "^1.0.0",
         "htmllint-loader": "^1.3.8",
-        "img-loader": "^2.0.0",
         "less": "^2.7.2",
         "less-loader": "^4.0.4",
         "moment": "^2.18.1",

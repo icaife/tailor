@@ -78,7 +78,7 @@ function imageHandler(config, loaders) {
         };
 
     if (imageOutputConfig.compress) {
-        rule.use.push(loaders.imageLoader);
+        // rule.use.push(loaders.imageLoader);
     }
 
     return rule;

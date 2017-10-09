@@ -85,7 +85,7 @@ function stylePlugin(config, entry) {
 
     plugins.push(new ExtractTextPlugin({ //extract css
         filename: `${styleConfig.path}/[name]` + (outputConfig.useHash ? `.[contenthash:${outputConfig.hashLen}]` : "") + `.css`,
-        allChunks: true,
+        allChunks: !true,
         disable: !styleConfig.extract
     }));
 
