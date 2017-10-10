@@ -6,7 +6,7 @@
 
 /**
  * @example
- *     tailor -e dev -f qa1
+ *     tailor -e dev
  */
 
 const
@@ -63,6 +63,9 @@ try {
     let projConfig = require(Path.join(configDir, argv.file));
 
     argv.env = ENV[argv.env] ? ENV[argv.env] : ENV.dev;
+
+    console.log(argv);
+    process.exit(1);
 
     config = _.merge({},
         require("../config/config.json"),

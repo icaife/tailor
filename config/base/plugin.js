@@ -25,7 +25,9 @@ const
     HashedModuleIdsPlugin = Webpack.HashedModuleIdsPlugin,
     SourceMapDevToolPlugin = Webpack.SourceMapDevToolPlugin,
     DefinePlugin = Webpack.DefinePlugin,
-    ProgressBarWebpackPlugin = require("progress-bar-webpack-plugin");
+    ProgressBarWebpackPlugin = require("progress-bar-webpack-plugin")
+    // ,HardSourceWebpackPlugin = require("hard-source-webpack-plugin")
+;
 
 /**
  * plugins for html
@@ -137,6 +139,7 @@ function devPlugin(config, entry) {
         new Webpack.optimize.OccurrenceOrderPlugin(),
         new Webpack.HotModuleReplacementPlugin(),
         new Webpack.NoEmitOnErrorsPlugin()
+        // ,new HardSourceWebpackPlugin()
     );
 
     return plugins;
