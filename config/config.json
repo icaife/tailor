@@ -31,16 +31,17 @@
         },
         "html": {
             "path": "views",
-            "minify": true,
+            "optm": true,
             "ext": "blade.php"
         },
         "style": {
             "path": "assets",
-            "extract": true
+            "extract": true,
+            "optm": true
         },
         "image": {
             "path": "assets",
-            "compress": false
+            "optm": false
         },
         "file": {
             "path": "assets"

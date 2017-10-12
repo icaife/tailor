@@ -64,9 +64,6 @@ try {
 
     argv.env = ENV[argv.env] ? ENV[argv.env] : ENV.dev;
 
-    console.log(argv);
-    process.exit(1);
-
     config = _.merge({},
         require("../config/config.json"),
         projConfig.base,

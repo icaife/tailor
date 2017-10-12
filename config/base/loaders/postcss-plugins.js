@@ -14,7 +14,10 @@ module.exports = (config) => {
             browsers: ["Chrome >= 35", "FireFox >= 40", "ie > 9", "Android >= 4", "Safari >= 5.1", "iOS >= 7"],
             remove: true
         }),
-        cssnano = CssNano(),
+        cssnano = CssNano({
+            preset: 'default',
+            safe: true
+        }),
         spriteConfig = SpriteConfig(config),
         sprite = PostCssSprites(spriteConfig);
 

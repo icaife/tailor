@@ -49,13 +49,24 @@ function htmlHandler(config, loaders) {
 function styleHandler(config, loaders) {
     let
         inputConfig = config.input,
-        styleConfig = inputConfig.style;
+        outputConfig = config.output,
+        styleInputConfig = inputConfig.style,
+        styleOutputConfig = outputConfig.style,
+        uses = [];
+
+    uses.push(loaders.cssLoader);
+
+    if (styleOutputConfig.optm) {
+        uses.push(loaders.postcssLoader);
+    }
+
+    uses.push(loaders.lessLoader);
 
     return {
-        test: new RegExp(`\\.(${styleConfig.ext.join("|")})$`, "i"),
+        test: new RegExp(`\\.(${styleInputConfig.ext.join("|")})$`, "i"),
         use: ExtractTextPlugin.extract({
             fallback: loaders.styleLoader.loader,
-            use: [loaders.cssLoader, loaders.postcssLoader, loaders.lessLoader]
+            use: uses
         })
     };
 }
@@ -77,7 +88,7 @@ function imageHandler(config, loaders) {
             use: [loaders.fileLoader]
         };
 
-    if (imageOutputConfig.compress) {
+    if (imageOutputConfig.optm) {
         // rule.use.push(loaders.imageLoader);
     }
 

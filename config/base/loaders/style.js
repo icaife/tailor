@@ -20,6 +20,7 @@ module.exports = (config) => {
             loader: "css-loader",
             options: {
                 importLoaders: 1,
+                minimize: true,
                 sourceMap: sourceMap
             }
         },
@@ -33,7 +34,13 @@ module.exports = (config) => {
         lessLoader = {
             loader: "less-loader",
             options: {
-                sourceMap: sourceMap
+                sourceMap: sourceMap,
+                compress: false,
+                plugin: {
+                    install: function(less, plm) {
+                        console.log(less);
+                    }
+                }
             }
         };
 

@@ -11,7 +11,9 @@ module.exports = (config) => {
             //@see https://vue-loader.vuejs.org/zh-cn/
             loader: "vue-loader",
             options: {
-                sourceMap: !!config.devtool,
+                // sourceMap: !!config.devtool,
+                cssSourceMap: false,
+                sourceMap: false,
                 esModule: false,
                 transformToRequire: {
                     script: ["src"],

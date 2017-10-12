@@ -4,8 +4,7 @@
  */
 
 const
-    Path = require("path"),
-    StringReplaceWebpackPlugin = require("string-replace-webpack-plugin");
+    Path = require("path");
 
 module.exports = (config) => {
     let

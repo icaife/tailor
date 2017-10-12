@@ -25,9 +25,8 @@ const
     HashedModuleIdsPlugin = Webpack.HashedModuleIdsPlugin,
     SourceMapDevToolPlugin = Webpack.SourceMapDevToolPlugin,
     DefinePlugin = Webpack.DefinePlugin,
-    ProgressBarWebpackPlugin = require("progress-bar-webpack-plugin")
-    // ,HardSourceWebpackPlugin = require("hard-source-webpack-plugin")
-;
+    ProgressBarWebpackPlugin = require("progress-bar-webpack-plugin"),
+    HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
 
 /**
  * plugins for html
@@ -57,7 +56,7 @@ function htmlPlugin(config, entry) {
                     chunks: [pageName], //TODO:add common js
                     template: `${pageName}.${pageInputExt}`,
                     inject: !false, //TODO: auto inject
-                    minify: outputConfig.html.minify ? {
+                    minify: outputConfig.html.optm ? {
                         html5: true,
                         collapseWhitespace: true,
                         collapseBooleanAttributes: true,
@@ -130,16 +129,19 @@ function lintPlugin(config, entry) {
 function devPlugin(config, entry) {
     let plugins = [],
         outputConfig = config.output,
-        htmlConfig = outputConfig.html;
+        inputConfig = config.input,
+        htmlOutputConfig = outputConfig.html,
+        // imageInputConfig = inputConfig.image,
+        fileInputConfig = inputConfig.file;
 
     plugins.push( //views write to hard disk
         new WriteFileWebpackPlugin({
-            test: new RegExp(htmlConfig.path, "i")
+            test: new RegExp(`(${[htmlOutputConfig.ext].join("|")})$`, "i")
         }),
         new Webpack.optimize.OccurrenceOrderPlugin(),
         new Webpack.HotModuleReplacementPlugin(),
-        new Webpack.NoEmitOnErrorsPlugin()
-        // ,new HardSourceWebpackPlugin()
+        new Webpack.NoEmitOnErrorsPlugin(),
+        // new HardSourceWebpackPlugin()
     );
 
     return plugins;

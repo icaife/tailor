@@ -12,7 +12,7 @@ module.exports = (config) => {
                 replacements: [{
                     pattern: /<script[^>]+src="([^"]+)"[^>]*?>[\s\S]*?<\/script>/img,
                     replacement: function(match, src, offset, string) {
-                        let result = /^(\w+:)?(\/\/)/.test(src) ? src : (`${outputConfig.publicPath}/${outputConfig.js.path}/${src}`).replace(/\\/g, "/");
+                        let result = /^(\w+:)?(\/\/)/.test(src) ? src : (`${outputConfig.publicPath}${outputConfig.js.path}/${src}`).replace(/\\/g, "/");
 
                         return match.toString().replace(src, result);
                     }
