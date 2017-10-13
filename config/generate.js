@@ -66,6 +66,12 @@ function entryHandler(config, entry) {
 
                 chunks.push(hotClient + hotClientQuery);
             });
+    } else if (config.env === ENV.dll) {
+        entry = {
+            "jquery": ["jquery"],
+            "vue": ["vue"],
+            "common": ["jquery", "vue"]
+        };
     }
 
     return entry;
@@ -131,6 +137,8 @@ function pluginsHandler(config, plugins) {
 
     if (config.env === ENV.dev) {
         result.push(...devPlugin);
+    } else if (config.env === ENV.dll) {
+        result = [plugins.dll];
     } else {
         result.push(...plugins.optm);
     }

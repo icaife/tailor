@@ -42,6 +42,8 @@ env info:
         FSE.existsSync(outputPath) && (Shell.rm("-rf", outputPath), Log.info("clean " + Log.chalk.blue(outputPath) + " done"));
     }
 
+    console.log(webpackConfig);
+
     compiler = Webpack(webpackConfig);
 
     if (config.env === ENV.dev) {

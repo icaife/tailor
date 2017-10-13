@@ -4,6 +4,7 @@
  */
 
 const
+    tryRequire = require("try-require"),
     Webpack = require("webpack"),
     Path = require("path"),
     Shell = require("shelljs"),
@@ -160,6 +161,7 @@ function optmPlugin(config, entry) {
         fileConfig = outputConfig.file;
 
     plugins.push(
+        //todo:webpack-uglify-parallel
         new UglifyJsPlugin({ //this will be very slow
             drop_debugger: true,
             dead_code: true,
@@ -200,6 +202,7 @@ function commonPlugin(config, entry) {
         new HashedModuleIdsPlugin(),
         new StringReplaceWebpackPlugin(),
         new FriendlyErrorsWebpackPlugin(),
+        new DefinePlugin(varsHandler(config.vars)),
         new ProgressBarWebpackPlugin({
             format: "tailor build [:bar] " + ":percent" + " (:elapsed seconds)",
             clear: !false,
@@ -215,7 +218,6 @@ function commonPlugin(config, entry) {
             },
             to: Path.join(config.root, outputConfig.path, jsConfig.path)
         }]),
-        new DefinePlugin(varsHandler(config.vars)),
         new CommonsChunkPlugin({
             names: [...Object.keys(entry)], //TODO
             chunks: [],
@@ -223,6 +225,17 @@ function commonPlugin(config, entry) {
             filename: `${jsConfig.path}/[name]` + (outputConfig.useHash ? `.[chunkhash]` : "") + `.js`,
         })
     );
+
+    Object
+        .keys(entry)
+        .forEach((item) => {
+            plugins.push(new Webpack.DllReferencePlugin({
+                // context: Path.join(config.root, outputConfig.path, outputConfig.js.path),
+                manifest: tryRequire(Path.join(config.root, outputConfig.path, outputConfig.js.path, `${item}.dll.json`)),
+                scope: "dll",
+                sourceType: "umd"
+            }));
+        });
 
     // plugins.push({
     //     /**
@@ -246,16 +259,35 @@ function commonPlugin(config, entry) {
     return plugins;
 }
 
-//TODO;
+/**
+ * plugins for dll
+ * @param  {Object} config [description]
+ * @param  {Object} entry  [description]
+ * @return {Array}        [description]
+ * @see https://webpack.js.org/plugins/dll-plugin/
+ */
 function dllPlugin(config, entry) {
-    let plugins = [];
+    let plugins = [],
+        outputConfig = config.output;
+
+    Object
+        .keys(entry)
+        .forEach((item) => {
+            let name = item + (outputConfig.useHash ? `.[chunkhash:${outputConfig.hashLen}]` : "");
+
+            plugins.push(new Webpack.DllPlugin({
+                //context:"",//defaults to the webpack context
+                name: name,
+                path: Path.join(config.root, outputConfig.path, outputConfig.js.path, "[name].dll.json")
+            }));
+        });
 
     return plugins;
 }
 
 
 /**
- * vars handler
+ * vars handler,stringify vars
  * @param  {Object} json [description]
  * @return {Object}      [description]
  */
@@ -286,6 +318,7 @@ module.exports = (config, entry) => {
         style: stylePlugin(config, entry),
         dev: devPlugin(config, entry),
         optm: optmPlugin(config, entry),
-        lint: lintPlugin(config, entry)
+        lint: lintPlugin(config, entry),
+        dll: dllPlugin(config, entry)
     };
 };
