@@ -23,7 +23,7 @@ module.exports = (config) => {
                 htmlResourceRoot: Path.join(config.root, inputConfig.path),
                 root: Path.join(config.root, inputConfig.path),
                 htmlResourceRules: [
-                    /<(?:img)[^>]+\b(?:\w+-?)?(?:src)="([^"{}]*)"[^>]*?>/img, //img tag
+                    /<(?:img)[^>]+\b(?:\w+-?)?(?:src)="([^"{}]*(?:jpg|png|gif|webp|bmp))"[^>]*?>/img, //img tag
                 ],
                 rules: [{
                         test: /{{raw}}([\w\W]*?){{\/raw}}/,
@@ -36,7 +36,6 @@ module.exports = (config) => {
                     }, {
                         test: /@{{([@#]?)[ \t]*([\w\W]*?)[ \t]*}}/, //TODO:vue or other javascript,php blade template
                         use: function(match, raw, close, code) {
-
                             return {
                                 code: `"${match.toString()}"`,
                                 output: "raw"
@@ -45,17 +44,8 @@ module.exports = (config) => {
                     }, {
                         test: /{#([@#]?)[ \t]*([\w\W]*?)[ \t]*#}/, //TODO:php blade template
                         use: function(match, raw, close, code) {
-
                             return {
                                 code: `"${match.toString()}"`.replace(/\.(\w+)/g, '[\'$1\']').replace(/{#/g, "{{").replace(/#}/g, "}}"),
-                                output: "raw"
-                            };
-                        }
-                    }, {
-                        test: /{{[ \t]*\w+\([ \t]*\$([\w\W]*?)?\)[ \t]*}}/, //php blade template with function
-                        use: function(match, raw, close, code) {
-                            return {
-                                code: `"${match.toString()}"`,
                                 output: "raw"
                             };
                         }
