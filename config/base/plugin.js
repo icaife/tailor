@@ -25,8 +25,8 @@ const
     HashedModuleIdsPlugin = Webpack.HashedModuleIdsPlugin,
     SourceMapDevToolPlugin = Webpack.SourceMapDevToolPlugin,
     DefinePlugin = Webpack.DefinePlugin,
-    ProgressBarWebpackPlugin = require("progress-bar-webpack-plugin"),
-    HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
+    // HardSourceWebpackPlugin = require("hard-source-webpack-plugin"),
+    ProgressBarWebpackPlugin = require("progress-bar-webpack-plugin");
 
 /**
  * plugins for html
@@ -61,8 +61,8 @@ function htmlPlugin(config, entry) {
                         collapseWhitespace: true,
                         collapseBooleanAttributes: true,
                         collapseWhitespace: true,
-                        minifyCSS: true,
-                        minifyJS: true,
+                        // minifyCSS: true,
+                        // minifyJS: true,
                     } : false
                 };
 
@@ -197,7 +197,7 @@ function commonPlugin(config, entry) {
      *     BundleAnalyzerPlugin
      */
     plugins.push(
-        new HashedModuleIdsPlugin(),
+        // new HashedModuleIdsPlugin(),
         new StringReplaceWebpackPlugin(),
         new FriendlyErrorsWebpackPlugin(),
         new ProgressBarWebpackPlugin({

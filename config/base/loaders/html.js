@@ -34,7 +34,7 @@ module.exports = (config) => {
                             }
                         }
                     }, {
-                        test: /@{{([@#]?)[ \t]*([\w\W]*?)[ \t]*}}/, //TODO:vue or other javascript,php blade template
+                        test: /@{{([@#]?)[ \t]*([\w\W]*?)[ \t]*}}/g, //TODO:vue or other javascript,php blade template
                         use: function(match, raw, close, code) {
                             return {
                                 code: `"${match.toString()}"`,
@@ -42,7 +42,7 @@ module.exports = (config) => {
                             };
                         }
                     }, {
-                        test: /{#([@#]?)[ \t]*([\w\W]*?)[ \t]*#}/, //TODO:php blade template
+                        test: /{#([@#]?)[ \t]*([\w\W]*?)[ \t]*#}/g, //TODO:php blade template
                         use: function(match, raw, close, code) {
                             return {
                                 code: `"${match.toString()}"`.replace(/\.(\w+)/g, '[\'$1\']').replace(/{#/g, "{{").replace(/#}/g, "}}"),
