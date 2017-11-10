@@ -31,6 +31,6 @@ module.exports = (config) => {
         }, resolveConfig.alias),
         modules: [Path.join(tailorConfig.path, "node_modules") /*, "node_modules"*/ ],
         extensions: [".js", ".json"],
-        // cacheWithContext: true
+        cacheWithContext: true
     };
 };

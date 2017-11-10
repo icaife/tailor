@@ -24,9 +24,10 @@ const
     CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin,
     HashedModuleIdsPlugin = Webpack.HashedModuleIdsPlugin,
     SourceMapDevToolPlugin = Webpack.SourceMapDevToolPlugin,
-    DefinePlugin = Webpack.DefinePlugin,
+    DefinePlugin = Webpack.DefinePlugin
     // HardSourceWebpackPlugin = require("hard-source-webpack-plugin"),
-    ProgressBarWebpackPlugin = require("progress-bar-webpack-plugin");
+    // ProgressBarWebpackPlugin = require("progress-bar-webpack-plugin")
+;
 
 /**
  * plugins for html
@@ -200,13 +201,13 @@ function commonPlugin(config, entry) {
         // new HashedModuleIdsPlugin(),
         new StringReplaceWebpackPlugin(),
         new FriendlyErrorsWebpackPlugin(),
-        new ProgressBarWebpackPlugin({
-            format: "tailor build [:bar] " + ":percent" + " (:elapsed seconds)",
-            clear: !false,
-            complete: "▊",
-            incomplete: "░",
-            renderThrottle: 1
-        }),
+        // new ProgressBarWebpackPlugin({
+        //     format: "tailor build [:bar] " + ":percent" + " (:elapsed seconds)",
+        //     clear: !false,
+        //     complete: "▊",
+        //     incomplete: "░",
+        //     renderThrottle: 1
+        // }),
         new CopyWebpackPlugin([{
             context: Path.join(config.root, inputConfig.path),
             from: {
