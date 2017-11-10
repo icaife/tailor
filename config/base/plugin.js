@@ -24,10 +24,7 @@ const
     CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin,
     HashedModuleIdsPlugin = Webpack.HashedModuleIdsPlugin,
     SourceMapDevToolPlugin = Webpack.SourceMapDevToolPlugin,
-    DefinePlugin = Webpack.DefinePlugin
-    // HardSourceWebpackPlugin = require("hard-source-webpack-plugin"),
-    // ProgressBarWebpackPlugin = require("progress-bar-webpack-plugin")
-;
+    DefinePlugin = Webpack.DefinePlugin;
 
 /**
  * plugins for html

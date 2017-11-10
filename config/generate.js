@@ -25,7 +25,8 @@ function generateConfig(config) {
         context = Path.resolve(config.root, inputConfig.path),
         entry = entryHandler(config, base.entry),
         module = moduleHandler(config, base.module),
-        plugins = pluginsHandler(config, base.plugins);
+        plugins = pluginsHandler(config, base.plugins),
+        devtool = config.devtool;
 
     return {
         target: "web",
@@ -37,13 +38,13 @@ function generateConfig(config) {
         output: base.output,
         resolve: base.resolve,
         resolveLoader: base.resolveLoader,
-        profile: true,
+        profile: false,
         externals: config.global || {}, //TODO
         watch: config.watch, //middleware default true
         /**
          * @see https://juejin.im/post/58293502a0bb9f005767ba2f
          */
-        devtool: config.devtool ? config.devtool : false
+        devtool: devtool
     };
 }
 
