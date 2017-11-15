@@ -28,7 +28,9 @@ module.exports = (config) => {
     dirs.forEach(function(dir) {
         let name = dir.replace(/\.[^.]+$/ig, "").replace(/\\/g, "/");
 
-        entries[name] = [`./${dir}`];
+        if (config.reg.test(name)) {
+            entries[name] = [`./${dir}`];
+        }
     });
 
     return entries;

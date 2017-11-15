@@ -23,7 +23,9 @@ const
     OPTIONS = {
         e: "env",
         h: "help",
-        f: "file"
+        f: "file",
+        r: "r",
+        c: "config"
     },
     CONFIG_FILE = "tailor.config.json",
     configDir = Path.join(process.cwd(), "config"),
@@ -32,11 +34,13 @@ const
     .default("e", ENV.dev) //default development
     .default("c", {})
     .default("f", CONFIG_FILE)
+    .default("r", false)
     .alias("h", "help")
     .alias("f", "file")
     .alias("e", "env")
     .alias("c", "config")
     .alias("v", "version")
+    .alias("r", "reg")
     .epilog("toursforfun.com copyright 2017 ")
     .argv;
 
@@ -84,6 +88,8 @@ config.root = Path.resolve(process.cwd());
 config.tailor = {
     path: Path.resolve(__dirname, "../")
 };
+//set reg
+config.reg = argv.reg ? new RegExp(argv.reg, "img") : /./;
 
 let cmd = (argv._ || [])[0];
 
