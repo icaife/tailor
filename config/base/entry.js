@@ -28,10 +28,15 @@ module.exports = (config) => {
     dirs.forEach(function(dir) {
         let name = dir.replace(/\.[^.]+$/ig, "").replace(/\\/g, "/");
 
+        config.reg.lastIndex = 0;
+
         if (config.reg.test(name)) {
             entries[name] = [`./${dir}`];
         }
     });
+
+    console.log(entries);
+    process.exit(1);
 
     return entries;
 };
