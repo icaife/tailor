@@ -35,8 +35,5 @@ module.exports = (config) => {
         }
     });
 
-    console.log(entries);
-    process.exit(1);
-
     return entries;
 };
