@@ -26,6 +26,8 @@
         "hashLen": 6,
         "path": "dest",
         "publicPath": "//static.tff.com",
+        "libraryTarget": "umd",
+        "library": "__TAILOR_LIBRARY__",
         "js": {
             "path": "assets"
         },
@@ -59,7 +61,7 @@
         "extensions": []
     },
     "vars": {},
-    "global": {
+    "externals": {
 
     },
     "server": {

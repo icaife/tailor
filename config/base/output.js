@@ -1,5 +1,6 @@
 /**
  * @description get entries
+ * @see https://doc.webpack-china.org/configuration/output/
  * @author Leon.Cai
  */
 "use strict";
@@ -23,9 +24,11 @@ module.exports = (config) => {
         chunkFilename: `${assetsPath}/${chunkFilename}`,
         sourceMapFilename: `[file].map`,
         pathinfo: !true,
-        libraryTarget: "umd",
-        library: config.global || {}
+        libraryTarget: outputConfig.libraryTarget,
+        library: outputConfig.library
     };
+
+
 
     if (outputConfig.useHash) {
         output.hashDigestLength = outputConfig.hashLen;

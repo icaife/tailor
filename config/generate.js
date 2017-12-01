@@ -39,7 +39,7 @@ function generateConfig(config) {
         resolve: base.resolve,
         resolveLoader: base.resolveLoader,
         profile: false,
-        externals: config.global || {}, //TODO
+        externals: config.externals || {}, //TODO
         watch: config.watch, //middleware default true
         /**
          * @see https://juejin.im/post/58293502a0bb9f005767ba2f
