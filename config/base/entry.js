@@ -29,7 +29,6 @@ module.exports = (config) => {
         let name = dir.replace(/\.[^.]+$/ig, "").replace(/\\/g, "/");
 
         config.reg.lastIndex = 0;
-
         if (config.reg.test(name)) {
             entries[name] = [`./${dir}`];
         }

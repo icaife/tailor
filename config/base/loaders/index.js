@@ -1,7 +1,7 @@
 /**
  * @description loaders
  * @author Leon.Cai
- * @see https://doc.webpack-china.org/loaders/thread-loader
+ * @see https://doc.webpack-china.org/loaders
  */
 const
     FileLoader = require("./file.js"),

@@ -16,10 +16,14 @@ module.exports = (config) => {
             loader: "html-loader",
             options: {}
         },
+        /**
+         * @see https://aui.github.io/art-template/zh-cn/docs/rules.html
+         */
         artTemplateLoader = {
             loader: "art-template-loader",
             options: {
                 extname: "." + inputConfig.html.ext[0],
+                cache: true,
                 htmlResourceRoot: Path.join(config.root, inputConfig.path),
                 root: Path.join(config.root, inputConfig.path),
                 htmlResourceRules: [

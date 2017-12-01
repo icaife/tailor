@@ -215,6 +215,10 @@ function commonPlugin(config, entry) {
         }]),
         new DefinePlugin(varsHandler(config.vars)),
         new CommonsChunkPlugin({
+            /**
+             * @see https://doc.webpack-china.org/plugins/commons-chunk-plugin
+             * @type {Array}
+             */
             names: [...Object.keys(entry)], //TODO
             chunks: [],
             minChunks: 4,

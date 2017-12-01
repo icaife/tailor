@@ -8,7 +8,7 @@
 # Tailor for ToursForFun Frontend
 
 ## Instructions
-Based on webpack@3.6
+Based on webpack@3.x
 
 - HTML
 	- [x] Multi pages support
@@ -28,7 +28,7 @@ Based on webpack@3.6
 - Lint
 	- [x] ES Lint
 	- [x] Sty leLint
-	- [x] HTMLL Lint
+	- [x] HTML Lint
 	- [ ] Pre push
 
 - Advanced
