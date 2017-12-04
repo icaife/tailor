@@ -25,8 +25,6 @@ module.exports = (config) => {
         globInstance = new Glob.Glob(`${glob}/${prefix}.${ext}`, options),
         dirs = globInstance.found;
 
-
-
     dirs.forEach(function(dir) {
         let name = dir.replace(/\.[^.]+$/ig, "").replace(/\\/g, "/");
 

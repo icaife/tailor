@@ -51,7 +51,7 @@ function htmlPlugin(config, entry) {
                 pageOutputExt = htmlOutputConfig.ext,
                 options = {
                     filename: `${pagePath}/${pageName}.${pageOutputExt}`,
-                    chunks: [pageName, "lib"], //TODO:add common js
+                    chunks: [pageName, "tailor-dev"], //TODO:add common js
                     template: `${pageName}.${pageInputExt}`,
                     inject: !false, //TODO: auto inject
                     minify: outputConfig.html.optm ? {
@@ -158,15 +158,15 @@ function optmPlugin(config, entry) {
         fileConfig = outputConfig.file;
 
     plugins.push(
-        // new UglifyJsPlugin({ //this will be very slow,todo:ParallelUglifyPlugin
-        //     drop_debugger: true,
-        //     dead_code: true,
-        //     join_vars: true,
-        //     reduce_vars: true,
-        //     drop_console: true,
-        //     comments: /[^\s\S]/g,
-        //     sourceMap: true
-        // }),
+        new UglifyJsPlugin({ //this will be very slow,todo:ParallelUglifyPlugin
+            drop_debugger: true,
+            dead_code: true,
+            join_vars: true,
+            reduce_vars: true,
+            drop_console: true,
+            comments: /[^\s\S]/g,
+            sourceMap: true
+        }),
         new ModuleConcatenationPlugin(),
         new ManifestPlugin({
             fileName: `${fileConfig.path}/manifest.json`,
@@ -214,12 +214,12 @@ function commonPlugin(config, entry) {
          * @type {Array}
          */
         new CommonsChunkPlugin({
-            // names: [...Object.keys(entry)],
-            name: "lib",
-            chunks: [...Object.keys(entry)],
-            minChunks: 4,
+            name: "tailor-dev",
+            minChunks: (m) => {
+                return /tailor[\/]*node_modules/.test(m.context);
+            },
             filename: `${jsConfig.path}/[name]` + (outputConfig.useHash ? `.[chunkhash]` : "") + `.js`,
-        })
+        }),
     );
 
     return plugins;

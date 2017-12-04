@@ -39,7 +39,7 @@ function generateConfig(config) {
         resolve: base.resolve,
         resolveLoader: base.resolveLoader,
         profile: false,
-        externals: config.externals || {}, //TODO
+        externals: config.externals || {},
         watch: config.watch, //middleware default true
         /**
          * @see https://juejin.im/post/58293502a0bb9f005767ba2f
@@ -65,7 +65,7 @@ function entryHandler(config, entry) {
             .forEach((page) => {
                 let chunks = entry[page] || [];
 
-                chunks.push(hotClient + hotClientQuery);
+                chunks.unshift(hotClient + hotClientQuery);
             });
     }
 
