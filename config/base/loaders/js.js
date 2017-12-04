@@ -72,9 +72,9 @@ module.exports = (config) => {
                             }
                         }
                     ],
-                    plugins: [
-                        require.resolve("babel-plugin-transform-runtime")
-                    ],
+                    // plugins: [
+                    //     require.resolve("babel-plugin-transform-runtime")
+                    // ],
                     // forceEnv: true,
                     babelrc: false,
                     retainLines: true,

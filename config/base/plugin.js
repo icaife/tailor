@@ -51,7 +51,7 @@ function htmlPlugin(config, entry) {
                 pageOutputExt = htmlOutputConfig.ext,
                 options = {
                     filename: `${pagePath}/${pageName}.${pageOutputExt}`,
-                    chunks: [pageName], //TODO:add common js
+                    chunks: [pageName, "lib"], //TODO:add common js
                     template: `${pageName}.${pageInputExt}`,
                     inject: !false, //TODO: auto inject
                     minify: outputConfig.html.optm ? {
@@ -158,15 +158,15 @@ function optmPlugin(config, entry) {
         fileConfig = outputConfig.file;
 
     plugins.push(
-        new UglifyJsPlugin({ //this will be very slow
-            drop_debugger: true,
-            dead_code: true,
-            join_vars: true,
-            reduce_vars: true,
-            drop_console: true,
-            comments: /[^\s\S]/g,
-            sourceMap: true
-        }),
+        // new UglifyJsPlugin({ //this will be very slow,todo:ParallelUglifyPlugin
+        //     drop_debugger: true,
+        //     dead_code: true,
+        //     join_vars: true,
+        //     reduce_vars: true,
+        //     drop_console: true,
+        //     comments: /[^\s\S]/g,
+        //     sourceMap: true
+        // }),
         new ModuleConcatenationPlugin(),
         new ManifestPlugin({
             fileName: `${fileConfig.path}/manifest.json`,
@@ -195,16 +195,8 @@ function commonPlugin(config, entry) {
      *     BundleAnalyzerPlugin
      */
     plugins.push(
-        // new HashedModuleIdsPlugin(),
         new StringReplaceWebpackPlugin(),
         new FriendlyErrorsWebpackPlugin(),
-        // new ProgressBarWebpackPlugin({
-        //     format: "tailor build [:bar] " + ":percent" + " (:elapsed seconds)",
-        //     clear: !false,
-        //     complete: "▊",
-        //     incomplete: "░",
-        //     renderThrottle: 1
-        // }),
         new CopyWebpackPlugin([{
             context: Path.join(config.root, inputConfig.path),
             from: {
@@ -213,37 +205,22 @@ function commonPlugin(config, entry) {
             },
             to: Path.join(config.root, outputConfig.path, jsConfig.path)
         }]),
-        new DefinePlugin(varsHandler(config.vars)),
+        new DefinePlugin(
+            varsHandler(config.vars)
+        ),
+        /**
+         * @see https://doc.webpack-china.org/plugins/commons-chunk-plugin
+         * @see https://github.com/creeperyang/blog/issues/37
+         * @type {Array}
+         */
         new CommonsChunkPlugin({
-            /**
-             * @see https://doc.webpack-china.org/plugins/commons-chunk-plugin
-             * @type {Array}
-             */
-            names: [...Object.keys(entry)], //TODO
-            chunks: [],
+            // names: [...Object.keys(entry)],
+            name: "lib",
+            chunks: [...Object.keys(entry)],
             minChunks: 4,
             filename: `${jsConfig.path}/[name]` + (outputConfig.useHash ? `.[chunkhash]` : "") + `.js`,
         })
     );
-
-    // plugins.push({
-    //     /**
-    //      * @description errors print
-    //      * @see https://doc.webpack-china.org/api/plugins/compiler/#-
-    //      * @see tttps://webpack.github.io/docs/plugins.html#the-compiler-instance
-    //      */
-    //     apply: function(compiler) {
-    //         compiler.plugin("done", function(stats, type, msg) {
-    //             if (stats.hasErrors()) { //有错误,退出 exit -1
-    //                 let errors = stats.compilation.errors || [],
-    //                     msg = errors.join("\n");
-
-    //                 Log.error(`some errors occurred:\n${msg}\n`);
-    //                 process.exit(1);
-    //             }
-    //         });
-    //     }
-    // });
 
     return plugins;
 }

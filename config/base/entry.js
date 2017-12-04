@@ -11,7 +11,7 @@ const
     Path = require("path");
 
 module.exports = (config) => {
-    let entries = {},
+    let entries = _.merge({}, config.entry || {}),
         inputConfig = config.input,
         cwd = Path.join(config.root, inputConfig.path),
         entryConfig = inputConfig.entry,
@@ -24,6 +24,8 @@ module.exports = (config) => {
         },
         globInstance = new Glob.Glob(`${glob}/${prefix}.${ext}`, options),
         dirs = globInstance.found;
+
+
 
     dirs.forEach(function(dir) {
         let name = dir.replace(/\.[^.]+$/ig, "").replace(/\\/g, "/");
