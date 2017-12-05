@@ -41,7 +41,8 @@ function htmlPlugin(config, entry) {
         inputConfig = config.input,
         outputConfig = config.output,
         htmlInputConfig = inputConfig.html,
-        htmlOutputConfig = outputConfig.html;
+        htmlOutputConfig = outputConfig.html,
+        includeEntries = Object.keys(inputConfig.entry.include || []);
 
     Object
         .keys(entry)
@@ -52,21 +53,23 @@ function htmlPlugin(config, entry) {
                 pageName = page,
                 pageInputExt = htmlInputConfig.ext[0],
                 pageOutputExt = htmlOutputConfig.ext,
-                options = {
-                    filename: `${pagePath}/${pageName}.${pageOutputExt}`,
-                    chunks: [COMMON_MANIFEST_NAME, COMMON_CHUNKS_NAME, pageName], //TODO
-                    template: `${pageName}.${pageInputExt}`,
-                    chunksSortMode: "manual",
-                    inject: !false, //TODO: auto inject
-                    minify: outputConfig.html.optm ? {
-                        html5: true,
-                        collapseWhitespace: true,
-                        collapseBooleanAttributes: true,
-                        collapseWhitespace: true,
-                        // minifyCSS: true,
-                        // minifyJS: true,
-                    } : false
-                };
+                chunks = [COMMON_MANIFEST_NAME, ...includeEntries, COMMON_CHUNKS_NAME];
+
+            let options = {
+                filename: `${pagePath}/${pageName}.${pageOutputExt}`,
+                chunks: chunks.concat(pageName), //TODO
+                template: `${pageName}.${pageInputExt}`,
+                chunksSortMode: "manual",
+                inject: !false, //TODO: auto inject
+                minify: outputConfig.html.optm ? {
+                    html5: true,
+                    collapseWhitespace: true,
+                    collapseBooleanAttributes: true,
+                    collapseWhitespace: true,
+                    // minifyCSS: true,
+                    // minifyJS: true,
+                } : false
+            };
 
             (new RegExp(inputConfig.entry.prefix + "$")).test(pageName) && plugins.push(new HtmlWebpackPlugin(options));
         });
@@ -227,11 +230,12 @@ function commonPlugin(config, entry) {
             chunks: entryKeys.filter((entryName) => {
                 return (new RegExp(inputConfig.entry.prefix + "$")).test(entryName);
             }),
-            minChunks: 3,
+            minChunks: (mod, count) => {
+                return count >= 3;
+            },
             filename: `${jsConfig.path}/[name]` + (outputConfig.useHash ? `.[chunkhash]` : "") + `.js`,
         })
     );
-
 
 
     Object.keys(includeEntries).forEach((includeEntryName) => {
