@@ -18,7 +18,7 @@ module.exports = (config) => {
                 transformToRequire: {
                     script: ["src"],
                     style: ["src"],
-                    img: ["src", "data-src", "data-original"]
+                    img: ["src", "data-src", "data-original"] //TODO
                 },
                 loaders: { //TODO
                     js: "babel-loader!eslint-loader"

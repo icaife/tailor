@@ -24,7 +24,10 @@ const
     CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin,
     HashedModuleIdsPlugin = Webpack.HashedModuleIdsPlugin,
     SourceMapDevToolPlugin = Webpack.SourceMapDevToolPlugin,
-    DefinePlugin = Webpack.DefinePlugin;
+    ProvidePlugin = Webpack.ProvidePlugin,
+    DefinePlugin = Webpack.DefinePlugin,
+    COMMON_CHUNKS_NAME = "common-chunks",
+    COMMON_MANIFEST_NAME = "common-manifest";
 
 /**
  * plugins for html
@@ -51,8 +54,9 @@ function htmlPlugin(config, entry) {
                 pageOutputExt = htmlOutputConfig.ext,
                 options = {
                     filename: `${pagePath}/${pageName}.${pageOutputExt}`,
-                    chunks: [pageName, "tailor-dev"], //TODO:add common js
+                    chunks: [COMMON_MANIFEST_NAME, COMMON_CHUNKS_NAME, pageName], //TODO
                     template: `${pageName}.${pageInputExt}`,
+                    chunksSortMode: "manual",
                     inject: !false, //TODO: auto inject
                     minify: outputConfig.html.optm ? {
                         html5: true,
@@ -64,7 +68,7 @@ function htmlPlugin(config, entry) {
                     } : false
                 };
 
-            plugins.push(new HtmlWebpackPlugin(options));
+            (new RegExp(inputConfig.entry.prefix + "$")).test(pageName) && plugins.push(new HtmlWebpackPlugin(options));
         });
 
     return plugins;
@@ -77,14 +81,13 @@ function htmlPlugin(config, entry) {
  * @return {Array}        [description]
  */
 function stylePlugin(config, entry) {
-    let
-        plugins = [],
+    let plugins = [],
         outputConfig = config.output,
         styleConfig = outputConfig.style;
 
     plugins.push(new ExtractTextPlugin({ //extract css
         filename: `${styleConfig.path}/[name]` + (outputConfig.useHash ? `.[contenthash:${outputConfig.hashLen}]` : "") + `.css`,
-        allChunks: !true,
+        allChunks: true,
         disable: !styleConfig.extract
     }));
 
@@ -185,8 +188,10 @@ function optmPlugin(config, entry) {
 function commonPlugin(config, entry) {
     let plugins = [],
         inputConfig = config.input,
+        includeEntries = inputConfig.entry.include || {},
         outputConfig = config.output,
         jsConfig = outputConfig.js,
+        entryKeys = Object.keys(entry),
         fileConfig = outputConfig.file;
 
     /**
@@ -214,13 +219,27 @@ function commonPlugin(config, entry) {
          * @type {Array}
          */
         new CommonsChunkPlugin({
-            name: "tailor-dev",
-            minChunks: (m) => {
-                return /tailor[\/]*node_modules/.test(m.context);
-            },
-            filename: `${jsConfig.path}/[name]` + (outputConfig.useHash ? `.[chunkhash]` : "") + `.js`,
+            name: COMMON_MANIFEST_NAME,
+            minChunks: Infinity
         }),
+        new CommonsChunkPlugin({
+            name: COMMON_CHUNKS_NAME,
+            chunks: entryKeys.filter((entryName) => {
+                return (new RegExp(inputConfig.entry.prefix + "$")).test(entryName);
+            }),
+            minChunks: 3,
+            filename: `${jsConfig.path}/[name]` + (outputConfig.useHash ? `.[chunkhash]` : "") + `.js`,
+        })
     );
+
+
+
+    Object.keys(includeEntries).forEach((includeEntryName) => {
+        new CommonsChunkPlugin({
+            name: includeEntryName,
+            filename: `${jsConfig.path}/[name]` + (outputConfig.useHash ? `.[chunkhash]` : "") + `.js`,
+        })
+    });
 
     return plugins;
 }

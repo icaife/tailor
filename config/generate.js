@@ -30,7 +30,7 @@ function generateConfig(config) {
 
     return {
         target: "web",
-        bail: true,
+        bail: false,
         context: context,
         entry: entry,
         module: module,
@@ -107,7 +107,7 @@ function moduleHandler(config, module) {
             fileRule,
             vueRule
         ],
-        noParse: [/vendor/] // why not use node_modules??
+        noParse: [/vendor/]
     };
 
     return result;

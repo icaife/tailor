@@ -28,8 +28,6 @@ module.exports = (config) => {
         library: outputConfig.library
     };
 
-
-
     if (outputConfig.useHash) {
         output.hashDigestLength = outputConfig.hashLen;
     }

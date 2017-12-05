@@ -3,7 +3,9 @@
         "path": "src",
         "entry": {
             "prefix": "index",
-            "ext": "js"
+            "ext": "js",
+            "include": {},
+            "group": {}
         },
         "js": {
             "ext": ["js"]
