@@ -1,3 +1,5 @@
+import { fail } from "assert";
+
 /**
  * @description plugins
  * @author Leon.Cai
@@ -19,6 +21,7 @@ const
     FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin"),
     BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin,
     StyleLintPlugin = require("stylelint-webpack-plugin"),
+    MiniMatch = require("minimatch"),
     UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
     ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
     CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin,
@@ -192,6 +195,7 @@ function commonPlugin(config, entry) {
     let plugins = [],
         inputConfig = config.input,
         includeEntries = inputConfig.entry.include || {},
+        groupEntries = inputConfig.entry.group || {},
         outputConfig = config.output,
         jsConfig = outputConfig.js,
         entryKeys = Object.keys(entry),
@@ -208,7 +212,7 @@ function commonPlugin(config, entry) {
         new CopyWebpackPlugin([{
             context: Path.join(config.root, inputConfig.path),
             from: {
-                glob: "**/vendor/**/*.*",
+                glob: "**/vendor/**/*.*",//TODO
                 dot: true
             },
             to: Path.join(config.root, outputConfig.path, jsConfig.path)
@@ -224,28 +228,59 @@ function commonPlugin(config, entry) {
         new CommonsChunkPlugin({
             name: COMMON_MANIFEST_NAME,
             minChunks: Infinity
-        }),
-        new CommonsChunkPlugin({
-            name: COMMON_CHUNKS_NAME,
-            chunks: entryKeys.filter((entryName) => {
-                return (new RegExp(inputConfig.entry.prefix + "$")).test(entryName);
-            }),
-            minChunks: (mod, count) => {
-                return count >= 3;
-            },
-            filename: `${jsConfig.path}/[name]` + (outputConfig.useHash ? `.[chunkhash]` : "") + `.js`,
         })
     );
 
-
-    Object.keys(includeEntries).forEach((includeEntryName) => {
+    //for must include entry.
+    for(let includeEntryName in includeEntries){
         new CommonsChunkPlugin({
             name: includeEntryName,
+            chunks: includeEntries[includeEntryName],
             filename: `${jsConfig.path}/[name]` + (outputConfig.useHash ? `.[chunkhash]` : "") + `.js`,
         })
-    });
+    }
+
+    console.log(findGroups(entry,groupEntries));
+    process.exit(1);
+
+    // for(let entryName in entry){
+    //     let groupName = findGroup(groupEntries,entryName) || "";
+
+    //     plugins.push(new CommonsChunkPlugin({
+    //         name : groupName ? [groupName,COMMON_CHUNKS_NAME].join("-") : COMMON_CHUNKS_NAME,
+    //         chunks: groupEntries[name],
+    //         minChunks: (mod, count) => {
+    //             return count >= 3;
+    //         },
+    //         filename: `${jsConfig.path}/[name]` + (outputConfig.useHash ? `.[chunkhash]` : "") + `.js`
+    //     }));
+    // }
 
     return plugins;
+}
+
+function findGroups(entries,group){
+    let  groups = {};
+
+    for(let groupName in group){
+        let items = [].concat(group[groupName]);
+    
+        if(!groups[groupName]){
+            groups[groupName] = [];
+        }
+
+        for(let entryName in entries){
+            for(let i = 0,len = items.length;i < len;i ++){
+                let item = items[i];
+                
+                if(Minimatch(entryName,item)){
+                    groups.push(entryName);
+                }
+            }
+        }
+    }
+
+    return groups;
 }
 
 //TODO;
