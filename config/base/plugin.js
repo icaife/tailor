@@ -1,5 +1,3 @@
-import { fail } from "assert";
-
 /**
  * @description plugins
  * @author Leon.Cai
@@ -45,7 +43,9 @@ function htmlPlugin(config, entry) {
         outputConfig = config.output,
         htmlInputConfig = inputConfig.html,
         htmlOutputConfig = outputConfig.html,
-        includeEntries = Object.keys(inputConfig.entry.include || []);
+        includeEntries = Object.keys(inputConfig.entry.include || {}),
+        groupEntries = inputConfig.entry.group || {},
+        groups = findGroups(entry, groupEntries);
 
     Object
         .keys(entry)
@@ -56,11 +56,16 @@ function htmlPlugin(config, entry) {
                 pageName = page,
                 pageInputExt = htmlInputConfig.ext[0],
                 pageOutputExt = htmlOutputConfig.ext,
-                chunks = [COMMON_MANIFEST_NAME, ...includeEntries, COMMON_CHUNKS_NAME];
+                chunks = [COMMON_MANIFEST_NAME, ...includeEntries],
+                groupName = getGroup(pageName, groups);
+
+            groupName && chunks.push([groupName, COMMON_CHUNKS_NAME].join("-")); //push group name, common chunk name
+
+            chunks.push(pageName);
 
             let options = {
                 filename: `${pagePath}/${pageName}.${pageOutputExt}`,
-                chunks: chunks.concat(pageName), //TODO
+                chunks: chunks, //TODO
                 template: `${pageName}.${pageInputExt}`,
                 chunksSortMode: "manual",
                 inject: !false, //TODO: auto inject
@@ -69,6 +74,7 @@ function htmlPlugin(config, entry) {
                     collapseWhitespace: true,
                     collapseBooleanAttributes: true,
                     collapseWhitespace: true,
+                    ignoreCustomComments: [/<!--[\w\W]+-->/g],
                     // minifyCSS: true,
                     // minifyJS: true,
                 } : false
@@ -76,6 +82,16 @@ function htmlPlugin(config, entry) {
 
             (new RegExp(inputConfig.entry.prefix + "$")).test(pageName) && plugins.push(new HtmlWebpackPlugin(options));
         });
+
+    function getGroup(entryName, groups) {
+        for (let groupName in groups) {
+            let items = groups[groupName];
+
+            if (items.indexOf(entryName) > -1) {
+                return groupName;
+            }
+        }
+    }
 
     return plugins;
 }
@@ -212,7 +228,7 @@ function commonPlugin(config, entry) {
         new CopyWebpackPlugin([{
             context: Path.join(config.root, inputConfig.path),
             from: {
-                glob: "**/vendor/**/*.*",//TODO
+                glob: "**/vendor/**/*.*", //TODO
                 dot: true
             },
             to: Path.join(config.root, outputConfig.path, jsConfig.path)
@@ -232,7 +248,7 @@ function commonPlugin(config, entry) {
     );
 
     //for must include entry.
-    for(let includeEntryName in includeEntries){
+    for (let includeEntryName in includeEntries) {
         new CommonsChunkPlugin({
             name: includeEntryName,
             chunks: includeEntries[includeEntryName],
@@ -240,41 +256,35 @@ function commonPlugin(config, entry) {
         })
     }
 
-    console.log(findGroups(entry,groupEntries));
-    process.exit(1);
+    let groups = findGroups(entry, groupEntries);
 
-    // for(let entryName in entry){
-    //     let groupName = findGroup(groupEntries,entryName) || "";
-
-    //     plugins.push(new CommonsChunkPlugin({
-    //         name : groupName ? [groupName,COMMON_CHUNKS_NAME].join("-") : COMMON_CHUNKS_NAME,
-    //         chunks: groupEntries[name],
-    //         minChunks: (mod, count) => {
-    //             return count >= 3;
-    //         },
-    //         filename: `${jsConfig.path}/[name]` + (outputConfig.useHash ? `.[chunkhash]` : "") + `.js`
-    //     }));
-    // }
+    for (let groupName in groups) {
+        plugins.push(new CommonsChunkPlugin({
+            name: [groupName, COMMON_CHUNKS_NAME].join("-"),
+            chunks: groups[groupName],
+            minChunks: (mod, count) => {
+                return count >= 3;
+            },
+            filename: `${jsConfig.path}/[name]` + (outputConfig.useHash ? `.[chunkhash]` : "") + `.js`
+        }));
+    }
 
     return plugins;
 }
 
-function findGroups(entries,group){
-    let  groups = {};
+function findGroups(entries, group) {
+    let groups = {};
 
-    for(let groupName in group){
-        let items = [].concat(group[groupName]);
-    
-        if(!groups[groupName]){
-            groups[groupName] = [];
-        }
+    for (let groupName in group) {
+        let items = [].concat(group[groupName]),
+            arr = groups[groupName] = [];
 
-        for(let entryName in entries){
-            for(let i = 0,len = items.length;i < len;i ++){
+        for (let entryName in entries) {
+            for (let i = 0, len = items.length; i < len; i++) {
                 let item = items[i];
-                
-                if(Minimatch(entryName,item)){
-                    groups.push(entryName);
+
+                if (MiniMatch(entryName, item)) {
+                    arr.push(entryName);
                 }
             }
         }
