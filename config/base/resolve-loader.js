@@ -12,8 +12,7 @@ module.exports = (config) => {
         extensions = resolveLoaderConfig.extensions;
 
     return {
-        modules: [Path.join(tailorConfig.path, "./node_modules") /*, "node_modules"*/ ],
-        // extensions: [".js", ".json", ".less", ".css", ".art", ".html", ".blade.php"],
+        modules: [Path.join(tailorConfig.path, "./node_modules")],
         cacheWithContext: true,
     };
 };

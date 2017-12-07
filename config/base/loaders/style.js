@@ -12,9 +12,7 @@ module.exports = (config) => {
     let
         styleLoader = {
             loader: "style-loader",
-            options: {
-                // sourceMap: true
-            }
+            options: {}
         },
         cssLoader = {
             loader: "css-loader",
@@ -36,11 +34,7 @@ module.exports = (config) => {
             options: {
                 sourceMap: sourceMap,
                 compress: false,
-                plugin: {
-                    install: function(less, plm) {
-                        console.log(less);
-                    }
-                }
+                // plugin: {}
             }
         };
 
