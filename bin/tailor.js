@@ -89,7 +89,7 @@ config.tailor = {
     path: Path.resolve(__dirname, "../")
 };
 //set reg
-config.reg = argv.reg ? new RegExp(argv.reg, "img") : /./;
+config.reg = typeof argv.reg === "string" ? new RegExp(argv.reg, "img") : /./;
 
 let cmd = (argv._ || [])[0];
 

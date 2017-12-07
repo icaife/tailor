@@ -23,7 +23,7 @@ module.exports = (config) => {
             loader: "art-template-loader",
             options: {
                 extname: "." + inputConfig.html.ext[0],
-                cache: true,
+                cache: !true,
                 htmlResourceRoot: Path.join(config.root, inputConfig.path),
                 root: Path.join(config.root, inputConfig.path),
                 htmlResourceRules: [
