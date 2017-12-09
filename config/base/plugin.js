@@ -249,11 +249,11 @@ function commonPlugin(config, entry) {
 
     //for must include entry.
     for (let includeEntryName in includeEntries) {
-        new CommonsChunkPlugin({
+        plugins.push(new CommonsChunkPlugin({
             name: includeEntryName,
             chunks: includeEntries[includeEntryName],
             filename: `${jsConfig.path}/[name]` + (outputConfig.useHash ? `.[chunkhash]` : "") + `.js`,
-        })
+        }));
     }
 
     let groups = findGroups(entry, groupEntries);

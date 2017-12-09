@@ -26,7 +26,7 @@ module.exports = (config) => {
                 css: [styleLoaders.cssLoader, styleLoaders.postcssLoader, styleLoaders.lessLoader],
                 // html: webpackCombineLoaders()
             },
-            extractCSS: true
+            extractCSS: false
         }
     };
 
