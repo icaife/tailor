@@ -259,9 +259,11 @@ function commonPlugin(config, entry) {
     let groups = findGroups(entry, groupEntries);
 
     for (let groupName in groups) {
-        plugins.push(new CommonsChunkPlugin({
+        let chunks = groups[groupName];
+
+        chunks && chunks.length && plugins.push(new CommonsChunkPlugin({
             name: [groupName, COMMON_CHUNKS_NAME].join("-"),
-            chunks: groups[groupName],
+            chunks: chunks,
             minChunks: (mod, count) => {
                 return count >= 3;
             },
