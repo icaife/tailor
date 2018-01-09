@@ -242,7 +242,7 @@ function commonPlugin(config, entry) {
          * @type {Array}
          */
         new CommonsChunkPlugin({
-            name: COMMON_MANIFEST_NAME,
+            name: COMMON_MANIFEST_NAME, //manifest.js
             minChunks: Infinity
         })
     );
