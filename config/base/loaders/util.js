@@ -22,7 +22,7 @@ module.exports = config => {
 						}
 					},
 					{
-						pattern: /<link[^>]+href="([^"]+)"[^>]*?\/?\/>/gim,
+						pattern: /<link[^>]+href="([^"]+)"[^>]*?\/?\/?>/gim,
 						replacement: function(match, src, offset, string) {
 							let result = /^(\w+:)?(\/\/)/.test(src)
 								? src
