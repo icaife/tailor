@@ -32,22 +32,34 @@ module.exports = config => {
 
 							return match.toString().replace(src, result);
 						}
+					},
+					{
+						pattern: /@font-face\s*{(.*?)}/gim,
+						replacement: function(match, src, offset, string) {
+							return match
+								.toString()
+								.replace(/url\("([\s\S]+")\)/gim, "url('$1')");
+						}
 					}
 				]
 			})
 		},
+		toStringLoader = {
+			loader: "to-string-loader"
+		},
 		cacheLoader = {
 			loader: "cache-loader",
-			option: {}
+			options: {}
 		},
 		threadLoader = {
 			loader: "thread-loader",
-			option: {}
+			options: {}
 		};
 
 	return {
 		stringReplaceLoader,
 		cacheLoader,
-		threadLoader
+		threadLoader,
+		toStringLoader
 	};
 };

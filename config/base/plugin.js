@@ -3,32 +3,33 @@
  * @author Leon.Cai
  */
 
-const
-    Webpack = require("webpack"),
-    Path = require("path"),
-    Shell = require("shelljs"),
-    Log = require("../../lib/util/log"),
-    HtmlWebpackPlugin = require("html-webpack-plugin"),
-    // HtmlWebpackReplaceUrlPlugin = require("html-webpack-replaceurl-plugin"),
-    StringReplaceWebpackPlugin = require("string-replace-webpack-plugin"),
-    ManifestPlugin = require("webpack-manifest-plugin"),
-    CopyWebpackPlugin = require('copy-webpack-plugin'),
-    ExtractTextPlugin = require("extract-text-webpack-plugin"),
-    StyleExtHtmlWebpackPlugin = require("style-ext-html-webpack-plugin"),
-    WriteFileWebpackPlugin = require("write-file-webpack-plugin"),
-    FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin"),
-    BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin,
-    StyleLintPlugin = require("stylelint-webpack-plugin"),
-    MiniMatch = require("minimatch"),
-    UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
-    ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
-    CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin,
-    HashedModuleIdsPlugin = Webpack.HashedModuleIdsPlugin,
-    SourceMapDevToolPlugin = Webpack.SourceMapDevToolPlugin,
-    ProvidePlugin = Webpack.ProvidePlugin,
-    DefinePlugin = Webpack.DefinePlugin,
-    COMMON_CHUNKS_NAME = "common-chunks",
-    COMMON_MANIFEST_NAME = "common-manifest";
+const Webpack = require("webpack"),
+	Path = require("path"),
+	FSE = require("fs-extra"),
+	Shell = require("shelljs"),
+	Log = require("../../lib/util/log"),
+	HtmlWebpackPlugin = require("html-webpack-plugin"),
+	// HtmlWebpackReplaceUrlPlugin = require("html-webpack-replaceurl-plugin"),
+	StringReplaceWebpackPlugin = require("string-replace-webpack-plugin"),
+	ManifestPlugin = require("webpack-manifest-plugin"),
+	CopyWebpackPlugin = require("copy-webpack-plugin"),
+	ExtractTextPlugin = require("extract-text-webpack-plugin"),
+	StyleExtHtmlWebpackPlugin = require("style-ext-html-webpack-plugin"),
+	WriteFileWebpackPlugin = require("write-file-webpack-plugin"),
+	FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin"),
+	BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
+		.BundleAnalyzerPlugin,
+	StyleLintPlugin = require("stylelint-webpack-plugin"),
+	MiniMatch = require("minimatch"),
+	UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
+	ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
+	CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin,
+	HashedModuleIdsPlugin = Webpack.HashedModuleIdsPlugin,
+	SourceMapDevToolPlugin = Webpack.SourceMapDevToolPlugin,
+	ProvidePlugin = Webpack.ProvidePlugin,
+	DefinePlugin = Webpack.DefinePlugin,
+	COMMON_CHUNKS_NAME = "common-chunks",
+	COMMON_MANIFEST_NAME = "common-manifest";
 
 /**
  * plugins for html
@@ -37,63 +38,64 @@ const
  * @return {Array}        [description]
  */
 function htmlPlugin(config, entry) {
-    let
-        plugins = [],
-        inputConfig = config.input,
-        outputConfig = config.output,
-        htmlInputConfig = inputConfig.html,
-        htmlOutputConfig = outputConfig.html,
-        includeEntries = Object.keys(inputConfig.entry.include || {}),
-        groupEntries = inputConfig.entry.group || {},
-        groups = findGroups(entry, groupEntries);
+	let plugins = [],
+		inputConfig = config.input,
+		outputConfig = config.output,
+		htmlInputConfig = inputConfig.html,
+		htmlOutputConfig = outputConfig.html,
+		includeEntries = Object.keys(inputConfig.entry.include || {}),
+		groupEntries = inputConfig.entry.group || {},
+		groups = findGroups(entry, groupEntries);
 
-    Object
-        .keys(entry)
-        .forEach((page) => {
-            let
-                pageItem = entry[page],
-                pagePath = htmlOutputConfig.path,
-                pageName = page,
-                pageInputExt = htmlInputConfig.ext[0],
-                pageOutputExt = htmlOutputConfig.ext,
-                chunks = [COMMON_MANIFEST_NAME, ...includeEntries],
-                groupName = getGroup(pageName, groups);
+	Object.keys(entry).forEach(page => {
+		let pageItem = entry[page],
+			pagePath = htmlOutputConfig.path,
+			pageName = page,
+			pageInputExt = htmlInputConfig.ext[0],
+			pageOutputExt = htmlOutputConfig.ext,
+			chunks = [COMMON_MANIFEST_NAME, ...includeEntries],
+			groupName = getGroup(pageName, groups);
 
-            groupName && chunks.push([groupName, COMMON_CHUNKS_NAME].join("-")); //push group name, common chunk name
+		groupName && chunks.push([groupName, COMMON_CHUNKS_NAME].join("-")); //push group name, common chunk name
 
-            chunks.push(pageName);
+		chunks.push(pageName);
 
-            let options = {
-                filename: `${pagePath}/${pageName}.${pageOutputExt}`,
-                chunks: chunks, //TODO
-                template: `${pageName}.${pageInputExt}`,
-                chunksSortMode: "manual",
-                inject: !false, //TODO: auto inject
-                minify: outputConfig.html.optm ? {
-                    html5: true,
-                    collapseWhitespace: true,
-                    collapseBooleanAttributes: true,
-                    collapseWhitespace: true,
-                    ignoreCustomComments: [/<!--[\w\W]+-->/g],
-                    // minifyCSS: true,
-                    // minifyJS: true,
-                } : false
-            };
+		let template = `${pageName}.${pageInputExt}`;
+		let options = {
+			filename: `${pagePath}/${pageName}.${pageOutputExt}`,
+			chunks: chunks, //TODO
+			template: template,
+			chunksSortMode: "manual",
+			inject: !false, //TODO: auto inject
+			minify: outputConfig.html.optm
+				? {
+						html5: true,
+						collapseWhitespace: true,
+						collapseBooleanAttributes: true,
+						collapseWhitespace: true,
+						ignoreCustomComments: [/<!--[\w\W]+-->/g]
+						// minifyCSS: true,
+						// minifyJS: true,
+					}
+				: false
+		};
 
-            (new RegExp(inputConfig.entry.prefix + "$")).test(pageName) && plugins.push(new HtmlWebpackPlugin(options));
-        });
+		FSE.pathExistsSync(`${config.root}/${inputConfig.path}/${template}`) &&
+			new RegExp(inputConfig.entry.prefix + "$").test(pageName) &&
+			plugins.push(new HtmlWebpackPlugin(options));
+	});
 
-    function getGroup(entryName, groups) {
-        for (let groupName in groups) {
-            let items = groups[groupName];
+	function getGroup(entryName, groups) {
+		for (let groupName in groups) {
+			let items = groups[groupName];
 
-            if (items.indexOf(entryName) > -1) {
-                return groupName;
-            }
-        }
-    }
+			if (items.indexOf(entryName) > -1) {
+				return groupName;
+			}
+		}
+	}
 
-    return plugins;
+	return plugins;
 }
 
 /**
@@ -103,17 +105,25 @@ function htmlPlugin(config, entry) {
  * @return {Array}        [description]
  */
 function stylePlugin(config, entry) {
-    let plugins = [],
-        outputConfig = config.output,
-        styleConfig = outputConfig.style;
+	let plugins = [],
+		outputConfig = config.output,
+		styleConfig = outputConfig.style;
 
-    plugins.push(new ExtractTextPlugin({ //extract css
-        filename: `${styleConfig.path}/[name]` + (outputConfig.useHash ? `.[contenthash:${outputConfig.hashLen}]` : "") + `.css`,
-        allChunks: true,
-        disable: !styleConfig.extract
-    }));
+	plugins.push(
+		new ExtractTextPlugin({
+			//extract css
+			filename:
+				`${styleConfig.path}/[name]` +
+				(outputConfig.useHash
+					? `.[contenthash:${outputConfig.hashLen}]`
+					: "") +
+				`.css`,
+			allChunks: true,
+			disable: !styleConfig.extract
+		})
+	);
 
-    return plugins;
+	return plugins;
 }
 
 /**
@@ -123,24 +133,23 @@ function stylePlugin(config, entry) {
  * @return {[type]}        [description]
  */
 function lintPlugin(config, entry) {
-    let
-        plugins = [],
-        inputConfig = config.input,
-        outputConfig = config.output;
+	let plugins = [],
+		inputConfig = config.input,
+		outputConfig = config.output;
 
-    plugins.push(
-        new StyleLintPlugin({
-            configFile: Path.join(config.root, ".stylelintrc"),
-            failOnWarning: false, // warning occured then stop
-            failOnError: false, // error occured then stop
-            emitError: true,
-            emitOnWarning: false,
-            files: ["**/*.css", "**/*.less"], //TODO
-            quiet: false,
-        })
-    );
+	plugins.push(
+		new StyleLintPlugin({
+			configFile: Path.join(config.root, ".stylelintrc"),
+			failOnWarning: false, // warning occured then stop
+			failOnError: false, // error occured then stop
+			emitError: true,
+			emitOnWarning: false,
+			files: ["**/*.css", "**/*.less"], //TODO
+			quiet: false
+		})
+	);
 
-    return plugins;
+	return plugins;
 }
 
 /**
@@ -150,24 +159,25 @@ function lintPlugin(config, entry) {
  * @return {Array}        [description]
  */
 function devPlugin(config, entry) {
-    let plugins = [],
-        outputConfig = config.output,
-        inputConfig = config.input,
-        htmlOutputConfig = outputConfig.html,
-        // imageInputConfig = inputConfig.image,
-        fileInputConfig = inputConfig.file;
+	let plugins = [],
+		outputConfig = config.output,
+		inputConfig = config.input,
+		htmlOutputConfig = outputConfig.html,
+		// imageInputConfig = inputConfig.image,
+		fileInputConfig = inputConfig.file;
 
-    plugins.push( //views write to hard disk
-        new WriteFileWebpackPlugin({
-            test: new RegExp(`(${[htmlOutputConfig.ext].join("|")})$`, "i")
-        }),
-        new Webpack.optimize.OccurrenceOrderPlugin(),
-        new Webpack.HotModuleReplacementPlugin(),
-        new Webpack.NoEmitOnErrorsPlugin(),
-        // new HardSourceWebpackPlugin()
-    );
+	plugins.push(
+		//views write to hard disk
+		new WriteFileWebpackPlugin({
+			test: new RegExp(`(${[htmlOutputConfig.ext].join("|")})$`, "i")
+		}),
+		new Webpack.optimize.OccurrenceOrderPlugin(),
+		new Webpack.HotModuleReplacementPlugin(),
+		new Webpack.NoEmitOnErrorsPlugin()
+		// new HardSourceWebpackPlugin()
+	);
 
-    return plugins;
+	return plugins;
 }
 
 /**
@@ -177,29 +187,29 @@ function devPlugin(config, entry) {
  * @return {Array}        [description]
  */
 function optmPlugin(config, entry) {
-    let
-        plugins = [],
-        outputConfig = config.output,
-        fileConfig = outputConfig.file;
+	let plugins = [],
+		outputConfig = config.output,
+		fileConfig = outputConfig.file;
 
-    plugins.push(
-        new UglifyJsPlugin({ //this will be very slow,todo:ParallelUglifyPlugin
-            drop_debugger: true,
-            dead_code: true,
-            join_vars: true,
-            reduce_vars: true,
-            drop_console: true,
-            comments: /[^\s\S]/g,
-            sourceMap: true
-        }),
-        new ModuleConcatenationPlugin(),
-        new ManifestPlugin({
-            fileName: `${fileConfig.path}/manifest.json`,
-            publicPath: `${outputConfig.publicPath}`
-        })
-    );
+	plugins.push(
+		new UglifyJsPlugin({
+			//this will be very slow,todo:ParallelUglifyPlugin
+			drop_debugger: true,
+			dead_code: true,
+			join_vars: true,
+			reduce_vars: true,
+			drop_console: true,
+			comments: /[^\s\S]/g,
+			sourceMap: true
+		}),
+		new ModuleConcatenationPlugin(),
+		new ManifestPlugin({
+			fileName: `${fileConfig.path}/manifest.json`,
+			publicPath: `${outputConfig.publicPath}`
+		})
+	);
 
-    return plugins;
+	return plugins;
 }
 
 /**
@@ -208,100 +218,111 @@ function optmPlugin(config, entry) {
  * @return {Object}        [description]
  */
 function commonPlugin(config, entry) {
-    let plugins = [],
-        inputConfig = config.input,
-        includeEntries = inputConfig.entry.include || {},
-        groupEntries = inputConfig.entry.group || {},
-        outputConfig = config.output,
-        jsConfig = outputConfig.js,
-        entryKeys = Object.keys(entry),
-        fileConfig = outputConfig.file;
+	let plugins = [],
+		inputConfig = config.input,
+		includeEntries = inputConfig.entry.include || {},
+		groupEntries = inputConfig.entry.group || {},
+		outputConfig = config.output,
+		jsConfig = outputConfig.js,
+		entryKeys = Object.keys(entry),
+		fileConfig = outputConfig.file;
 
-    /**
-     * TODO:
-     *     SourceMapDevToolPlugin
-     *     BundleAnalyzerPlugin
-     */
-    plugins.push(
-        new StringReplaceWebpackPlugin(),
-        new FriendlyErrorsWebpackPlugin(),
-        new CopyWebpackPlugin([{
-            context: Path.join(config.root, inputConfig.path),
-            from: {
-                glob: "**/vendor/**/*.*", //TODO
-                dot: true
-            },
-            to: Path.join(config.root, outputConfig.path, jsConfig.path)
-        }]),
-        new DefinePlugin(
-            varsHandler(config.vars)
-        ),
-        /**
-         * @see https://doc.webpack-china.org/plugins/commons-chunk-plugin
-         * @see https://github.com/creeperyang/blog/issues/37
-         * @type {Array}
-         */
-        new CommonsChunkPlugin({
-            name: COMMON_MANIFEST_NAME, //manifest.js
-            minChunks: Infinity
-        })
-    );
+	/**
+	 * TODO:
+	 *     SourceMapDevToolPlugin
+	 *     BundleAnalyzerPlugin
+	 */
+	plugins.push(
+		new StringReplaceWebpackPlugin(),
+		new FriendlyErrorsWebpackPlugin(),
+		new CopyWebpackPlugin([
+			{
+				context: Path.join(config.root, inputConfig.path),
+				from: {
+					glob: "**/vendor/**/*.*", //TODO
+					dot: true
+				},
+				to: Path.join(config.root, outputConfig.path, jsConfig.path)
+			}
+		]),
+		new DefinePlugin(varsHandler(config.vars)),
+		/**
+		 * @see https://doc.webpack-china.org/plugins/commons-chunk-plugin
+		 * @see https://github.com/creeperyang/blog/issues/37
+		 * @type {Array}
+		 */
+		new CommonsChunkPlugin({
+			name: COMMON_MANIFEST_NAME, //manifest.js
+			minChunks: Infinity
+		})
+	);
 
-    //for must include entry.
-    for (let includeEntryName in includeEntries) {
-        plugins.push(new CommonsChunkPlugin({
-            name: includeEntryName,
-            chunks: includeEntries[includeEntryName],
-            filename: `${jsConfig.path}/[name]` + (outputConfig.useHash ? `.[chunkhash]` : "") + `.js`,
-        }));
-    }
+	//for must include entry.
+	for (let includeEntryName in includeEntries) {
+		plugins.push(
+			new CommonsChunkPlugin({
+				name: includeEntryName,
+				chunks: includeEntries[includeEntryName],
+				filename:
+					`${jsConfig.path}/[name]` +
+					(outputConfig.useHash ? `.[chunkhash]` : "") +
+					`.js`
+			})
+		);
+	}
 
-    let groups = findGroups(entry, groupEntries);
+	let groups = findGroups(entry, groupEntries);
 
-    for (let groupName in groups) {
-        let chunks = groups[groupName];
+	for (let groupName in groups) {
+		let chunks = groups[groupName];
 
-        chunks && chunks.length && plugins.push(new CommonsChunkPlugin({
-            name: [groupName, COMMON_CHUNKS_NAME].join("-"),
-            chunks: chunks,
-            minChunks: (mod, count) => {
-                return count >= 3;
-            },
-            filename: `${jsConfig.path}/[name]` + (outputConfig.useHash ? `.[chunkhash]` : "") + `.js`
-        }));
-    }
+		chunks &&
+			chunks.length &&
+			plugins.push(
+				new CommonsChunkPlugin({
+					name: [groupName, COMMON_CHUNKS_NAME].join("-"),
+					chunks: chunks,
+					minChunks: (mod, count) => {
+						return count >= 3;
+					},
+					filename:
+						`${jsConfig.path}/[name]` +
+						(outputConfig.useHash ? `.[chunkhash]` : "") +
+						`.js`
+				})
+			);
+	}
 
-    return plugins;
+	return plugins;
 }
 
 function findGroups(entries, group) {
-    let groups = {};
+	let groups = {};
 
-    for (let groupName in group) {
-        let items = [].concat(group[groupName]),
-            arr = groups[groupName] = [];
+	for (let groupName in group) {
+		let items = [].concat(group[groupName]),
+			arr = (groups[groupName] = []);
 
-        for (let entryName in entries) {
-            for (let i = 0, len = items.length; i < len; i++) {
-                let item = items[i];
+		for (let entryName in entries) {
+			for (let i = 0, len = items.length; i < len; i++) {
+				let item = items[i];
 
-                if (MiniMatch(entryName, item)) {
-                    arr.push(entryName);
-                }
-            }
-        }
-    }
+				if (MiniMatch(entryName, item)) {
+					arr.push(entryName);
+				}
+			}
+		}
+	}
 
-    return groups;
+	return groups;
 }
 
 //TODO;
 function dllPlugin(config, entry) {
-    let plugins = [];
+	let plugins = [];
 
-    return plugins;
+	return plugins;
 }
-
 
 /**
  * vars handler
@@ -309,32 +330,32 @@ function dllPlugin(config, entry) {
  * @return {Object}      [description]
  */
 function varsHandler(json) {
-    json = json || {};
+	json = json || {};
 
-    let result = {};
+	let result = {};
 
-    for (let key in json) {
-        let val = json[key];
+	for (let key in json) {
+		let val = json[key];
 
-        if (typeof val === "string") {
-            result[key] = JSON.stringify(val);
-        } else if (Object.prototype.toString.call(val) === "[object Object]") {
-            varsHandler(val);
-        } else {
-            result[key] = val;
-        }
-    }
+		if (typeof val === "string") {
+			result[key] = JSON.stringify(val);
+		} else if (Object.prototype.toString.call(val) === "[object Object]") {
+			varsHandler(val);
+		} else {
+			result[key] = val;
+		}
+	}
 
-    return result;
+	return result;
 }
 
 module.exports = (config, entry) => {
-    return {
-        common: commonPlugin(config, entry),
-        html: htmlPlugin(config, entry),
-        style: stylePlugin(config, entry),
-        dev: devPlugin(config, entry),
-        optm: optmPlugin(config, entry),
-        lint: lintPlugin(config, entry)
-    };
+	return {
+		common: commonPlugin(config, entry),
+		html: htmlPlugin(config, entry),
+		style: stylePlugin(config, entry),
+		dev: devPlugin(config, entry),
+		optm: optmPlugin(config, entry),
+		lint: lintPlugin(config, entry)
+	};
 };
