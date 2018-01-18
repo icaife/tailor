@@ -50,8 +50,8 @@ function styleHandler(config, loaders) {
 		styleOutputConfig = outputConfig.style,
 		uses = [];
 
-	uses.push(loaders.cssLoader);
 	// uses.push(loaders.stringReplaceLoader);
+	uses.push(loaders.cssLoader);
 
 	if (styleOutputConfig.optm) {
 		uses.push(loaders.postcssLoader); //TODO
