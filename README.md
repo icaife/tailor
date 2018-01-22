@@ -55,6 +55,7 @@ tailor -e test
 	- **e**: environment,`dev`、`test`、`prod`,default `dev`
 	- **c**: config, json config in CLI,will rewrite the default config
 	- **f**: config file
+	- **r**: regexp for modules which are compiled
 
 - ### Env config
 	- tailor.config.json
@@ -69,4 +70,5 @@ tailor -e test
 	tailor -e dev  (default)
 	tailor -e test -f custom.env.json
 	tailor -e test -c {output:{path:'custom-dest'},input:{path:'custom-src'}}
+	tailor -r product
 	```
