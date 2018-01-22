@@ -53,7 +53,7 @@ tailor -e test
 
 - ### Options
 	- **e**: environment,`dev`、`test`、`prod`,default `dev`
-	- **c**: config, json config in CLI
+	- **c**: config, json config in CLI,will rewrite the default config
 	- **f**: config file
 
 - ### Env config

@@ -54,30 +54,35 @@ module.exports = config => {
 	let babelrc = babelrcHandler(config),
 		babelLoader = {
 			loader: "babel-loader",
-			options: _.merge(
+			options:
 				{
 					/**
 					 * @see http://babeljs.io/docs/usage/api/
 					 * @see http://babeljs.io/docs/plugins/#plugin-preset-paths
 					 * @see http://babeljs.io/docs/plugins/#plugin-preset-ordering
 					 * @see https://github.com/babel/babel/pull/3207
+					 * @see https://www.npmjs.com/package/babel-loader
 					 */
-					presets: [
-						[require.resolve("babel-preset-env")],
-						{
-							targets: {
-								browsers: ["last 2 versions", "ie 9"],
-								modules: false
-							}
-						}
+					presets: [[require.resolve("babel-preset-env")]],
+					plugins: [
+						require.resolve(
+							config.tailor.path +
+								"/node_modules/babel-plugin-syntax-dynamic-import"
+						),
+						require.resolve(
+							config.tailor.path +
+								"/node_modules/babel-plugin-syntax-object-rest-spread"
+						)
 					],
 					babelrc: false,
 					retainLines: true,
 					cacheDirectory: true,
-					sourceRoot: config.tailor.path
-				},
-				babelrc
-			)
+					sourceMap: true
+				} ||
+				_
+					.merge
+					// {} || babelrc
+					()
 			// exclude: /vendor/
 		},
 		eslintLoader = {
