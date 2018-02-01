@@ -3,9 +3,8 @@
  * @author Leon.Cai
  */
 "use strict";
-const
-    _ = require("lodash"),
-    Path = require("path");
+const _ = require("lodash"),
+	Path = require("path");
 
 /**
  *
@@ -17,20 +16,22 @@ const
  *
  */
 
-module.exports = (config) => {
-    let
-        tailorConfig = config.tailor,
-        resolveConfig = config.resolve,
-        inputConfig = config.input,
-        projModule = Path.resolve(config.root, inputConfig.path);
+module.exports = config => {
+	let tailorConfig = config.tailor,
+		resolveConfig = config.resolve,
+		inputConfig = config.input,
+		projModule = Path.resolve(config.root, inputConfig.path);
 
-    return {
-        alias: _.merge({
-            "root": Path.resolve(config.root),
-            "@": `root/${inputConfig.path}`,
-        }, resolveConfig.alias),
-        modules: [Path.join(tailorConfig.path, "node_modules") /*, "node_modules"*/ ],
-        extensions: [".js", ".json"],
-        cacheWithContext: true
-    };
+	return {
+		alias: _.merge(
+			{
+				root: Path.resolve(config.root),
+				"@": `root/${inputConfig.path}`
+			},
+			resolveConfig.alias
+		),
+		modules: [Path.join(tailorConfig.path, "node_modules"), "node_modules"],
+		extensions: [".js", ".json", ".vue"],
+		cacheWithContext: true
+	};
 };
