@@ -29,7 +29,8 @@ module.exports = config => {
 				]
 				// html: webpackCombineLoaders()
 			},
-			extractCSS: true
+			extractCSS: true,
+			hotReload: config.env === "dev"
 		}
 	};
 

@@ -200,7 +200,8 @@ function optmPlugin(config, entry) {
 			reduce_vars: true,
 			drop_console: true,
 			comments: /[^\s\S]/g,
-			sourceMap: true
+			sourceMap: true,
+			parallel: true
 		}),
 		new ModuleConcatenationPlugin(),
 		new ManifestPlugin({
