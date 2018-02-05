@@ -33,7 +33,7 @@
     "cssnano": "^3.10.0",
     "deasync": "^0.1.12",
     "debug": "^3.1.0",
-    "eslint": "^4.16.0",
+    "eslint": "^4.17.0",
     "eslint-friendly-formatter": "^3.0.0",
     "eslint-loader": "^1.9.0",
     "eventsource-polyfill": "^0.9.6",
