@@ -28,7 +28,8 @@ module.exports = config => {
 				cache: false, // disable cache
 				emitError: true,
 				emitOnWarning: false,
-				quiet: false
+				quiet: false,
+				fix: !true
 			}
 		};
 

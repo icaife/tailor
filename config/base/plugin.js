@@ -21,10 +21,11 @@ const Webpack = require("webpack"),
 		.BundleAnalyzerPlugin,
 	StyleLintPlugin = require("stylelint-webpack-plugin"),
 	MiniMatch = require("minimatch"),
+	// WebpackMd5Hash = require("webpack-md5-hash"),
 	UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
 	ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
 	CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin,
-	HashedModuleIdsPlugin = Webpack.HashedModuleIdsPlugin,
+	// HashedModuleIdsPlugin = Webpack.HashedModuleIdsPlugin,
 	SourceMapDevToolPlugin = Webpack.SourceMapDevToolPlugin,
 	ProvidePlugin = Webpack.ProvidePlugin,
 	DefinePlugin = Webpack.DefinePlugin,
@@ -236,6 +237,8 @@ function commonPlugin(config, entry) {
 	plugins.push(
 		new StringReplaceWebpackPlugin(),
 		new FriendlyErrorsWebpackPlugin(),
+		// new HashedModuleIdsPlugin(),
+		// new WebpackMd5Hash(),
 		new CopyWebpackPlugin([
 			{
 				context: Path.join(config.root, inputConfig.path),
