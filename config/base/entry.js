@@ -5,35 +5,33 @@
 
 "use strict";
 
-const
-    _ = require("lodash"),
-    Glob = require("glob"),
-    Path = require("path");
+const _ = require("lodash"),
+	Glob = require("glob"),
+	Path = require("path");
 
-module.exports = (config) => {
-    let
-        inputConfig = config.input,
-        cwd = Path.join(config.root, inputConfig.path),
-        entryConfig = inputConfig.entry,
-        glob = "**",
-        prefix = entryConfig.prefix,
-        ext = entryConfig.ext,
-        options = {
-            cwd: cwd,
-            sync: true
-        },
-        globInstance = new Glob.Glob(`${glob}/${prefix}.${ext}`, options),
-        dirs = globInstance.found,
-        entries = _.merge({}, entryConfig.include || {});
+module.exports = config => {
+	let inputConfig = config.input,
+		cwd = Path.join(config.root, inputConfig.path),
+		entryConfig = inputConfig.entry,
+		glob = "**",
+		prefix = entryConfig.prefix,
+		ext = entryConfig.ext,
+		options = {
+			cwd: cwd,
+			sync: true
+		},
+		globInstance = new Glob.Glob(`${glob}/${prefix}.${ext}`, options),
+		dirs = globInstance.found,
+		entries = _.merge({}, entryConfig.include || {});
 
-    dirs.forEach(function(dir) {
-        let name = dir.replace(/\.[^.]+$/ig, "").replace(/\\/g, "/");
+	dirs.forEach(function(dir) {
+		let name = dir.replace(/\.[^.]+$/gi, "").replace(/\\/g, "/");
 
-        config.reg.lastIndex = 0;
-        if (config.reg.test(name)) {
-            entries[name] = [`./${dir}`];
-        }
-    });
+		config.reg.lastIndex = 0;
+		if (config.reg.test(name)) {
+			entries[name] = [`./${dir}`];
+		}
+	});
 
-    return entries;
+	return entries;
 };

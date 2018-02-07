@@ -25,7 +25,7 @@ const Webpack = require("webpack"),
 	UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
 	ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
 	CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin,
-	// HashedModuleIdsPlugin = Webpack.HashedModuleIdsPlugin,
+	HashedModuleIdsPlugin = Webpack.HashedModuleIdsPlugin,
 	SourceMapDevToolPlugin = Webpack.SourceMapDevToolPlugin,
 	ProvidePlugin = Webpack.ProvidePlugin,
 	DefinePlugin = Webpack.DefinePlugin,
@@ -44,7 +44,7 @@ function htmlPlugin(config, entry) {
 		outputConfig = config.output,
 		htmlInputConfig = inputConfig.html,
 		htmlOutputConfig = outputConfig.html,
-		includeEntries = Object.keys(inputConfig.entry.include || {}),
+		includeEntryNames = Object.keys(inputConfig.entry.include || {}),
 		groupEntries = inputConfig.entry.group || {},
 		groups = findGroups(entry, groupEntries);
 
@@ -54,7 +54,7 @@ function htmlPlugin(config, entry) {
 			pageName = page,
 			pageInputExt = htmlInputConfig.ext[0],
 			pageOutputExt = htmlOutputConfig.ext,
-			chunks = [COMMON_MANIFEST_NAME, ...includeEntries],
+			chunks = [COMMON_MANIFEST_NAME, ...includeEntryNames],
 			groupName = getGroup(pageName, groups);
 
 		groupName && chunks.push([groupName, COMMON_CHUNKS_NAME].join("-")); //push group name, common chunk name
@@ -80,7 +80,6 @@ function htmlPlugin(config, entry) {
 					}
 				: false
 		};
-
 		FSE.pathExistsSync(`${config.root}/${inputConfig.path}/${template}`) &&
 			new RegExp(inputConfig.entry.prefix + "$").test(pageName) &&
 			plugins.push(new HtmlWebpackPlugin(options));
@@ -237,7 +236,7 @@ function commonPlugin(config, entry) {
 	plugins.push(
 		new StringReplaceWebpackPlugin(),
 		new FriendlyErrorsWebpackPlugin(),
-		// new HashedModuleIdsPlugin(),
+		new HashedModuleIdsPlugin(),
 		// new WebpackMd5Hash(),
 		new CopyWebpackPlugin([
 			{
@@ -256,24 +255,18 @@ function commonPlugin(config, entry) {
 		 * @type {Array}
 		 */
 		new CommonsChunkPlugin({
-			name: COMMON_MANIFEST_NAME, //manifest.js
+			names: [...Object.keys(includeEntries)],
+			filename:
+				`${jsConfig.path}/[name]` +
+				(outputConfig.useHash ? `.[chunkhash]` : "") +
+				`.js`,
+			minChunks: Infinity
+		}),
+		new CommonsChunkPlugin({
+			name: COMMON_MANIFEST_NAME,
 			minChunks: Infinity
 		})
 	);
-
-	//for must include entry.
-	for (let includeEntryName in includeEntries) {
-		plugins.push(
-			new CommonsChunkPlugin({
-				name: includeEntryName,
-				chunks: includeEntries[includeEntryName],
-				filename:
-					`${jsConfig.path}/[name]` +
-					(outputConfig.useHash ? `.[chunkhash]` : "") +
-					`.js`
-			})
-		);
-	}
 
 	let groups = findGroups(entry, groupEntries);
 
