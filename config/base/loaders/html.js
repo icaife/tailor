@@ -3,7 +3,8 @@
  * @author Leon.Cai
  */
 
-const Path = require("path");
+const Path = require("path"),
+	ENV = require("../../../constant/env.js");
 
 module.exports = config => {
 	let outputConfig = config.output,
@@ -19,7 +20,7 @@ module.exports = config => {
 		artTemplateLoader = {
 			loader: "art-template-loader",
 			options: {
-				debug: config.env === "dev",
+				debug: config.env === ENV.dev,
 				extname: "." + inputConfig.html.ext[0],
 				cache: !true,
 				htmlResourceRoot: Path.join(config.root, inputConfig.path),

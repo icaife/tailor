@@ -21,7 +21,9 @@ const Webpack = require("webpack"),
 		.BundleAnalyzerPlugin,
 	StyleLintPlugin = require("stylelint-webpack-plugin"),
 	MiniMatch = require("minimatch"),
-	// WebpackMd5Hash = require("webpack-md5-hash"),
+	ENV = require("../../constant/env.js"),
+	DllPlugin = Webpack.DllPlugin,
+	DllReferencePlugin = Webpack.DllReferencePlugin,
 	UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
 	ModuleConcatenationPlugin = Webpack.optimize.ModuleConcatenationPlugin,
 	CommonsChunkPlugin = Webpack.optimize.CommonsChunkPlugin,
@@ -30,7 +32,8 @@ const Webpack = require("webpack"),
 	ProvidePlugin = Webpack.ProvidePlugin,
 	DefinePlugin = Webpack.DefinePlugin,
 	COMMON_CHUNKS_NAME = "common-chunks",
-	COMMON_MANIFEST_NAME = "common-manifest";
+	COMMON_MANIFEST_NAME = "common-manifest",
+	COMMON_DLL_NAME = "common-dll";
 
 /**
  * plugins for html
@@ -248,46 +251,50 @@ function commonPlugin(config, entry) {
 				to: Path.join(config.root, outputConfig.path, jsConfig.path)
 			}
 		]),
-		new DefinePlugin(varsHandler(config.vars)),
+		new DefinePlugin(varsHandler(config.vars))
+	);
+
+	if (config.env !== ENV.dll) {
 		/**
 		 * @see https://doc.webpack-china.org/plugins/commons-chunk-plugin
 		 * @see https://github.com/creeperyang/blog/issues/37
 		 * @type {Array}
 		 */
-		new CommonsChunkPlugin({
-			names: [...Object.keys(includeEntries)],
-			filename:
-				`${jsConfig.path}/[name]` +
-				(outputConfig.useHash ? `.[chunkhash]` : "") +
-				`.js`,
-			minChunks: Infinity
-		}),
+		// new CommonsChunkPlugin({
+		// 	names: [...Object.keys(includeEntries)],
+		// 	filename:
+		// 		`${jsConfig.path}/[name]` +
+		// 		(outputConfig.useHash ? `.[chunkhash]` : "") +
+		// 		`.js`,
+		// 	minChunks: Infinity
+		// });
+
 		new CommonsChunkPlugin({
 			name: COMMON_MANIFEST_NAME,
 			minChunks: Infinity
-		})
-	);
+		});
 
-	let groups = findGroups(entry, groupEntries);
+		let groups = findGroups(entry, groupEntries);
 
-	for (let groupName in groups) {
-		let chunks = groups[groupName];
+		for (let groupName in groups) {
+			let chunks = groups[groupName];
 
-		chunks &&
-			chunks.length &&
-			plugins.push(
-				new CommonsChunkPlugin({
-					name: [groupName, COMMON_CHUNKS_NAME].join("-"),
-					chunks: chunks,
-					minChunks: (mod, count) => {
-						return count >= 3;
-					},
-					filename:
-						`${jsConfig.path}/[name]` +
-						(outputConfig.useHash ? `.[chunkhash]` : "") +
-						`.js`
-				})
-			);
+			chunks &&
+				chunks.length &&
+				plugins.push(
+					new CommonsChunkPlugin({
+						name: [groupName, COMMON_CHUNKS_NAME].join("-"),
+						chunks: chunks,
+						minChunks: (mod, count) => {
+							return count >= 3;
+						},
+						filename:
+							`${jsConfig.path}/[name]` +
+							(outputConfig.useHash ? `.[chunkhash]` : "") +
+							`.js`
+					})
+				);
+		}
 	}
 
 	return plugins;
@@ -314,9 +321,42 @@ function findGroups(entries, group) {
 	return groups;
 }
 
-//TODO;
 function dllPlugin(config, entry) {
-	let plugins = [];
+	let plugins = [],
+		inputConfig = config.input,
+		outputConfig = config.output,
+		include = inputConfig.entry.include || {};
+
+	if (Object.keys(include).length) {
+		let context = Path.join(config.root, inputConfig.path);
+
+		if (config.env === ENV.dll) {
+			for (let key in include) {
+				plugins.push(
+					new DllPlugin({
+						context: context,
+						name: outputConfig.library,
+						sourceType: outputConfig.libraryTarget,
+						path: Path.join(
+							context,
+							`${key}-${COMMON_DLL_NAME}.json`
+						)
+					})
+				);
+			}
+		} else {
+			for (let key in include) {
+				plugins.push(
+					new DllReferencePlugin({
+						context: context,
+						manifest: require.resolve(
+							`${context}/${key}-${COMMON_DLL_NAME}.json`
+						)
+					})
+				);
+			}
+		}
+	}
 
 	return plugins;
 }
@@ -353,6 +393,7 @@ module.exports = (config, entry) => {
 		style: stylePlugin(config, entry),
 		dev: devPlugin(config, entry),
 		optm: optmPlugin(config, entry),
-		lint: lintPlugin(config, entry)
+		lint: lintPlugin(config, entry),
+		dll: dllPlugin(config, entry)
 	};
 };

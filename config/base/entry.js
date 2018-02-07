@@ -7,7 +7,8 @@
 
 const _ = require("lodash"),
 	Glob = require("glob"),
-	Path = require("path");
+	Path = require("path"),
+	ENV = require("../../constant/env.js");
 
 module.exports = config => {
 	let inputConfig = config.input,
@@ -24,14 +25,18 @@ module.exports = config => {
 		dirs = globInstance.found,
 		entries = _.merge({}, entryConfig.include || {});
 
-	dirs.forEach(function(dir) {
-		let name = dir.replace(/\.[^.]+$/gi, "").replace(/\\/g, "/");
+	if (config.env === ENV.dll) {
+		entries = inputConfig.entry.include;
+	} else {
+		dirs.forEach(function(dir) {
+			let name = dir.replace(/\.[^.]+$/gi, "").replace(/\\/g, "/");
 
-		config.reg.lastIndex = 0;
-		if (config.reg.test(name)) {
-			entries[name] = [`./${dir}`];
-		}
-	});
+			config.reg.lastIndex = 0;
+			if (config.reg.test(name)) {
+				entries[name] = [`./${dir}`];
+			}
+		});
+	}
 
 	return entries;
 };

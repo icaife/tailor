@@ -6,7 +6,8 @@
 module.exports = config => {
 	let outputConfig = config.output,
 		styleLoaders = require("./style.js")(config),
-		jsLoaders = require("./js.js")(config);
+		jsLoaders = require("./js.js")(config),
+		ENV = require("../../../constant/env.js");
 
 	let vueLoader = {
 		//@see https://github.com/vuejs/vue-loader/blob/master/docs/en/options.md
@@ -30,7 +31,7 @@ module.exports = config => {
 				// html: webpackCombineLoaders()
 			},
 			extractCSS: true,
-			hotReload: config.env === "dev"
+			hotReload: config.env === ENV.dev
 		}
 	};
 
