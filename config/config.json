@@ -3,7 +3,9 @@
         "path": "src",
         "entry": {
             "prefix": "index",
-            "ext": "js"
+            "ext": "js",
+            "include": {},
+            "group": {}
         },
         "js": {
             "ext": ["js"]
@@ -64,6 +66,7 @@
     "externals": {
 
     },
+    "entry": {},
     "server": {
         "port": 8080,
         "host": "localhost",

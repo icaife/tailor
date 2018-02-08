@@ -35,6 +35,7 @@ Based on webpack@3.x
 	- [x] ES6 Support
 	- [x] VUE Supported
 	- [ ] Mock Server
+	- [x] Parallel
 	- [ ] TODO MORE...
 
 
@@ -53,8 +54,10 @@ tailor -e test
 
 - ### Options
 	- **e**: environment,`dev`、`test`、`prod`,default `dev`
-	- **c**: config, json config in CLI
+	- **c**: config, json config in CLI,will rewrite the default config
 	- **f**: config file
+	- **r**: regexp for modules which are compiled
+	- **p**: parallel,multiple threads support
 
 - ### Env config
 	- tailor.config.json
@@ -69,4 +72,6 @@ tailor -e test
 	tailor -e dev  (default)
 	tailor -e test -f custom.env.json
 	tailor -e test -c {output:{path:'custom-dest'},input:{path:'custom-src'}}
+	tailor -r product
+	tailor -p parallel
 	```
