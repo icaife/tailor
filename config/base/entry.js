@@ -8,7 +8,8 @@
 const _ = require("lodash"),
 	Glob = require("glob"),
 	Path = require("path"),
-	ENV = require("../../constant/env.js");
+	ENV = require("../../constant/env.js"),
+	FSE = require("fs-extra");
 
 module.exports = config => {
 	let inputConfig = config.input,
@@ -23,16 +24,24 @@ module.exports = config => {
 		},
 		globInstance = new Glob.Glob(`${glob}/${prefix}.${ext}`, options),
 		dirs = globInstance.found,
-		entries = _.merge({}, entryConfig.include || {});
+		entries = _.merge({}, entryConfig.include || {}),
+		htmlInputConfig = inputConfig.html,
+		pageInputExt = htmlInputConfig.ext[0];
 
-	if (config.env === ENV.dll) {
-		entries = inputConfig.entry.include;
-	} else {
+	if (config.env !== ENV.dll) {
 		dirs.forEach(function(dir) {
 			let name = dir.replace(/\.[^.]+$/gi, "").replace(/\\/g, "/");
 
 			config.reg.lastIndex = 0;
-			if (config.reg.test(name)) {
+
+			let template = `${name}.${pageInputExt}`;
+
+			if (
+				FSE.pathExistsSync(
+					`${config.root}/${inputConfig.path}/${template}`
+				) &&
+				config.reg.test(name)
+			) {
 				entries[name] = [`./${dir}`];
 			}
 		});

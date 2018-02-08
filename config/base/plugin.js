@@ -5,8 +5,8 @@
 
 const Webpack = require("webpack"),
 	Path = require("path"),
-	FSE = require("fs-extra"),
-	Shell = require("shelljs"),
+	// FSE = require("fs-extra"),
+	// Shell = require("shelljs"),
 	Log = require("../../lib/util/log"),
 	HtmlWebpackPlugin = require("html-webpack-plugin"),
 	// HtmlWebpackReplaceUrlPlugin = require("html-webpack-replaceurl-plugin"),
@@ -83,8 +83,8 @@ function htmlPlugin(config, entry) {
 					}
 				: false
 		};
-		FSE.pathExistsSync(`${config.root}/${inputConfig.path}/${template}`) &&
-			new RegExp(inputConfig.entry.prefix + "$").test(pageName) &&
+		// FSE.pathExistsSync(`${config.root}/${inputConfig.path}/${template}`) &&
+		new RegExp(inputConfig.entry.prefix + "$").test(pageName) &&
 			plugins.push(new HtmlWebpackPlugin(options));
 	});
 
@@ -255,24 +255,25 @@ function commonPlugin(config, entry) {
 	);
 
 	if (config.env !== ENV.dll) {
-		/**
-		 * @see https://doc.webpack-china.org/plugins/commons-chunk-plugin
-		 * @see https://github.com/creeperyang/blog/issues/37
-		 * @type {Array}
-		 */
-		// new CommonsChunkPlugin({
-		// 	names: [...Object.keys(includeEntries)],
-		// 	filename:
-		// 		`${jsConfig.path}/[name]` +
-		// 		(outputConfig.useHash ? `.[chunkhash]` : "") +
-		// 		`.js`,
-		// 	minChunks: Infinity
-		// });
-
-		new CommonsChunkPlugin({
-			name: COMMON_MANIFEST_NAME,
-			minChunks: Infinity
-		});
+		plugins.push(
+			/**
+			 * @see https://doc.webpack-china.org/plugins/commons-chunk-plugin
+			 * @see https://github.com/creeperyang/blog/issues/37
+			 * @type {Array}
+			 */
+			new CommonsChunkPlugin({
+				names: [...Object.keys(includeEntries)],
+				filename:
+					`${jsConfig.path}/[name]` +
+					(outputConfig.useHash ? `.[chunkhash]` : "") +
+					`.js`,
+				minChunks: Infinity
+			}),
+			new CommonsChunkPlugin({
+				name: COMMON_MANIFEST_NAME,
+				minChunks: Infinity
+			})
+		);
 
 		let groups = findGroups(entry, groupEntries);
 
@@ -283,7 +284,7 @@ function commonPlugin(config, entry) {
 				chunks.length &&
 				plugins.push(
 					new CommonsChunkPlugin({
-						name: [groupName, COMMON_CHUNKS_NAME].join("-"),
+						name: `${groupName}-${COMMON_CHUNKS_NAME}`,
 						chunks: chunks,
 						minChunks: (mod, count) => {
 							return count >= 3;
