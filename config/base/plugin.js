@@ -21,7 +21,10 @@ const Webpack = require("webpack"),
 		.BundleAnalyzerPlugin,
 	StyleLintPlugin = require("stylelint-webpack-plugin"),
 	MiniMatch = require("minimatch"),
+	HappyPack = require("happypack"),
+	OS = require("os"),
 	ENV = require("../../constant/env.js"),
+	Loaders = require("./loaders"),
 	DllPlugin = Webpack.DllPlugin,
 	DllReferencePlugin = Webpack.DllReferencePlugin,
 	UglifyJsPlugin = Webpack.optimize.UglifyJsPlugin,
@@ -216,6 +219,35 @@ function optmPlugin(config, entry) {
 	return plugins;
 }
 
+function happyPlugin(config, entry) {
+	// HappyPack.SERIALIZABLE_OPTIONS = HappyPack.SERIALIZABLE_OPTIONS.concat([
+	// 	"postcss"
+	// ]);
+
+	let happyThreadPool = HappyPack.ThreadPool({
+			size: OS.cpus().length
+		}),
+		plugins = [],
+		loaders = Loaders(config);
+
+	plugins.push(
+		new HappyPack({
+			id: loaders.happyJsLoaderName,
+			loaders: [loaders.babelLoader, loaders.eslintLoader],
+			threadPool: happyThreadPool,
+			verbose: true
+		}),
+		new HappyPack({
+			id: loaders.happyStyleLoaderName,
+			loaders: [loaders.lessLoader],
+			threadPool: happyThreadPool,
+			verbose: true
+		})
+	);
+
+	return plugins;
+}
+
 /**
  * plugins for common
  * @param  {Object} config [description]
@@ -236,6 +268,7 @@ function commonPlugin(config, entry) {
 	 *     SourceMapDevToolPlugin
 	 *     BundleAnalyzerPlugin
 	 */
+
 	plugins.push(
 		new StringReplaceWebpackPlugin(),
 		new FriendlyErrorsWebpackPlugin(),
@@ -296,6 +329,11 @@ function commonPlugin(config, entry) {
 					})
 				);
 		}
+	}
+
+	//for happy pack
+	if (config.parallel) {
+		plugins.push(...happyPlugin(config, entry));
 	}
 
 	return plugins;

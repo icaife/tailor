@@ -10,6 +10,7 @@ const AutoPrefixer = require("autoprefixer"),
 module.exports = config => {
 	let autoprefixer = AutoPrefixer({
 			browsers: [
+				//TODO
 				"Chrome >= 35",
 				"FireFox >= 40",
 				"ie > 9",

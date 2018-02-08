@@ -1,10 +1,18 @@
 /**
  * @description module config
  * @author Leon.Cai
+ * @see https://flyyang.github.io/2017/03/09/使用happypack将vuejs项目webpack初始化构建速度提升50/
+ * @see https://github.com/amireh/happypack/wiki/Loader-Compatibility-List
+ * @see https://github.com/amireh/happypack/issues/84
  */
 "use strict";
-const Loaders = require("./loaders"),
-	ExtractTextPlugin = require("extract-text-webpack-plugin");
+
+const ExtractTextPlugin = require("extract-text-webpack-plugin"),
+	HappyPack = require("happypack"),
+	OS = require("os"),
+	happyThreadPool = HappyPack.ThreadPool({
+		size: OS.cpus().length
+	});
 
 /**
  * js handler
@@ -12,12 +20,19 @@ const Loaders = require("./loaders"),
  */
 function jsHandler(config, loaders) {
 	let inputConfig = config.input,
-		jsConfig = inputConfig.js;
+		jsConfig = inputConfig.js,
+		use = [];
+
+	if (config.parallel) {
+		use.push(loaders.happyJsLoader);
+	} else {
+		use.push(loaders.babelLoader, loaders.eslintLoader);
+	}
 
 	return {
 		test: new RegExp(`\\.(${jsConfig.ext.join("|")})$`, "i"),
 		exclude: /node_modules|vendor/,
-		use: [loaders.babelLoader, loaders.eslintLoader]
+		use: use
 	};
 }
 
@@ -48,22 +63,22 @@ function styleHandler(config, loaders) {
 		outputConfig = config.output,
 		styleInputConfig = inputConfig.style,
 		styleOutputConfig = outputConfig.style,
-		uses = [];
+		use = [];
 
-	// uses.push(loaders.stringReplaceLoader);
-	uses.push(loaders.cssLoader);
+	// use.push(loaders.stringReplaceLoader);
+	use.push(loaders.cssLoader);
 
 	if (styleOutputConfig.optm) {
-		uses.push(loaders.postcssLoader); //TODO
+		use.push(loaders.postcssLoader); //TODO in happypack,must separate file.postcss.config.js
 	}
 
-	uses.push(loaders.lessLoader);
+	config.parallel && use.push(loaders.happyStyleLoader);
 
 	return {
 		test: new RegExp(`\\.(${styleInputConfig.ext.join("|")})$`, "i"),
 		use: ExtractTextPlugin.extract({
 			fallback: loaders.styleLoader.loader,
-			use: uses
+			use: use
 		})
 	};
 }

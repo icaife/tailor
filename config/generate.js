@@ -82,7 +82,6 @@ function entryHandler(config, entry) {
  */
 function moduleHandler(config, module) {
 	let rules = module.rules,
-		loaders = module.loaders,
 		htmlRule = rules.html,
 		jsRule = rules.js,
 		styleRule = rules.style,
