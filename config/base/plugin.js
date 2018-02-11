@@ -273,7 +273,6 @@ function commonPlugin(config, entry) {
 		new StringReplaceWebpackPlugin(),
 		new FriendlyErrorsWebpackPlugin(),
 		new HashedModuleIdsPlugin(),
-		// new WebpackMd5Hash(),
 		new CopyWebpackPlugin([
 			{
 				context: Path.join(config.root, inputConfig.path),
@@ -295,15 +294,16 @@ function commonPlugin(config, entry) {
 			 * @type {Array}
 			 */
 			new CommonsChunkPlugin({
+				name: COMMON_MANIFEST_NAME,
+				minChunks: Infinity
+			}),
+			new CommonsChunkPlugin({
 				names: [...Object.keys(includeEntries)],
+				children: true,
 				filename:
 					`${jsConfig.path}/[name]` +
 					(outputConfig.useHash ? `.[chunkhash]` : "") +
 					`.js`,
-				minChunks: Infinity
-			}),
-			new CommonsChunkPlugin({
-				name: COMMON_MANIFEST_NAME,
 				minChunks: Infinity
 			})
 		);

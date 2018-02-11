@@ -4,7 +4,8 @@
  */
 
 const Path = require("path"),
-	ENV = require("../../../constant/env.js");
+	ENV = require("../../../constant/env.js"),
+	template = require("art-template");
 
 module.exports = config => {
 	let outputConfig = config.output,
@@ -59,8 +60,11 @@ module.exports = config => {
 							};
 						}
 					},
-					...require("art-template").defaults.rules
-				]
+					...template.defaults.rules
+				],
+				data: {
+					TFF: "this is tours forfun."
+				}
 			}
 		};
 
