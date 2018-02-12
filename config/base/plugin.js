@@ -20,6 +20,7 @@ const Webpack = require("webpack"),
 	BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
 		.BundleAnalyzerPlugin,
 	StyleLintPlugin = require("stylelint-webpack-plugin"),
+	HtmlWebpackIncludeAssetsPlugin = require("html-webpack-include-assets-plugin"),
 	MiniMatch = require("minimatch"),
 	HappyPack = require("happypack"),
 	OS = require("os"),
@@ -119,7 +120,7 @@ function stylePlugin(config, entry) {
 		new ExtractTextPlugin({
 			//extract css
 			filename:
-				`${styleConfig.path}/[name]` +
+				`${styleConfig.path || "."}/[name]` +
 				(outputConfig.useHash
 					? `.[contenthash:${outputConfig.hashLen}]`
 					: "") +
@@ -143,17 +144,17 @@ function lintPlugin(config, entry) {
 		inputConfig = config.input,
 		outputConfig = config.output;
 
-	plugins.push(
-		new StyleLintPlugin({
-			configFile: Path.join(config.root, ".stylelintrc"),
-			failOnWarning: false, // warning occured then stop
-			failOnError: false, // error occured then stop
-			emitError: true,
-			emitOnWarning: false,
-			files: ["**/*.css", "**/*.less"], //TODO
-			quiet: false
-		})
-	);
+	// plugins.push(
+	// 	new StyleLintPlugin({
+	// 		configFile: Path.join(config.root, ".stylelintrc"),
+	// 		failOnWarning: false, // warning occured then stop
+	// 		failOnError: false, // error occured then stop
+	// 		emitError: true,
+	// 		emitOnWarning: false,
+	// 		files: ["**/*.css", "**/*.less"], //TODO
+	// 		quiet: false
+	// 	})
+	// );
 
 	return plugins;
 }
@@ -207,13 +208,10 @@ function optmPlugin(config, entry) {
 			drop_console: true,
 			comments: /[^\s\S]/g,
 			sourceMap: true,
-			parallel: true
+			parallel: true,
+			exclude: /\.min\.js$/
 		}),
-		new ModuleConcatenationPlugin(),
-		new ManifestPlugin({
-			fileName: `${fileConfig.path}/manifest.json`,
-			publicPath: `${outputConfig.publicPath}`
-		})
+		new ModuleConcatenationPlugin()
 	);
 
 	return plugins;
@@ -270,19 +268,9 @@ function commonPlugin(config, entry) {
 	 */
 
 	plugins.push(
+		new HashedModuleIdsPlugin(),
 		new StringReplaceWebpackPlugin(),
 		new FriendlyErrorsWebpackPlugin(),
-		new HashedModuleIdsPlugin(),
-		new CopyWebpackPlugin([
-			{
-				context: Path.join(config.root, inputConfig.path),
-				from: {
-					glob: "**/vendor/**/*.*", //TODO
-					dot: true
-				},
-				to: Path.join(config.root, outputConfig.path, jsConfig.path)
-			}
-		]),
 		new DefinePlugin(varsHandler(config.vars))
 	);
 
@@ -293,18 +281,32 @@ function commonPlugin(config, entry) {
 			 * @see https://github.com/creeperyang/blog/issues/37
 			 * @type {Array}
 			 */
-			new CommonsChunkPlugin({
-				name: COMMON_MANIFEST_NAME,
-				minChunks: Infinity
-			}),
-			new CommonsChunkPlugin({
-				names: [...Object.keys(includeEntries)],
-				children: true,
-				filename:
-					`${jsConfig.path}/[name]` +
-					(outputConfig.useHash ? `.[chunkhash]` : "") +
-					`.js`,
-				minChunks: Infinity
+			// new CommonsChunkPlugin({
+			// 	name: COMMON_MANIFEST_NAME,
+			// 	minChunks: Infinity
+			// }),
+			// new CommonsChunkPlugin({
+			// 	names: [...Object.keys(includeEntries)],
+			// 	children: true,
+			// 	filename:
+			// 		`${jsConfig.path}/[name]` +
+			// 		(outputConfig.useHash ? `.[chunkhash]` : "") +
+			// 		`.js`,
+			// 	minChunks: Infinity
+			// }),
+			// new CopyWebpackPlugin([
+			// 	{
+			// 		context: Path.join(config.root, inputConfig.path),
+			// 		from: {
+			// 			glob: "**/vendor/**/*.*", //TODO
+			// 			dot: true
+			// 		},
+			// 		to: Path.join(config.root, outputConfig.path, jsConfig.path)
+			// 	}
+			// ]),
+			new ManifestPlugin({
+				fileName: `${fileConfig.path || "."}/manifest.json`,
+				publicPath: `${outputConfig.publicPath}`
 			})
 		);
 
@@ -360,6 +362,9 @@ function findGroups(entries, group) {
 	return groups;
 }
 
+/**
+ * @see https://github.com/superpig/blog/issues/6
+ */
 function dllPlugin(config, entry) {
 	let plugins = [],
 		inputConfig = config.input,
@@ -373,27 +378,54 @@ function dllPlugin(config, entry) {
 			for (let key in include) {
 				plugins.push(
 					new DllPlugin({
-						context: context,
-						name: outputConfig.library,
-						sourceType: outputConfig.libraryTarget,
+						// context: context,
+						// name: `${key}-${COMMON_DLL_NAME}`,
+						// library: `${outputConfig.library}_${key}`,
+						// sourceType: outputConfig.libraryTarget,
+						name: "[name]_[hash]",
 						path: Path.join(
-							context,
+							outputConfig.path,
 							`${key}-${COMMON_DLL_NAME}.json`
 						)
 					})
 				);
 			}
 		} else {
+			let dllAssets = [];
+
 			for (let key in include) {
 				plugins.push(
 					new DllReferencePlugin({
-						context: context,
+						// context: context,
 						manifest: require.resolve(
-							`${context}/${key}-${COMMON_DLL_NAME}.json`
+							`${config.root}/${
+								inputConfig.path
+							}/common/dll/${key}-${COMMON_DLL_NAME}.json`
 						)
 					})
 				);
+
+				dllAssets.push(
+					{
+						path: "dll",
+						glob: "*.js",
+						globPath: Path.join(inputConfig.path, "common/dll")
+					},
+					{
+						path: "dll",
+						glob: "*.css",
+						globPath: Path.join(inputConfig.path, "common/dll")
+					}
+				);
 			}
+
+			plugins.push(
+				new HtmlWebpackIncludeAssetsPlugin({
+					assets: dllAssets,
+					append: false,
+					hash: outputConfig.useHash
+				})
+			);
 		}
 	}
 

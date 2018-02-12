@@ -1,4 +1,5 @@
 {
+    "cache": true,
     "input": {
         "path": "src",
         "entry": {
@@ -63,9 +64,7 @@
         "extensions": []
     },
     "vars": {},
-    "externals": {
-
-    },
+    "externals": {},
     "entry": {},
     "server": {
         "port": 8080,

@@ -6,7 +6,8 @@ const Path = require("path"),
 	_ = require("lodash");
 
 module.exports = config => {
-	let babelLoader = {
+	let inputConfig = config.input,
+		babelLoader = {
 			loader: "babel-loader",
 			options: {
 				retainLines: true,

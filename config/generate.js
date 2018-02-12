@@ -30,6 +30,7 @@ function generateConfig(config) {
 
 	return {
 		target: "web",
+		cache: !!config.cache,
 		bail: false,
 		context: context,
 		entry: entry,
