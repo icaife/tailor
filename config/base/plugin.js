@@ -281,29 +281,29 @@ function commonPlugin(config, entry) {
 			 * @see https://github.com/creeperyang/blog/issues/37
 			 * @type {Array}
 			 */
-			// new CommonsChunkPlugin({
-			// 	name: COMMON_MANIFEST_NAME,
-			// 	minChunks: Infinity
-			// }),
-			// new CommonsChunkPlugin({
-			// 	names: [...Object.keys(includeEntries)],
-			// 	children: true,
-			// 	filename:
-			// 		`${jsConfig.path}/[name]` +
-			// 		(outputConfig.useHash ? `.[chunkhash]` : "") +
-			// 		`.js`,
-			// 	minChunks: Infinity
-			// }),
-			// new CopyWebpackPlugin([
-			// 	{
-			// 		context: Path.join(config.root, inputConfig.path),
-			// 		from: {
-			// 			glob: "**/vendor/**/*.*", //TODO
-			// 			dot: true
-			// 		},
-			// 		to: Path.join(config.root, outputConfig.path, jsConfig.path)
-			// 	}
-			// ]),
+			new CommonsChunkPlugin({
+				name: COMMON_MANIFEST_NAME,
+				minChunks: Infinity
+			}),
+			new CommonsChunkPlugin({
+				names: [...Object.keys(includeEntries)],
+				children: true,
+				filename:
+					`${jsConfig.path}/[name]` +
+					(outputConfig.useHash ? `.[chunkhash]` : "") +
+					`.js`,
+				minChunks: Infinity
+			}),
+			new CopyWebpackPlugin([
+				{
+					context: Path.join(config.root, inputConfig.path),
+					from: {
+						glob: "**/vendor/**/*.*", //TODO
+						dot: true
+					},
+					to: Path.join(config.root, outputConfig.path, jsConfig.path)
+				}
+			]),
 			new ManifestPlugin({
 				fileName: `${fileConfig.path || "."}/manifest.json`,
 				publicPath: `${outputConfig.publicPath}`
