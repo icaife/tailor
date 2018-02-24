@@ -5,11 +5,8 @@
 
 const Webpack = require("webpack"),
 	Path = require("path"),
-	// FSE = require("fs-extra"),
-	// Shell = require("shelljs"),
 	Log = require("../../lib/util/log"),
 	HtmlWebpackPlugin = require("html-webpack-plugin"),
-	// HtmlWebpackReplaceUrlPlugin = require("html-webpack-replaceurl-plugin"),
 	StringReplaceWebpackPlugin = require("string-replace-webpack-plugin"),
 	CopyWebpackPlugin = require("copy-webpack-plugin"),
 	ExtractTextPlugin = require("extract-text-webpack-plugin"),
@@ -214,7 +211,7 @@ function optmPlugin(config, entry) {
 		new ModuleConcatenationPlugin(),
 		new AssetsPlugin({
 			path: Path.join(outputConfig.path, fileConfig.path),
-			filename: "assets.json",
+			filename: "map.json",
 			metadata: {
 				date: Moment().format(),
 				tailor: config.tailor.package.version
