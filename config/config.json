@@ -63,8 +63,11 @@
         "modules": [],
         "extensions": []
     },
-    "vars": {},
+    "vars": {
+        "process.env.NODE_ENV": "production"
+    },
     "externals": {},
+    "providers": {},
     "entry": {},
     "server": {
         "port": 8080,

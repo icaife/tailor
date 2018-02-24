@@ -277,7 +277,10 @@ function commonPlugin(config, entry) {
 		new HashedModuleIdsPlugin(),
 		new StringReplaceWebpackPlugin(),
 		new FriendlyErrorsWebpackPlugin(),
-		new DefinePlugin(varsHandler(config.vars))
+		new DefinePlugin(varsHandler(config.vars)),
+		new ProvidePlugin({
+			...(config.providers || {})
+		})
 	);
 
 	if (config.env !== ENV.dll) {
