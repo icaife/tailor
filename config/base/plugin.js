@@ -11,7 +11,6 @@ const Webpack = require("webpack"),
 	HtmlWebpackPlugin = require("html-webpack-plugin"),
 	// HtmlWebpackReplaceUrlPlugin = require("html-webpack-replaceurl-plugin"),
 	StringReplaceWebpackPlugin = require("string-replace-webpack-plugin"),
-	ManifestPlugin = require("webpack-manifest-plugin"),
 	CopyWebpackPlugin = require("copy-webpack-plugin"),
 	ExtractTextPlugin = require("extract-text-webpack-plugin"),
 	StyleExtHtmlWebpackPlugin = require("style-ext-html-webpack-plugin"),
@@ -20,7 +19,9 @@ const Webpack = require("webpack"),
 	BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
 		.BundleAnalyzerPlugin,
 	StyleLintPlugin = require("stylelint-webpack-plugin"),
-	HtmlWebpackIncludeAssetsPlugin = require("html-webpack-include-assets-plugin"),
+	AddAssetHtmlWebpackPlugin = require("add-asset-html-webpack-plugin"),
+	AssetsPlugin = require("assets-webpack-plugin"),
+	Moment = require("moment"),
 	MiniMatch = require("minimatch"),
 	HappyPack = require("happypack"),
 	OS = require("os"),
@@ -51,7 +52,6 @@ function htmlPlugin(config, entry) {
 		outputConfig = config.output,
 		htmlInputConfig = inputConfig.html,
 		htmlOutputConfig = outputConfig.html,
-		includeEntryNames = Object.keys(inputConfig.entry.include || {}),
 		groupEntries = inputConfig.entry.group || {},
 		groups = findGroups(entry, groupEntries);
 
@@ -61,7 +61,7 @@ function htmlPlugin(config, entry) {
 			pageName = page,
 			pageInputExt = htmlInputConfig.ext[0],
 			pageOutputExt = htmlOutputConfig.ext,
-			chunks = [COMMON_MANIFEST_NAME, ...includeEntryNames],
+			chunks = [COMMON_MANIFEST_NAME],
 			groupName = getGroup(pageName, groups);
 
 		groupName && chunks.push([groupName, COMMON_CHUNKS_NAME].join("-")); //push group name, common chunk name
@@ -144,17 +144,17 @@ function lintPlugin(config, entry) {
 		inputConfig = config.input,
 		outputConfig = config.output;
 
-	// plugins.push(
-	// 	new StyleLintPlugin({
-	// 		configFile: Path.join(config.root, ".stylelintrc"),
-	// 		failOnWarning: false, // warning occured then stop
-	// 		failOnError: false, // error occured then stop
-	// 		emitError: true,
-	// 		emitOnWarning: false,
-	// 		files: ["**/*.css", "**/*.less"], //TODO
-	// 		quiet: false
-	// 	})
-	// );
+	plugins.push(
+		new StyleLintPlugin({
+			configFile: Path.join(config.root, ".stylelintrc"),
+			failOnWarning: false, // warning occured then stop
+			failOnError: false, // error occured then stop
+			emitError: true,
+			emitOnWarning: false,
+			quiet: false,
+			cache: true
+		})
+	);
 
 	return plugins;
 }
@@ -200,7 +200,7 @@ function optmPlugin(config, entry) {
 
 	plugins.push(
 		new UglifyJsPlugin({
-			//this will be very slow,todo:ParallelUglifyPlugin
+			//this will be very slow
 			drop_debugger: true,
 			dead_code: true,
 			join_vars: true,
@@ -211,7 +211,15 @@ function optmPlugin(config, entry) {
 			parallel: true,
 			exclude: /\.min\.js$/
 		}),
-		new ModuleConcatenationPlugin()
+		new ModuleConcatenationPlugin(),
+		new AssetsPlugin({
+			path: Path.join(outputConfig.path, fileConfig.path),
+			filename: "assets.json",
+			metadata: {
+				date: Moment().format(),
+				tailor: config.tailor.package.version
+			}
+		})
 	);
 
 	return plugins;
@@ -254,12 +262,13 @@ function happyPlugin(config, entry) {
 function commonPlugin(config, entry) {
 	let plugins = [],
 		inputConfig = config.input,
-		includeEntries = inputConfig.entry.include || {},
 		groupEntries = inputConfig.entry.group || {},
 		outputConfig = config.output,
 		jsConfig = outputConfig.js,
 		entryKeys = Object.keys(entry),
-		fileConfig = outputConfig.file;
+		fileConfig = outputConfig.file,
+		projConfig = config._projConfig,
+		dllConfig = projConfig.dll;
 
 	/**
 	 * TODO:
@@ -285,29 +294,38 @@ function commonPlugin(config, entry) {
 				name: COMMON_MANIFEST_NAME,
 				minChunks: Infinity
 			}),
-			new CommonsChunkPlugin({
-				names: [...Object.keys(includeEntries)],
-				children: true,
-				filename:
-					`${jsConfig.path}/[name]` +
-					(outputConfig.useHash ? `.[chunkhash]` : "") +
-					`.js`,
-				minChunks: Infinity
-			}),
 			new CopyWebpackPlugin([
 				{
 					context: Path.join(config.root, inputConfig.path),
 					from: {
-						glob: "**/vendor/**/*.*", //TODO
+						glob: "**/vendor/**",
 						dot: true
 					},
-					to: Path.join(config.root, outputConfig.path, jsConfig.path)
+					to: Path.join(
+						config.root,
+						outputConfig.path,
+						jsConfig.path
+					),
+					toType: "dir"
+				},
+				{
+					context: Path.join(config.root, inputConfig.path),
+					from: {
+						glob: `${dllConfig.output.path.replace(
+							inputConfig.path,
+							""
+						)}/**`.replace(/^\/+/, ""),
+						dot: true
+					},
+					to: Path.join(
+						config.root,
+						outputConfig.path,
+						jsConfig.path
+					),
+					toType: "dir",
+					force: true
 				}
-			]),
-			new ManifestPlugin({
-				fileName: `${fileConfig.path || "."}/manifest.json`,
-				publicPath: `${outputConfig.publicPath}`
-			})
+			])
 		);
 
 		let groups = findGroups(entry, groupEntries);
@@ -369,63 +387,76 @@ function dllPlugin(config, entry) {
 	let plugins = [],
 		inputConfig = config.input,
 		outputConfig = config.output,
-		include = inputConfig.entry.include || {};
+		include = inputConfig.entry.include || inputConfig.entry.dll || {},
+		projConfig = config._projConfig,
+		dllConfig = projConfig.dll;
 
 	if (Object.keys(include).length) {
 		let context = Path.join(config.root, inputConfig.path);
 
 		if (config.env === ENV.dll) {
-			for (let key in include) {
-				plugins.push(
-					new DllPlugin({
-						// context: context,
-						// name: `${key}-${COMMON_DLL_NAME}`,
-						// library: `${outputConfig.library}_${key}`,
-						// sourceType: outputConfig.libraryTarget,
-						name: "[name]_[hash]",
-						path: Path.join(
-							outputConfig.path,
-							`${key}-${COMMON_DLL_NAME}.json`
-						)
-					})
-				);
-			}
-		} else {
-			let dllAssets = [];
-
-			for (let key in include) {
-				plugins.push(
-					new DllReferencePlugin({
-						// context: context,
-						manifest: require.resolve(
-							`${config.root}/${
-								inputConfig.path
-							}/common/dll/${key}-${COMMON_DLL_NAME}.json`
-						)
-					})
-				);
-
-				dllAssets.push(
-					{
-						path: "dll",
-						glob: "*.js",
-						globPath: Path.join(inputConfig.path, "common/dll")
-					},
-					{
-						path: "dll",
-						glob: "*.css",
-						globPath: Path.join(inputConfig.path, "common/dll")
-					}
-				);
-			}
-
 			plugins.push(
-				new HtmlWebpackIncludeAssetsPlugin({
-					assets: dllAssets,
-					append: false,
-					hash: outputConfig.useHash
+				new DllPlugin({
+					library: `${outputConfig.library}`,
+					name: `${outputConfig.library}`,
+					path: Path.join(
+						outputConfig.path,
+						`[name]-${COMMON_DLL_NAME}.json`
+					)
 				})
 			);
+		} else {
+			let dllAssets = [],
+				dllPath = Path.resolve(config.root, dllConfig.output.path),
+				styleInputConfig = inputConfig.style,
+				styleReg = new RegExp(
+					`\\.(${styleInputConfig.ext.join("|")})$`,
+					"i"
+				),
+				outputPath =
+					`/${outputConfig.js.path}/` +
+					dllConfig.output.path.replace(inputConfig.path, ""),
+				publicPath = `${outputConfig.publicPath}/${outputPath}`;
+
+			outputPath = outputPath.replace(/([\w_-]+)\/+/g, "$1/");
+			publicPath = publicPath.replace(/([\w_-]+)\/+/g, "$1/");
+
+			for (let key in include) {
+				let manifest = require(`${config.root}/${
+					dllConfig.output.path
+				}/${key}-${COMMON_DLL_NAME}.json`);
+
+				plugins.push(
+					new DllReferencePlugin({
+						context: context,
+						manifest: manifest
+					})
+				);
+
+				let existStyle = Object.keys(manifest.content).some(key => {
+					return styleReg.test(key);
+				});
+
+				if (existStyle) {
+					dllAssets.push({
+						filepath: Path.resolve(dllPath, `${key}.css`),
+						typeOfAsset: "css",
+						hash: true,
+						outputPath: outputPath,
+						publicPath: publicPath
+					});
+				}
+
+				dllAssets.push({
+					filepath: Path.resolve(dllPath, `${key}.js`),
+					typeOfAsset: "js",
+					hash: true,
+					outputPath: outputPath,
+					publicPath: publicPath
+				});
+			}
+
+			plugins.push(new AddAssetHtmlWebpackPlugin(dllAssets));
 		}
 	}
 

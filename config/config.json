@@ -30,7 +30,7 @@
         "path": "dest",
         "publicPath": "//static.tff.com",
         "libraryTarget": "umd",
-        "library": "__TAILOR_LIBRARY__",
+        "library": "TAILOR_LIB_[name]",
         "js": {
             "path": "assets"
         },

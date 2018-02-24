@@ -95,6 +95,8 @@ try {
 		projConfig[argv.env] || {},
 		fixJson(argv.c)
 	);
+
+	config._projConfig = projConfig;
 } catch (e) {
 	Log.error(e.message);
 	process.exit(1);
@@ -106,7 +108,8 @@ config.env = ENV[argv.env];
 config.root = Path.resolve(process.cwd());
 //set tailor config
 config.tailor = {
-	path: Path.resolve(__dirname, "../")
+	path: Path.resolve(__dirname, "../"),
+	package: pkg
 };
 //set reg
 config.reg = typeof argv.reg === "string" ? new RegExp(argv.reg, "img") : /./;
