@@ -352,7 +352,8 @@ function commonPlugin(config, entry) {
 						filename:
 							`${jsConfig.path}/[name]` +
 							(outputConfig.useHash ? `.[chunkhash]` : "") +
-							`.js`
+							`.js`,
+						minChunks: Infinity
 					})
 				);
 		}
