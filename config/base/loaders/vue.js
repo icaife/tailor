@@ -7,6 +7,7 @@ module.exports = config => {
 	let outputConfig = config.output,
 		styleLoaders = require("./style.js")(config),
 		jsLoaders = require("./js.js")(config),
+		happyLoader = require("./happypack.js"),
 		ENV = require("../../../constant/env.js");
 
 	let vueLoader = {
@@ -22,7 +23,12 @@ module.exports = config => {
 				img: ["src", "data-src", "data-original"] //TODO
 			},
 			loaders: {
-				js: [jsLoaders.babelLoader, jsLoaders.eslintLoader],
+				js: [
+					config.parallel
+						? happyLoader.happyJsLoader
+						: jsLoaders.babelLoader,
+					jsLoaders.eslintLoader
+				],
 				css: [
 					styleLoaders.cssLoader,
 					styleLoaders.postcssLoader,

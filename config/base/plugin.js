@@ -49,8 +49,15 @@ function htmlPlugin(config, entry) {
 		outputConfig = config.output,
 		htmlInputConfig = inputConfig.html,
 		htmlOutputConfig = outputConfig.html,
+		commonEntries = inputConfig.entry.common || {},
 		groupEntries = inputConfig.entry.group || {},
 		groups = findGroups(entry, groupEntries);
+
+	let commons = [];
+
+	Object.keys(commonEntries).forEach(commonName => {
+		commons.push(commonName);
+	});
 
 	Object.keys(entry).forEach(page => {
 		let pageItem = entry[page],
@@ -58,10 +65,10 @@ function htmlPlugin(config, entry) {
 			pageName = page,
 			pageInputExt = htmlInputConfig.ext[0],
 			pageOutputExt = htmlOutputConfig.ext,
-			chunks = [COMMON_MANIFEST_NAME],
+			chunks = [COMMON_MANIFEST_NAME, ...commons],
 			groupName = getGroup(pageName, groups);
 
-		groupName && chunks.push([groupName, COMMON_CHUNKS_NAME].join("-")); //push group name, common chunk name
+		groupName && chunks.push(`${groupName}-${COMMON_CHUNKS_NAME}`); //push group name, common chunk name
 
 		chunks.push(pageName);
 
@@ -208,16 +215,20 @@ function optmPlugin(config, entry) {
 			parallel: true,
 			exclude: /\.min\.js$/
 		}),
-		new ModuleConcatenationPlugin(),
-		new AssetsPlugin({
-			path: Path.join(outputConfig.path, fileConfig.path),
-			filename: "map.json",
-			metadata: {
-				date: Moment().format(),
-				tailor: config.tailor.package.version
-			}
-		})
+		new ModuleConcatenationPlugin()
 	);
+
+	[ENV.test, ENV.prod].indexOf(config.env) > -1 &&
+		plugins.push(
+			new AssetsPlugin({
+				path: Path.join(outputConfig.path, fileConfig.path),
+				filename: "map.json",
+				metadata: {
+					date: Moment().format(),
+					tailor: config.tailor.package.version
+				}
+			})
+		);
 
 	return plugins;
 }
@@ -328,13 +339,30 @@ function commonPlugin(config, entry) {
 			])
 		);
 
+		let commonEntries = inputConfig.entry.common || {};
+
+		for (let commonName in commonEntries) {
+			let chunks = commonEntries[commonName];
+
+			chunks.length &&
+				plugins.push(
+					new CommonsChunkPlugin({
+						name: commonName,
+						chunks: chunks,
+						filename:
+							`${jsConfig.path}/[name]` +
+							(outputConfig.useHash ? `.[chunkhash]` : "") +
+							`.js`
+					})
+				);
+		}
+
 		let groups = findGroups(entry, groupEntries);
 
 		for (let groupName in groups) {
-			let chunks = groups[groupName];
+			let chunks = groups[groupName] || [];
 
-			chunks &&
-				chunks.length &&
+			chunks.length &&
 				plugins.push(
 					new CommonsChunkPlugin({
 						name: `${groupName}-${COMMON_CHUNKS_NAME}`,
@@ -387,7 +415,7 @@ function dllPlugin(config, entry) {
 	let plugins = [],
 		inputConfig = config.input,
 		outputConfig = config.output,
-		include = inputConfig.entry.include || inputConfig.entry.dll || {},
+		include = inputConfig.entry.dll || {},
 		projConfig = config._projConfig,
 		dllConfig = projConfig.dll;
 
@@ -397,6 +425,7 @@ function dllPlugin(config, entry) {
 		if (config.env === ENV.dll) {
 			plugins.push(
 				new DllPlugin({
+					context: context,
 					library: `${outputConfig.library}`,
 					name: `${outputConfig.library}`,
 					path: Path.join(
@@ -456,7 +485,9 @@ function dllPlugin(config, entry) {
 				});
 			}
 
-			plugins.push(new AddAssetHtmlWebpackPlugin(dllAssets));
+			if (dllAssets.length) {
+				plugins.push(new AddAssetHtmlWebpackPlugin(dllAssets));
+			}
 		}
 	}
 

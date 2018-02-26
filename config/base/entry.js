@@ -24,7 +24,7 @@ module.exports = config => {
 		},
 		globInstance = new Glob.Glob(`${glob}/${prefix}.${ext}`, options),
 		dirs = globInstance.found,
-		entries = _.merge({}, entryConfig.include || {}),
+		entries = _.merge({}, entryConfig.dll || {}, entryConfig.common || []),
 		htmlInputConfig = inputConfig.html,
 		pageInputExt = htmlInputConfig.ext[0];
 
