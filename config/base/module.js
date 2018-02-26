@@ -72,7 +72,11 @@ function styleHandler(config, loaders) {
 		use.push(loaders.postcssLoader); //TODO in happypack,must separate file.postcss.config.js
 	}
 
-	config.parallel && use.push(loaders.happyStyleLoader);
+	if (config.parallel) {
+		use.push(loaders.happyStyleLoader);
+	} else {
+		use.push(loaders.lessLoader);
+	}
 
 	return {
 		test: new RegExp(`\\.(${styleInputConfig.ext.join("|")})$`, "i"),

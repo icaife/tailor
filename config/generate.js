@@ -18,7 +18,7 @@ function generateConfig(config) {
 			? outputConfig.publicPath
 			: outputConfig.publicPath + "/";
 
-	outputConfig.publicPath = publicPath;
+	outputConfig.publicPath = publicPath.replace(/([\w_-]+)\/+/g, "$1/");
 
 	let base = Base(config),
 		inputConfig = config.input,
@@ -30,6 +30,7 @@ function generateConfig(config) {
 
 	return {
 		target: "web",
+		cache: !!config.cache,
 		bail: false,
 		context: context,
 		entry: entry,
@@ -118,14 +119,12 @@ function pluginsHandler(config, plugins) {
 		dllPlugin = plugins.dll,
 		result = [];
 
-	if (config.env === ENV.dll) {
-		result.push(...dllPlugin, ...plugins.optm);
+	result.push(...dllPlugin);
+
+	if (config.env === ENV.dev) {
+		result.push(...devPlugin);
 	} else {
-		if (config.env === ENV.dev) {
-			result.push(...devPlugin);
-		} else {
-			result.push(...plugins.optm);
-		}
+		result.push(...plugins.optm);
 	}
 
 	result.push(
