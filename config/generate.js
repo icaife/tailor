@@ -119,12 +119,19 @@ function pluginsHandler(config, plugins) {
 		dllPlugin = plugins.dll,
 		result = [];
 
+<<<<<<< HEAD
 	result.push(...dllPlugin);
 
 	if (config.env === ENV.dev) {
 		result.push(...devPlugin);
 	} else {
 		result.push(...plugins.optm);
+=======
+	result.push(...dllPlugin, ...plugins.optm);
+		
+	if (config.env === ENV.dev) {
+		result.push(...devPlugin);
+>>>>>>> df1c7310438a830b1ea1713cd1c927cde160e04d
 	}
 
 	result.push(
