@@ -416,11 +416,11 @@ function dllPlugin(config, entry) {
 	let plugins = [],
 		inputConfig = config.input,
 		outputConfig = config.output,
-		include = inputConfig.entry.dll || {},
+		dlls = inputConfig.entry.dll || {},
 		projConfig = config._projConfig,
 		dllConfig = projConfig.dll;
 
-	if (Object.keys(include).length) {
+	if (Object.keys(dlls).length) {
 		let context = Path.join(config.root, inputConfig.path);
 
 		if (config.env === ENV.dll) {
@@ -451,7 +451,7 @@ function dllPlugin(config, entry) {
 			outputPath = outputPath.replace(/([\w_-]+)\/+/g, "$1/");
 			publicPath = publicPath.replace(/([\w_-]+)\/+/g, "$1/");
 
-			for (let key in include) {
+			for (let key in dlls) {
 				let manifest = require(`${config.root}/${
 					dllConfig.output.path
 				}/${key}-${COMMON_DLL_NAME}.json`);

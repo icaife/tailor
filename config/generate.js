@@ -6,6 +6,7 @@
 const Path = require("path"),
 	Base = require("./base"),
 	Webpack = require("webpack"),
+	Log = require("../lib/util/log"),
 	ENV = require("../constant/env.js");
 
 /**
@@ -27,6 +28,11 @@ function generateConfig(config) {
 		module = moduleHandler(config, base.module),
 		plugins = pluginsHandler(config, base.plugins),
 		devtool = config.devtool;
+
+	if (!Object.keys(entry).length) {
+		Log.error(`no entry found,plz check.`);
+		process.exit(1);
+	}
 
 	return {
 		target: "web",
