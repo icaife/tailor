@@ -1,6 +1,6 @@
 {
   "name": "tf-tailor",
-  "version": "1.6.7",
+  "version": "1.6.8",
   "description": "tailor for toursforfun frontend",
   "main": "webpack",
   "scripts": {},
@@ -71,7 +71,7 @@
     "vue-template-loader": "^0.4.1",
     "webpack": "^3.11.0",
     "webpack-bundle-analyzer": "^2.11.1",
-    "webpack-dev-middleware": "^3.0.1",
+    "webpack-dev-middleware": "^2.0.6",
     "webpack-hot-middleware": "^2.21.2",
     "write-file-webpack-plugin": "^4.2.0",
     "yargs": "^11.0.0"
